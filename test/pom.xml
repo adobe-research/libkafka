@@ -29,7 +29,7 @@
     //                                                              //
     //////////////////////////////////////////////////////////////////
   </description>
-  
+
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.dt.libkafka</groupId>
@@ -64,7 +64,6 @@
 	      <directory>src</directory> 
 	      <includes>
 		<include>*.cc</include>
-		<include>RunTests.c</include>
 	      </includes>
 	    </source>
 	    <source>
@@ -84,7 +83,28 @@
 	  </linkerStartOptions>
 	</configuration>
       </plugin>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>exec-maven-plugin</artifactId>
+	<version>1.2.1</version>
+	<executions>
+	  <execution>
+	    <id>Google Tests</id>
+	    <phase>test</phase>
+	    <configuration>
+	      <executable>target/libkafka-test.a</executable>
+	      <!--
+	      <arguments>
+		<argument></argument>
+	      </arguments>
+	      -->
+	    </configuration>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	  </execution>
+	</executions>
+      </plugin>
     </plugins>
   </build>
-
 </project>
