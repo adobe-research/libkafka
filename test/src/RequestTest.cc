@@ -1,45 +1,35 @@
 #include <string>
 #include <gtest/gtest.h>
+#include <BaseTest.h>
 #include <Request.h>
 
 namespace {
 
-  class RequestTest : public ::testing::Test {
+  class RequestTest : public BaseTest {
     protected:
 
       RequestTest() { }
       virtual ~RequestTest() { }
       virtual void SetUp() { } 
       virtual void TearDown() { }
-
-      // Objects declared here can be used by all tests in the test case for RequestTest.
   };
 
   TEST_F(RequestTest, Constructor) {
-    // build test packet
-    unsigned char buffer[256];
-    unsigned char *head = (unsigned char *)&buffer;
+    init_packet();
 
     int size = 21;
     short int apiKey = 1;
     short int apiVersion = 2;
     int correlationId = 3;
     string clientId = "testClientId";
-    short int clientIdLength = (short int)clientId.length();
 
-    memcpy(head, &size, sizeof(int));
-    head += sizeof(int);
-    memcpy(head, &apiKey, sizeof(short int));
-    head += sizeof(short int);
-    memcpy(head, &apiVersion, sizeof(short int));
-    head += sizeof(short int);
-    memcpy(head, &correlationId, sizeof(int));
-    head += sizeof(int);
-    memcpy(head, &clientIdLength, sizeof(short int));
-    head += sizeof(short int);
-    memcpy(head, clientId.data(), clientIdLength);
+    write_int32(size);
+    write_int16(apiKey);
+    write_int16(apiVersion);
+    write_int32(correlationId);
+    write_string(clientId);
 
-    Request *r = new Request((unsigned char *)&buffer);
+    Request *r = new Request((unsigned char *)&packet);
     EXPECT_NE(r, (void*)0);
     EXPECT_EQ(r->size, size);
     EXPECT_EQ(r->apiKey, apiKey);
