@@ -35,7 +35,7 @@ using namespace std;
 extern "C" {
 #endif
 
-  class Request : RequestOrResponse
+  class Request : public RequestOrResponse
   {
     public:
 
@@ -45,10 +45,6 @@ extern "C" {
       string clientId;
 
       Request(unsigned char *buffer);
-
-    private: 
-
-      int parse();
   };
 
 #ifdef __cpp

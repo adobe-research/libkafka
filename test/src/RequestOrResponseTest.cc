@@ -15,11 +15,10 @@ namespace {
   };
 
   TEST_F(RequestOrResponseTest, Constructor) {
-    EXPECT_EQ(0, 0);
-  }
-
-  TEST_F(RequestOrResponseTest, Parse) {
-    EXPECT_EQ(0, 0);
+    int size = 21;
+    RequestOrResponse *r = new RequestOrResponse((unsigned char *)&size);
+    EXPECT_NE(r, (void*)0);
+    EXPECT_EQ(r->size, size);
   }
 
 }  // namespace

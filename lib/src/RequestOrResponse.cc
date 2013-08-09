@@ -25,6 +25,7 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#include <string>
 #include <iostream>
 
 #include <RequestOrResponse.h>
@@ -33,13 +34,32 @@ using namespace std;
 
 RequestOrResponse::RequestOrResponse(unsigned char *buffer)
 {
+  cout << "--------------RequestOrResponse()\n";
   this->buffer = buffer;
-  parse();
+  this->head = buffer;
+
+  // Kafka Protocol: int32 size
+  this->size = read_int32();
 }
 
-int
-RequestOrResponse::parse()
+short int RequestOrResponse::read_int16()
 {
-  cout << "RequestOrResponse::parse";
-  return 0;
+  short int value = *(int*)(this->head);
+  this->head += sizeof(short int);
+  return value;
+}
+
+int RequestOrResponse::read_int32()
+{
+  int value = *(int*)(this->head);
+  this->head += sizeof(int);
+  return value;
+}
+
+string RequestOrResponse::read_string()
+{
+  short int length = read_int16();
+  string value = string((const char *)(this->head), length);
+  this->head += length;
+  return value;
 }

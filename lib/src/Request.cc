@@ -31,11 +31,18 @@
 
 using namespace std;
 
-Request::Request(unsigned char *buffer) : RequestOrResponse(buffer) { }
-
-int
-Request::parse()
+Request::Request(unsigned char *buffer) : RequestOrResponse(buffer)
 {
-  cout << "Request::parse";
-  return 0;
+  cout << "--------------Request()\n";
+  // Kafka Protocol: short int apiKey
+  this->apiKey = read_int16();
+
+  // Kafka Protocol: short int apiVersion
+  this->apiVersion = read_int16();
+ 
+  // Kafka Protocol: int correlationId
+  this->correlationId = read_int32();
+
+  // Kafka Protocol: kafka string clientId
+  this->clientId = read_string();
 }

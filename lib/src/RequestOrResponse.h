@@ -25,6 +25,10 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#include <string>
+
+using namespace std;
+
 #ifdef __cpp
 extern "C" {
 #endif
@@ -40,10 +44,11 @@ extern "C" {
     protected:
       
       unsigned char *buffer;
-
-    private: 
-
-      int parse();
+      unsigned char *head;
+      
+      short int read_int16();
+      int read_int32();
+      string read_string();
   };
 
 #ifdef __cpp
