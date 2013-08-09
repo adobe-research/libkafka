@@ -33,7 +33,7 @@ using namespace std;
 
 Request::Request(unsigned char *buffer) : RequestOrResponse(buffer)
 {
-  cout << "--------------Request()\n";
+  D(cout << "--------------Request()\n";)
   // Kafka Protocol: short int apiKey
   this->apiKey = read_int16();
 

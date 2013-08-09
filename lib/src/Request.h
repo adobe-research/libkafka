@@ -26,27 +26,18 @@
 //////////////////////////////////////////////////////////////////
 
 #include <string>
-
 #include <RequestOrResponse.h>
 
 using namespace std;
 
-#ifdef __cpp
-extern "C" {
-#endif
+class Request : public RequestOrResponse
+{
+  public:
 
-  class Request : public RequestOrResponse
-  {
-    public:
+    short int apiKey;
+    short int apiVersion;
+    int correlationId;
+    string clientId;
 
-      short int apiKey;
-      short int apiVersion;
-      int correlationId;
-      string clientId;
-
-      Request(unsigned char *buffer);
-  };
-
-#ifdef __cpp
-}
-#endif
+    Request(unsigned char *buffer);
+};

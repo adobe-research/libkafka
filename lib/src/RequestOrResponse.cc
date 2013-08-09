@@ -34,7 +34,7 @@ using namespace std;
 
 RequestOrResponse::RequestOrResponse(unsigned char *buffer)
 {
-  cout << "--------------RequestOrResponse()\n";
+  D(cout << "--------------RequestOrResponse()\n";)
   this->buffer = buffer;
   this->head = buffer;
 
@@ -46,6 +46,7 @@ short int RequestOrResponse::read_int16()
 {
   short int value = *(int*)(this->head);
   this->head += sizeof(short int);
+  D(cout << "read_int16():" << value << "\n";)
   return value;
 }
 
@@ -53,6 +54,7 @@ int RequestOrResponse::read_int32()
 {
   int value = *(int*)(this->head);
   this->head += sizeof(int);
+  D(cout << "read_int32():" << value << "\n";)
   return value;
 }
 
@@ -61,5 +63,6 @@ string RequestOrResponse::read_string()
   short int length = read_int16();
   string value = string((const char *)(this->head), length);
   this->head += length;
+  D(cout << "read_string():" << length << ":" << value << "\n";)
   return value;
 }

@@ -25,30 +25,20 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#include <string>
+#include <iostream>
+
+#include <MetadataRequest.h>
 
 using namespace std;
 
-#ifdef DEBUG 
-#define D(x) x
-#else 
-#define D(x)
-#endif
-
-class RequestOrResponse
+MetadataRequest::MetadataRequest(unsigned char *buffer) : Request(buffer)
 {
-  public:
-
-    int size;
-
-    RequestOrResponse (unsigned char *buffer);
-
-  protected:
-
-    unsigned char *buffer;
-    unsigned char *head;
-
-    short int read_int16();
-    int read_int32();
-    string read_string();
-};
+  D(cout << "--------------MetadataRequest()\n";)
+  // Kafka Protocol: string[] topic_name
+  this->topicNameArraySize = read_int32();
+  D(cout << "--------------topicArraySize is " << this->topicNameArraySize << "\n";)
+  this->topicNameArray = new string[this->topicNameArraySize];
+  for (int i=0 ; i<this->topicNameArraySize; i++) {
+    this->topicNameArray[i] = read_string();
+  }
+}

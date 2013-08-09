@@ -26,29 +26,16 @@
 //////////////////////////////////////////////////////////////////
 
 #include <string>
+#include <Request.h>
 
 using namespace std;
 
-#ifdef DEBUG 
-#define D(x) x
-#else 
-#define D(x)
-#endif
-
-class RequestOrResponse
+class MetadataRequest : public Request
 {
   public:
 
-    int size;
+    int topicNameArraySize;
+    string *topicNameArray;
 
-    RequestOrResponse (unsigned char *buffer);
-
-  protected:
-
-    unsigned char *buffer;
-    unsigned char *head;
-
-    short int read_int16();
-    int read_int32();
-    string read_string();
+    MetadataRequest(unsigned char *buffer);
 };

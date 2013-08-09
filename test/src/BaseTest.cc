@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <gtest/gtest.h>
 #include <BaseTest.h>
@@ -28,7 +29,9 @@ void BaseTest::write_string(string value)
   short int length = value.length();
   memcpy(head, &length, sizeof(short int));
   head += sizeof(short int);
-  memcpy(head, value.data(), length);
+  D(cout << "write_string():" << length << ":" << value.c_str() << "\n";)
+  memcpy(head, value.c_str(), length);
+  head += length;
 }
 
 int main(int argc, char **argv) {

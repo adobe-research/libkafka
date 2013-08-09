@@ -3,6 +3,12 @@
 
 using namespace std;
 
+#ifdef DEBUG 
+#define D(x) x
+#else 
+#define D(x)
+#endif
+
 class BaseTest : public ::testing::Test {
   protected:
 
@@ -11,7 +17,7 @@ class BaseTest : public ::testing::Test {
     virtual void SetUp();
     virtual void TearDown();
 
-    unsigned char packet[256];
+    unsigned char packet[1024];
     unsigned char *head;
 
     void init_packet();
