@@ -72,7 +72,7 @@
 	    </source>
 	  </sources>
 	  <compilerStartOptions>
-	    <compilerStartOption>-fPIC -O2 -g -ffast-math -funit-at-a-time -x c++</compilerStartOption>
+	    <compilerStartOption>${compiler.debug} -fPIC -O2 -g -ffast-math -funit-at-a-time -x c++</compilerStartOption>
 	  </compilerStartOptions>
 	  <linkerStartOptions>
 	    <linkerStartOption>-prebind -dynamiclib -lstdc++ -L /opt/local/lib -lgtest</linkerStartOption> 

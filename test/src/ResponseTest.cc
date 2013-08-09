@@ -15,18 +15,18 @@ namespace {
   };
 
   TEST_F(ResponseTest, Constructor) {
-    init_packet();
-
     int size = 21;
     int correlationId = 3;
 
-    write_int32(size);
-    write_int32(correlationId);
+    Response *r1 = new Response(correlationId);
+    EXPECT_NE(r1, (void*)0);
+    unsigned char * message = r1->toWireFormat();
+    EXPECT_EQ(r1->size, sizeof(int) + sizeof(int));
 
-    Response *r = new Response((unsigned char *)&packet);
-    EXPECT_NE(r, (void*)0);
-    EXPECT_EQ(r->size, size);
-    EXPECT_EQ(r->correlationId, correlationId);
+    Response *r2 = new Response(message);
+    EXPECT_NE(r2, (void*)0);
+    EXPECT_EQ(r2->size, r1->size);
+    EXPECT_EQ(r2->correlationId, r1->correlationId);
   }
 
 }  // namespace

@@ -35,6 +35,8 @@ using namespace std;
 #define D(x)
 #endif
 
+#define DEFAULT_BUFFER_SIZE 1024
+
 class RequestOrResponse
 {
   public:
@@ -43,6 +45,7 @@ class RequestOrResponse
 
     RequestOrResponse(unsigned char *buffer);
     RequestOrResponse();
+    unsigned char* toWireFormat();
 
   protected:
 
@@ -53,4 +56,10 @@ class RequestOrResponse
     int read_int32();
     long int read_int64();
     string read_string();
+
+    void write_size();
+    void write_int16(short int value);
+    void write_int32(int value);
+    void write_int64(int long value);
+    void write_string(string value);
 };

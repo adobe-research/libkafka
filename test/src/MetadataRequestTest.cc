@@ -15,9 +15,6 @@ namespace {
   };
 
   TEST_F(MetadataRequestTest, Constructor) {
-    init_packet();
-
-    int size = 21;
     short int apiKey = 1;
     short int apiVersion = 2;
     int correlationId = 3;
@@ -25,27 +22,26 @@ namespace {
     int topicNameArraySize = 3;
     string topicNameArray[3] = { string("testTopic1"), string("testTopic2"), string("testTopic3") };
 
-    write_int32(size);
-    write_int16(apiKey);
-    write_int16(apiVersion);
-    write_int32(correlationId);
-    write_string(clientId);
-    write_int32(topicNameArraySize);
+    MetadataRequest *mr1 = new MetadataRequest(apiKey, apiVersion, correlationId, clientId, topicNameArraySize, topicNameArray);
+    EXPECT_NE(mr1, (void*)0);
+    unsigned char * message = mr1->toWireFormat();
+    int size = sizeof(int) + sizeof(short int) + sizeof(short int) + sizeof(int) + sizeof(short int) + clientId.length() + sizeof(int);
     for (int i=0; i<topicNameArraySize; i++) {
-      write_string(topicNameArray[i]);
+      size += sizeof(short int) + topicNameArray[i].length();
     }
+    EXPECT_EQ(mr1->size, size);
 
-    MetadataRequest *r = new MetadataRequest((unsigned char *)&packet);
+    MetadataRequest *mr2 = new MetadataRequest(message);
 
-    EXPECT_NE(r, (void*)0);
-    EXPECT_EQ(r->size, size);
-    EXPECT_EQ(r->apiKey, apiKey);
-    EXPECT_EQ(r->apiVersion, apiVersion);
-    EXPECT_EQ(r->correlationId, correlationId);
-    EXPECT_EQ(r->clientId, clientId);
-    EXPECT_EQ(r->topicNameArraySize, topicNameArraySize);
-    for (int i=0; i<r->topicNameArraySize; i++) {
-      EXPECT_EQ(r->topicNameArray[i], topicNameArray[i]);
+    EXPECT_NE(mr2, (void*)0);
+    EXPECT_EQ(mr2->size, mr1->size);
+    EXPECT_EQ(mr2->apiKey, mr1->apiKey);
+    EXPECT_EQ(mr2->apiVersion, mr1->apiVersion);
+    EXPECT_EQ(mr2->correlationId, mr1->correlationId);
+    EXPECT_EQ(mr2->clientId, mr1->clientId);
+    EXPECT_EQ(mr2->topicNameArraySize, mr1->topicNameArraySize);
+    for (int i=0; i<mr2->topicNameArraySize; i++) {
+      EXPECT_EQ(mr2->topicNameArray[i], mr1->topicNameArray[i]);
     }
   }
 

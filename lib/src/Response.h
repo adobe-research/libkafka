@@ -38,4 +38,5 @@ class Response : public RequestOrResponse
 
     Response(unsigned char *buffer);
     Response(int correlationId);
+    unsigned char* toWireFormat();
 };

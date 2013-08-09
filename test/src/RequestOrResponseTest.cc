@@ -14,12 +14,14 @@ namespace {
   };
 
   TEST_F(RequestOrResponseTest, Constructor) {
-    int size = 21;
-    init_packet();
-    write_int32(size);
-    RequestOrResponse *r = new RequestOrResponse((unsigned char *)&packet);
-    EXPECT_NE(r, (void*)0);
-    EXPECT_EQ(r->size, size);
+    RequestOrResponse *r1 = new RequestOrResponse();
+    EXPECT_NE(r1, (void*)0);
+    unsigned char * message = r1->toWireFormat();
+    EXPECT_EQ(r1->size, sizeof(int));
+
+    RequestOrResponse *r2 = new RequestOrResponse(message);
+    EXPECT_NE(r2, (void*)0);
+    EXPECT_EQ(r2->size, r1->size);
   }
 
 }  // namespace

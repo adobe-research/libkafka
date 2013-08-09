@@ -46,3 +46,16 @@ Response::Response(int correlationId) : RequestOrResponse()
   // Kafka Protocol: int correlationId
   this->correlationId = correlationId;
 }
+
+unsigned char* Response::toWireFormat()
+{
+  this->RequestOrResponse::toWireFormat();
+
+  D(cout << "--------------Response::toWireFormat()\n";)
+
+  // Kafka Protocol: int correlationId
+  write_int32(this->correlationId);
+
+  write_size();
+  return this->buffer;
+}

@@ -36,6 +36,11 @@
   <version>0.1.0</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <compiler.debug></compiler.debug>
+    <!--<compiler.debug>-DDEBUG</compiler.debug>-->
+  </properties>
+
   <developers>
     <developer>
       <id>dt</id>

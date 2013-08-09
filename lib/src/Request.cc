@@ -40,7 +40,7 @@ Request::Request(unsigned char *buffer) : RequestOrResponse(buffer)
 
   // Kafka Protocol: short int apiVersion
   this->apiVersion = read_int16();
- 
+
   // Kafka Protocol: int correlationId
   this->correlationId = read_int32();
 
@@ -56,4 +56,26 @@ Request::Request(short int apiKey, short int apiVersion, int correlationId, stri
   this->apiVersion = apiVersion;
   this->correlationId = correlationId;
   this->clientId = clientId;
+}
+
+unsigned char* Request::toWireFormat()
+{
+  this->RequestOrResponse::toWireFormat();
+
+  D(cout << "--------------Request::toWireFormat()\n";)
+
+  // Kafka Protocol: short int apiKey
+  write_int16(this->apiKey);
+
+  // Kafka Protocol: short int apiVersion
+  write_int16(this->apiVersion);
+
+  // Kafka Protocol: int correlationId
+  write_int32(this->correlationId);
+
+  // Kafka Protocol: kafka string clientId
+  write_string(this->clientId);
+
+  write_size();
+  return this->buffer;
 }

@@ -15,27 +15,23 @@ namespace {
   };
 
   TEST_F(RequestTest, Constructor) {
-    init_packet();
-
-    int size = 21;
     short int apiKey = 1;
     short int apiVersion = 2;
     int correlationId = 3;
     string clientId = "testClientId";
 
-    write_int32(size);
-    write_int16(apiKey);
-    write_int16(apiVersion);
-    write_int32(correlationId);
-    write_string(clientId);
+    Request *r1 = new Request(apiKey, apiVersion, correlationId, clientId);
+    EXPECT_NE(r1, (void*)0);
+    unsigned char * message = r1->toWireFormat();
+    EXPECT_EQ(r1->size, sizeof(int) + sizeof(short int) + sizeof(short int) + sizeof(int) + sizeof(short int) + clientId.length());
 
-    Request *r = new Request((unsigned char *)&packet);
-    EXPECT_NE(r, (void*)0);
-    EXPECT_EQ(r->size, size);
-    EXPECT_EQ(r->apiKey, apiKey);
-    EXPECT_EQ(r->apiVersion, apiVersion);
-    EXPECT_EQ(r->correlationId, correlationId);
-    EXPECT_EQ(r->clientId, clientId);
+    Request *r2 = new Request(message);
+    EXPECT_NE(r2, (void*)0);
+    EXPECT_EQ(r2->size, r1->size);
+    EXPECT_EQ(r2->apiKey, r1->apiKey);
+    EXPECT_EQ(r2->apiVersion, r1->apiVersion);
+    EXPECT_EQ(r2->correlationId, r1->correlationId);
+    EXPECT_EQ(r2->clientId, r1->clientId);
   }
 
 }  // namespace

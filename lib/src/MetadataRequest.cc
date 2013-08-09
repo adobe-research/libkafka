@@ -48,7 +48,23 @@ MetadataRequest::MetadataRequest(short int apiKey, short int apiVersion, int cor
 {
   D(cout << "--------------MetadataRequest(params)\n";)
 
-  // Kafka Protocol: string[] topic_name
+  // Kafka Protocol: string[] topicName
   this->topicNameArraySize = topicNameArraySize;
   this->topicNameArray = topicNameArray;
+}
+
+unsigned char* MetadataRequest::toWireFormat()
+{
+  this->Request::toWireFormat();
+
+  D(cout << "--------------MetadataRequest::toWireFormat()\n";)
+
+  // Kafka Protocol: string[] topicName
+  write_int32(this->topicNameArraySize);
+  for (int i=0; i<this->topicNameArraySize; i++) {
+    write_string(this->topicNameArray[i]);
+  }
+
+  write_size();
+  return this->buffer;
 }

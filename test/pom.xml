@@ -76,7 +76,7 @@
 	    </source>
 	  </sources>
 	  <compilerStartOptions>
-	    <compilerStartOption>-fPIC -O2 -g -ffast-math -funit-at-a-time -x c++</compilerStartOption>
+	    <compilerStartOption>${compiler.debug} -fPIC -O2 -g -ffast-math -funit-at-a-time -x c++</compilerStartOption>
 	  </compilerStartOptions>
 	  <linkerStartOptions>
 	    <linkerStartOption>-lstdc++ -L /opt/local/lib -L ../lib/target -lgtest -lkafka</linkerStartOption> 
