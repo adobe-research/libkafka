@@ -50,5 +50,6 @@ class RequestOrResponse
 
     short int read_int16();
     int read_int32();
+    long int read_int64();
     string read_string();
 };

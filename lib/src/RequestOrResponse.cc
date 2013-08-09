@@ -58,6 +58,14 @@ int RequestOrResponse::read_int32()
   return value;
 }
 
+long int RequestOrResponse::read_int64()
+{
+  long int value = *(long int*)(this->head);
+  this->head += sizeof(long int);
+  D(cout << "read_int64():" << value << "\n";)
+  return value;
+}
+
 string RequestOrResponse::read_string()
 {
   short int length = read_int16();
