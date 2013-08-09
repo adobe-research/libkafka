@@ -34,13 +34,18 @@ using namespace std;
 
 RequestOrResponse::RequestOrResponse(unsigned char *buffer)
 {
-  D(cout << "--------------RequestOrResponse()\n";)
+  D(cout << "--------------RequestOrResponse(buffer)\n";)
 
   this->buffer = buffer;
   this->head = buffer;
 
   // Kafka Protocol: int32 size
   this->size = read_int32();
+}
+
+RequestOrResponse::RequestOrResponse()
+{
+  D(cout << "--------------RequestOrResponse(params)\n";)
 }
 
 short int RequestOrResponse::read_int16()

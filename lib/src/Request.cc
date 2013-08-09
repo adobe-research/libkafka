@@ -33,7 +33,7 @@ using namespace std;
 
 Request::Request(unsigned char *buffer) : RequestOrResponse(buffer)
 {
-  D(cout << "--------------Request()\n";)
+  D(cout << "--------------Request(buffer)\n";)
 
   // Kafka Protocol: short int apiKey
   this->apiKey = read_int16();
@@ -46,4 +46,14 @@ Request::Request(unsigned char *buffer) : RequestOrResponse(buffer)
 
   // Kafka Protocol: kafka string clientId
   this->clientId = read_string();
+}
+
+Request::Request(short int apiKey, short int apiVersion, int correlationId, string clientId) : RequestOrResponse()
+{
+  D(cout << "--------------Request(params)\n";)
+
+  this->apiKey = apiKey;
+  this->apiVersion = apiVersion;
+  this->correlationId = correlationId;
+  this->clientId = clientId;
 }

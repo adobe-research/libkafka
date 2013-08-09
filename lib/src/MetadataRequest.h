@@ -38,4 +38,5 @@ class MetadataRequest : public Request
     string *topicNameArray;
 
     MetadataRequest(unsigned char *buffer);
+    MetadataRequest(short int apiKey, short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]);
 };

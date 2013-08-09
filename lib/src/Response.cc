@@ -33,8 +33,16 @@ using namespace std;
 
 Response::Response(unsigned char *buffer) : RequestOrResponse(buffer)
 {
-  D(cout << "--------------Response()\n";)
+  D(cout << "--------------Response(buffer)\n";)
  
   // Kafka Protocol: int correlationId
   this->correlationId = read_int32();
+}
+
+Response::Response(int correlationId) : RequestOrResponse()
+{
+  D(cout << "--------------Response(params)\n";)
+ 
+  // Kafka Protocol: int correlationId
+  this->correlationId = correlationId;
 }

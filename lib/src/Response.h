@@ -37,4 +37,5 @@ class Response : public RequestOrResponse
     int correlationId;
 
     Response(unsigned char *buffer);
+    Response(int correlationId);
 };

@@ -41,7 +41,8 @@ class RequestOrResponse
 
     int size;
 
-    RequestOrResponse (unsigned char *buffer);
+    RequestOrResponse(unsigned char *buffer);
+    RequestOrResponse();
 
   protected:
 

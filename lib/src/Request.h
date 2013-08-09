@@ -40,4 +40,5 @@ class Request : public RequestOrResponse
     string clientId;
 
     Request(unsigned char *buffer);
+    Request(short int apiKey, short int apiVersion, int correlationId, string clientId);
 };
