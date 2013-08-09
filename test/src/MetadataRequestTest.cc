@@ -5,16 +5,16 @@
 
 namespace {
 
-  class MetadataTest : public BaseTest {
+  class MetadataRequestTest : public BaseTest {
     protected:
 
-      MetadataTest() { }
-      virtual ~MetadataTest() { }
+      MetadataRequestTest() { }
+      virtual ~MetadataRequestTest() { }
       virtual void SetUp() { } 
       virtual void TearDown() { }
   };
 
-  TEST_F(MetadataTest, Constructor) {
+  TEST_F(MetadataRequestTest, Constructor) {
     init_packet();
 
     int size = 21;

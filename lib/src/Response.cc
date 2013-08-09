@@ -27,23 +27,14 @@
 
 #include <iostream>
 
-#include <Request.h>
+#include <Response.h>
 
 using namespace std;
 
-Request::Request(unsigned char *buffer) : RequestOrResponse(buffer)
+Response::Response(unsigned char *buffer) : RequestOrResponse(buffer)
 {
-  D(cout << "--------------Request()\n";)
-
-  // Kafka Protocol: short int apiKey
-  this->apiKey = read_int16();
-
-  // Kafka Protocol: short int apiVersion
-  this->apiVersion = read_int16();
+  D(cout << "--------------Response()\n";)
  
   // Kafka Protocol: int correlationId
   this->correlationId = read_int32();
-
-  // Kafka Protocol: kafka string clientId
-  this->clientId = read_string();
 }

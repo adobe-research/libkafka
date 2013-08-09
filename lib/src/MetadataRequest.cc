@@ -34,6 +34,7 @@ using namespace std;
 MetadataRequest::MetadataRequest(unsigned char *buffer) : Request(buffer)
 {
   D(cout << "--------------MetadataRequest()\n";)
+
   // Kafka Protocol: string[] topic_name
   this->topicNameArraySize = read_int32();
   D(cout << "--------------topicArraySize is " << this->topicNameArraySize << "\n";)

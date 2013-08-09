@@ -35,6 +35,7 @@ using namespace std;
 RequestOrResponse::RequestOrResponse(unsigned char *buffer)
 {
   D(cout << "--------------RequestOrResponse()\n";)
+
   this->buffer = buffer;
   this->head = buffer;
 
