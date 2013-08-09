@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <description>
+    //////////////////////////////////////////////////////////////////
+    //                                                              //
+    // libkafka - C/C++ client for Apache Kafka v0.8+               //
+    //                                                              //
+    // David Tompkins -- 8/8/2013                                   //
+    // http://dt.org/                                               //
+    //                                                              //
+    // Copyright (c) 2007 by David Tompkins.                        //
+    //                                                              //
+    //////////////////////////////////////////////////////////////////
+    //                                                              //
+    // This program is free software; you can redistribute it       //
+    // and/or modify it under the terms of the GNU General Public   //
+    // License as published by the Free Software Foundation.        //
+    //                                                              //
+    // This program is distributed in the hope that it will be      //
+    // useful, but WITHOUT ANY WARRANTY; without even the implied   //
+    // warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR      //
+    // PURPOSE. See the GNU General Public License for more details //
+    //                                                              //
+    // You should have received a copy of the GNU General Public    //
+    // License along with this program; if not, write to the Free   //
+    // Software Foundation, Inc., 59 Temple Place, Suite 330,       //
+    // Boston, MA 02111-1307 USA                                    //
+    //                                                              //
+    //////////////////////////////////////////////////////////////////
+  </description>
+
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.dt.libkafka</groupId>
+    <artifactId>libkafka-all</artifactId>
+    <version>0.1.0</version>
+  </parent>
+  <artifactId>libkafka-app</artifactId>
+  <packaging>a</packaging>
+
+  <developers>
+    <developer>
+      <id>dt</id>
+      <name>David Tompkins</name>
+      <email>dt@dt.org</email>
+      <url>http://blog.dt.org</url>
+    </developer>
+  </developers>
+
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>native-maven-plugin</artifactId>
+	<version>1.0-alpha-7</version>
+	<extensions>true</extensions>
+	<configuration>
+	  <compilerProvider>generic-classic</compilerProvider>
+	  <compilerExecutable>clang</compilerExecutable>
+	  <linkerExecutable>clang</linkerExecutable>
+	  <sources>
+	    <source>
+	      <directory>src</directory> 
+	      <includes>
+		<include>*.cc</include>
+	      </includes>
+	    </source>
+	    <source>
+	      <directory>../lib/src</directory>
+	      <dependencyAnalysisParticipation>false</dependencyAnalysisParticipation>
+	    </source>
+	    <source>
+	      <directory>/opt/local/include</directory>
+	      <dependencyAnalysisParticipation>false</dependencyAnalysisParticipation>
+	    </source>
+	  </sources>
+	  <compilerStartOptions>
+	    <compilerStartOption>-fPIC -O2 -g -ffast-math -funit-at-a-time -x c++</compilerStartOption>
+	  </compilerStartOptions>
+	  <linkerStartOptions>
+	    <linkerStartOption>-lstdc++ -L /opt/local/lib -L ../lib/target -lgtest -lkafka</linkerStartOption> 
+	  </linkerStartOptions>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
