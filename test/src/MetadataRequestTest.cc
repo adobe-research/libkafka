@@ -29,12 +29,12 @@ namespace {
     for (int i=0; i<topicNameArraySize; i++) {
       size += sizeof(short int) + topicNameArray[i].length();
     }
-    EXPECT_EQ(mr1->size, size);
+    EXPECT_EQ(mr1->size(), size);
 
     MetadataRequest *mr2 = new MetadataRequest(message);
 
     EXPECT_NE(mr2, (void*)0);
-    EXPECT_EQ(mr2->size, mr1->size);
+    EXPECT_EQ(mr2->size(), mr1->size());
     EXPECT_EQ(mr2->apiKey, mr1->apiKey);
     EXPECT_EQ(mr2->apiVersion, mr1->apiVersion);
     EXPECT_EQ(mr2->correlationId, mr1->correlationId);

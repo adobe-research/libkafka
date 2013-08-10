@@ -25,45 +25,38 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#include <iostream>
-
-#include <MetadataRequest.h>
+#include <string>
+#include <Debug.h>
 
 using namespace std;
 
-MetadataRequest::MetadataRequest(unsigned char *buffer) : Request(buffer)
+#define DEFAULT_BUFFER_SIZE 1024
+
+class Packet
 {
-  D(cout << "--------------MetadataRequest(buffer)\n";)
+  public:
 
-  // Kafka Protocol: string[] topic_name
-  this->topicNameArraySize = this->packet->read_int32();
-  this->topicNameArray = new string[this->topicNameArraySize];
-  for (int i=0 ; i<this->topicNameArraySize; i++) {
-    this->topicNameArray[i] = this->packet->read_string();
-  }
-}
+    int size;
 
-MetadataRequest::MetadataRequest(short int apiKey, short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]) : Request(apiKey, apiVersion, correlationId, clientId)
-{
-  D(cout << "--------------MetadataRequest(params)\n";)
+    Packet();
+    Packet(unsigned char *buffer);
+    unsigned char* toWireFormat();
 
-  // Kafka Protocol: string[] topicName
-  this->topicNameArraySize = topicNameArraySize;
-  this->topicNameArray = topicNameArray;
-}
+    short int read_int16();
+    int read_int32();
+    long int read_int64();
+    string read_string();
 
-unsigned char* MetadataRequest::toWireFormat()
-{
-  unsigned char* buffer = this->Request::toWireFormat();
+    void write_int16(short int value);
+    void write_int32(int value);
+    void write_int64(int long value);
+    void write_string(string value);
+    
+    void update_packet_size();
 
-  D(cout << "--------------MetadataRequest::toWireFormat()\n";)
+  protected:
 
-  // Kafka Protocol: string[] topicName
-  this->packet->write_int32(this->topicNameArraySize);
-  for (int i=0; i<this->topicNameArraySize; i++) {
-    this->packet->write_string(this->topicNameArray[i]);
-  }
+    unsigned char *buffer;
+    unsigned char *head;
 
-  this->packet->update_packet_size();
-  return buffer;
-}
+};

@@ -34,106 +34,29 @@ using namespace std;
 
 RequestOrResponse::RequestOrResponse(unsigned char *buffer)
 {
+  packet = new Packet(buffer);
+
   D(cout << "--------------RequestOrResponse(buffer)\n";)
 
-  this->buffer = buffer;
-  this->head = buffer;
-
-  // Kafka Protocol: int32 size
-  this->size = read_int32();
+  // Kafka Protocol: int32 size - managed within the Packet class
 }
 
 RequestOrResponse::RequestOrResponse()
 {
+  packet = new Packet();
+
   D(cout << "--------------RequestOrResponse(params)\n";)
-}
-
-short int RequestOrResponse::read_int16()
-{
-  short int value = *(int*)(this->head);
-  this->head += sizeof(short int);
-  D(cout << "read_int16():" << value << "\n";)
-  return value;
-}
-
-int RequestOrResponse::read_int32()
-{
-  int value = *(int*)(this->head);
-  this->head += sizeof(int);
-  D(cout << "read_int32():" << value << "\n";)
-  return value;
-}
-
-long int RequestOrResponse::read_int64()
-{
-  long int value = *(long int*)(this->head);
-  this->head += sizeof(long int);
-  D(cout << "read_int64():" << value << "\n";)
-  return value;
-}
-
-string RequestOrResponse::read_string()
-{
-  short int length = read_int16();
-  string value = string((const char *)(this->head), length);
-  this->head += length;
-  D(cout << "read_string():" << length << ":" << value << "\n";)
-  return value;
 }
 
 unsigned char* RequestOrResponse::toWireFormat()
 {
   D(cout << "--------------RequestOrResponse::toWireFormat()\n";)
 
-  buffer = new unsigned char[DEFAULT_BUFFER_SIZE];
-  head = buffer;
-  this->size = 0;
-
-  // Kafka Protocol: int32 size
-  write_int32(this->size);
-
-  write_size();
-  return this->buffer;
+  // Kafka Protocol: int32 size - managed within the Packet class
+  return this->packet->toWireFormat();
 }
 
-void RequestOrResponse::write_size()
+int RequestOrResponse::size()
 {
-  memcpy(buffer, &(this->size), sizeof(int));
-  D(cout << "write_size():" << this->size << "\n";)
-}
-
-void RequestOrResponse::write_int16(short int value)
-{
-  memcpy(head, &value, sizeof(short int));
-  head += sizeof(short int);
-  this->size += sizeof(short int);
-  D(cout << "write_int16():" << value << "\n";)
-}
-
-void RequestOrResponse::write_int32(int value)
-{
-  memcpy(head, &value, sizeof(int));
-  head += sizeof(int);
-  this->size += sizeof(int);
-  D(cout << "write_int32():" << value << "\n";)
-}
-
-void RequestOrResponse::write_int64(long int value)
-{
-  memcpy(head, &value, sizeof(long int));
-  head += sizeof(long int);
-  this->size += sizeof(long int);
-  D(cout << "write_int64():" << value << "\n";)
-}
-
-void RequestOrResponse::write_string(string value)
-{
-  short int length = value.length();
-  memcpy(head, &length, sizeof(short int));
-  head += sizeof(short int);
-  this->size += sizeof(short int);
-  memcpy(head, value.c_str(), length);
-  head += length;
-  this->size += length;
-  D(cout << "write_string():" << length << ":" << value.c_str() << "\n";)
+  return this->packet->size;
 }

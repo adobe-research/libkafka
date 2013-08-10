@@ -27,34 +27,21 @@
 
 #include <string>
 #include <Debug.h>
+#include <Packet.h>
 
 using namespace std;
-
-#define DEFAULT_BUFFER_SIZE 1024
 
 class RequestOrResponse
 {
   public:
 
-    int size;
-
-    RequestOrResponse(unsigned char *buffer);
     RequestOrResponse();
+    RequestOrResponse(unsigned char *buffer);
     unsigned char* toWireFormat();
+
+    int size();
 
   protected:
 
-    unsigned char *buffer;
-    unsigned char *head;
-
-    short int read_int16();
-    int read_int32();
-    long int read_int64();
-    string read_string();
-
-    void write_size();
-    void write_int16(short int value);
-    void write_int32(int value);
-    void write_int64(int long value);
-    void write_string(string value);
+    Packet *packet;
 };

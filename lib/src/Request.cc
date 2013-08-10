@@ -36,16 +36,16 @@ Request::Request(unsigned char *buffer) : RequestOrResponse(buffer)
   D(cout << "--------------Request(buffer)\n";)
 
   // Kafka Protocol: short int apiKey
-  this->apiKey = read_int16();
+  this->apiKey = this->packet->read_int16();
 
   // Kafka Protocol: short int apiVersion
-  this->apiVersion = read_int16();
+  this->apiVersion = this->packet->read_int16();
 
   // Kafka Protocol: int correlationId
-  this->correlationId = read_int32();
+  this->correlationId = this->packet->read_int32();
 
   // Kafka Protocol: kafka string clientId
-  this->clientId = read_string();
+  this->clientId = this->packet->read_string();
 }
 
 Request::Request(short int apiKey, short int apiVersion, int correlationId, string clientId) : RequestOrResponse()
@@ -60,22 +60,22 @@ Request::Request(short int apiKey, short int apiVersion, int correlationId, stri
 
 unsigned char* Request::toWireFormat()
 {
-  this->RequestOrResponse::toWireFormat();
+  unsigned char* buffer = this->RequestOrResponse::toWireFormat();
 
   D(cout << "--------------Request::toWireFormat()\n";)
 
   // Kafka Protocol: short int apiKey
-  write_int16(this->apiKey);
+  this->packet->write_int16(this->apiKey);
 
   // Kafka Protocol: short int apiVersion
-  write_int16(this->apiVersion);
+  this->packet->write_int16(this->apiVersion);
 
   // Kafka Protocol: int correlationId
-  write_int32(this->correlationId);
+  this->packet->write_int32(this->correlationId);
 
   // Kafka Protocol: kafka string clientId
-  write_string(this->clientId);
+  this->packet->write_string(this->clientId);
 
-  write_size();
-  return this->buffer;
+  this->packet->update_packet_size();
+  return buffer;
 }
