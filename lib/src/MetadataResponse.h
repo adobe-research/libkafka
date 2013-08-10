@@ -26,35 +26,23 @@
 //////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <Debug.h>
+#include <Response.h>
+#include <Broker.h>
+#include <TopicMetadata.h>
 
 using namespace std;
 
-#define DEFAULT_BUFFER_SIZE 1024
-
-class RequestOrResponse
+class MetadataResponse : public Response
 {
   public:
 
-    int size;
+    int brokerArraySize;
+    Broker *brokerArray;
 
-    RequestOrResponse(unsigned char *buffer);
-    RequestOrResponse();
+    int topicMetadataArraySize;
+    TopicMetadata *topicMetadataArray;
+
+    MetadataResponse(unsigned char *buffer);
+    MetadataResponse(int correlationId, int brokerArraySize, Broker brokerArray[], int topicMetadataArraySize, TopicMetadata topicMetadataArray[]);
     unsigned char* toWireFormat();
-
-  protected:
-
-    unsigned char *buffer;
-    unsigned char *head;
-
-    short int read_int16();
-    int read_int32();
-    long int read_int64();
-    string read_string();
-
-    void write_size();
-    void write_int16(short int value);
-    void write_int32(int value);
-    void write_int64(int long value);
-    void write_string(string value);
 };
