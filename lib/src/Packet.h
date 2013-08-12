@@ -38,25 +38,29 @@ class Packet
 
     int size;
 
-    Packet();
+    ~Packet();
+    Packet(int bufferSize = DEFAULT_BUFFER_SIZE);
     Packet(unsigned char *buffer);
-    unsigned char* toWireFormat();
+    unsigned char* toWireFormat(bool updateSize = true);
 
-    short int read_int16();
-    int read_int32();
-    long int read_int64();
-    string read_string();
+    short int readInt16();
+    int readInt32();
+    long int readInt64();
+    string readString();
 
-    void write_int16(short int value);
-    void write_int32(int value);
-    void write_int64(int long value);
-    void write_string(string value);
+    void writeInt16(short int value);
+    void writeInt32(int value);
+    void writeInt64(int long value);
+    void writeString(string value);
     
-    void update_packet_size();
+    void updatePacketSize();
 
   protected:
 
     unsigned char *buffer;
     unsigned char *head;
 
+  private:
+
+    bool releaseBuffer;
 };

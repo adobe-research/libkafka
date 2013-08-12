@@ -32,99 +32,110 @@
 
 using namespace std;
 
+// Constructor to parse incoming Kafka protocol packet
 Packet::Packet(unsigned char *buffer)
 {
-  D(cout << "--------------Packet(buffer)\n";)
+  D(cout << "--------------Packet(incoming)\n";)
 
   this->buffer = buffer;
   this->head = buffer;
-  this->size = read_int32();
+  this->size = readInt32();
+  this->releaseBuffer = false;
 }
 
-Packet::Packet()
+// Constructor to construct outgoing Kafka protocol packet
+Packet::Packet(int bufferSize)
 {
-  D(cout << "--------------Packet(params)\n";)
+  D(cout << "--------------Packet(outgoing)\n";)
+  
+  buffer = new unsigned char[bufferSize];
+  head = buffer;
+  this->size = 0;
+  this->releaseBuffer = true;
 }
 
-unsigned char* Packet::toWireFormat()
+Packet::~Packet()
+{
+  D(cout << "--------------~Packet()\n";)
+
+  if (releaseBuffer) delete buffer;
+}
+
+unsigned char* Packet::toWireFormat(bool updateSize)
 {
   D(cout << "--------------Packet::toWireFormat()\n";)
 
-  buffer = new unsigned char[DEFAULT_BUFFER_SIZE];
-  head = buffer;
-  this->size = 0;
-
   // Kafka Protocol: int32 size
-  write_int32(this->size);
+  writeInt32(this->size);
 
-  update_packet_size();
+  if (updateSize) updatePacketSize();
   return this->buffer;
 }
 
-short int Packet::read_int16()
+short int Packet::readInt16()
 {
   short int value = *(int*)(this->head);
   this->head += sizeof(short int);
-  D(cout << "Packet::read_int16():" << value << "\n";)
+  D(cout << "Packet::readInt16():" << value << "\n";)
   return value;
 }
 
-int Packet::read_int32()
+int Packet::readInt32()
 {
   int value = *(int*)(this->head);
   this->head += sizeof(int);
-  D(cout << "Packet::read_int32():" << value << "\n";)
+  D(cout << "Packet::readInt32():" << value << "\n";)
   return value;
 }
 
-long int Packet::read_int64()
+long int Packet::readInt64()
 {
   long int value = *(long int*)(this->head);
   this->head += sizeof(long int);
-  D(cout << "Packet::read_int64():" << value << "\n";)
+  D(cout << "Packet::readInt64():" << value << "\n";)
   return value;
 }
 
-string Packet::read_string()
+string Packet::readString()
 {
-  short int length = read_int16();
+  short int length = readInt16();
   string value = string((const char *)(this->head), length);
   this->head += length;
-  D(cout << "Packet::read_string():" << length << ":" << value << "\n";)
+  D(cout << "Packet::readString():" << length << ":" << value << "\n";)
   return value;
 }
 
-void Packet::update_packet_size()
+void Packet::updatePacketSize()
 {
   memcpy(buffer, &(this->size), sizeof(int));
-  D(cout << "Packet::update_packet_size():" << this->size << "\n";)
+  D(cout << "Packet::updatePacketSize():" << this->size << "\n";)
 }
 
-void Packet::write_int16(short int value)
+void Packet::writeInt16(short int value)
 {
   memcpy(head, &value, sizeof(short int));
   head += sizeof(short int);
   this->size += sizeof(short int);
-  D(cout << "Packet::write_int16():" << value << "\n";)
+  D(cout << "Packet::writeInt16():" << value << "\n";)
 }
 
-void Packet::write_int32(int value)
+void Packet::writeInt32(int value)
 {
   memcpy(head, &value, sizeof(int));
   head += sizeof(int);
   this->size += sizeof(int);
-  D(cout << "Packet::write_int32():" << value << "\n";)
+  D(cout << "Packet::writeInt32():" << value << "\n";)
 }
 
-void Packet::write_int64(long int value)
+void Packet::writeInt64(long int value)
 {
   memcpy(head, &value, sizeof(long int));
   head += sizeof(long int);
   this->size += sizeof(long int);
-  D(cout << "Packet::write_int64():" << value << "\n";)
+  D(cout << "Packet::writeInt64():" << value << "\n";)
 }
 
-void Packet::write_string(string value)
+void Packet::writeString(string value)
 {
   short int length = value.length();
   memcpy(head, &length, sizeof(short int));
@@ -133,5 +144,5 @@ void Packet::write_string(string value)
   memcpy(head, value.c_str(), length);
   head += length;
   this->size += length;
-  D(cout << "Packet::write_string():" << length << ":" << value.c_str() << "\n";)
+  D(cout << "Packet::writeString():" << length << ":" << value.c_str() << "\n";)
 }

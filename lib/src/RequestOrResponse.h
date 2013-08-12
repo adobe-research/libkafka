@@ -37,7 +37,7 @@ class RequestOrResponse
 
     RequestOrResponse();
     RequestOrResponse(unsigned char *buffer);
-    unsigned char* toWireFormat();
+    unsigned char* toWireFormat(bool updateSize = true);
 
     int size();
 

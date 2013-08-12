@@ -36,10 +36,10 @@ MetadataRequest::MetadataRequest(unsigned char *buffer) : Request(buffer)
   D(cout << "--------------MetadataRequest(buffer)\n";)
 
   // Kafka Protocol: string[] topic_name
-  this->topicNameArraySize = this->packet->read_int32();
+  this->topicNameArraySize = this->packet->readInt32();
   this->topicNameArray = new string[this->topicNameArraySize];
   for (int i=0 ; i<this->topicNameArraySize; i++) {
-    this->topicNameArray[i] = this->packet->read_string();
+    this->topicNameArray[i] = this->packet->readString();
   }
 }
 
@@ -52,18 +52,18 @@ MetadataRequest::MetadataRequest(short int apiKey, short int apiVersion, int cor
   this->topicNameArray = topicNameArray;
 }
 
-unsigned char* MetadataRequest::toWireFormat()
+unsigned char* MetadataRequest::toWireFormat(bool updateSize)
 {
-  unsigned char* buffer = this->Request::toWireFormat();
+  unsigned char* buffer = this->Request::toWireFormat(false);
 
   D(cout << "--------------MetadataRequest::toWireFormat()\n";)
 
   // Kafka Protocol: string[] topicName
-  this->packet->write_int32(this->topicNameArraySize);
+  this->packet->writeInt32(this->topicNameArraySize);
   for (int i=0; i<this->topicNameArraySize; i++) {
-    this->packet->write_string(this->topicNameArray[i]);
+    this->packet->writeString(this->topicNameArray[i]);
   }
 
-  this->packet->update_packet_size();
+  if (updateSize) this->packet->updatePacketSize();
   return buffer;
 }
