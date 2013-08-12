@@ -39,5 +39,6 @@ class MetadataRequest : public Request
 
     MetadataRequest(unsigned char *buffer);
     MetadataRequest(short int apiKey, short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]);
+
     unsigned char* toWireFormat(bool updateSize = true);
 };

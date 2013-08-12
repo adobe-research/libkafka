@@ -27,21 +27,21 @@
 
 #include <string>
 #include <Debug.h>
+#include <WireFormatter.h>
 
 using namespace std;
 
 #define DEFAULT_BUFFER_SIZE 1024
 
-class Packet
+class Packet : public WireFormatter
 {
   public:
 
     int size;
 
-    ~Packet();
     Packet(int bufferSize = DEFAULT_BUFFER_SIZE);
     Packet(unsigned char *buffer);
-    unsigned char* toWireFormat(bool updateSize = true);
+    ~Packet();
 
     short int readInt16();
     int readInt32();
@@ -54,6 +54,8 @@ class Packet
     void writeString(string value);
     
     void updatePacketSize();
+
+    unsigned char* toWireFormat(bool updateSize = true);
 
   protected:
 

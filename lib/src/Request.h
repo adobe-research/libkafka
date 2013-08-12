@@ -41,5 +41,6 @@ class Request : public RequestOrResponse
 
     Request(unsigned char *buffer);
     Request(short int apiKey, short int apiVersion, int correlationId, string clientId);
+
     unsigned char* toWireFormat(bool updateSize = true);
 };

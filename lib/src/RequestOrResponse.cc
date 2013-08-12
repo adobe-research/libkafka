@@ -32,20 +32,27 @@
 
 using namespace std;
 
-RequestOrResponse::RequestOrResponse(unsigned char *buffer)
+RequestOrResponse::RequestOrResponse(unsigned char *buffer) : WireFormatter()
 {
-  packet = new Packet(buffer);
+  this->packet = new Packet(buffer);
 
   D(cout << "--------------RequestOrResponse(buffer)\n";)
 
   // Kafka Protocol: int32 size - managed within the Packet class
 }
 
-RequestOrResponse::RequestOrResponse()
+RequestOrResponse::RequestOrResponse() : WireFormatter()
 {
-  packet = new Packet();
+  this->packet = new Packet();
 
   D(cout << "--------------RequestOrResponse(params)\n";)
+}
+
+RequestOrResponse::~RequestOrResponse()
+{
+  delete this->packet;
+
+  D(cout << "--------------~RequestOrResponse()\n";)
 }
 
 unsigned char* RequestOrResponse::toWireFormat(bool updateSize)

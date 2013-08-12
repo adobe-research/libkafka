@@ -33,7 +33,7 @@
 using namespace std;
 
 // Constructor to parse incoming Kafka protocol packet
-Packet::Packet(unsigned char *buffer)
+Packet::Packet(unsigned char *buffer) : WireFormatter()
 {
   D(cout << "--------------Packet(incoming)\n";)
 
@@ -44,7 +44,7 @@ Packet::Packet(unsigned char *buffer)
 }
 
 // Constructor to construct outgoing Kafka protocol packet
-Packet::Packet(int bufferSize)
+Packet::Packet(int bufferSize) : WireFormatter()
 {
   D(cout << "--------------Packet(outgoing)\n";)
   

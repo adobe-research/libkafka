@@ -25,26 +25,16 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#include <string>
+#ifndef WIRE_FORMATTER_H
+#define WIRE_FORMATTER_H
+
 #include <Debug.h>
-#include <Packet.h>
-#include <WireFormatter.h>
 
-using namespace std;
-
-class RequestOrResponse : public WireFormatter
+class WireFormatter
 {
   public:
 
-    RequestOrResponse();
-    RequestOrResponse(unsigned char *buffer);
-    ~RequestOrResponse();
-
-    int size();
-
-    unsigned char* toWireFormat(bool updateSize = true);
-
-  protected:
-
-    Packet *packet;
+    virtual unsigned char* toWireFormat(bool updateSize = true) = 0;
 };
+
+#endif /* WIRE_FORMATTER_H */
