@@ -25,9 +25,13 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#ifndef TOPICMETADATA_H
+#define TOPICMETADATA_H
+
 #include <string>
 #include <Debug.h>
 #include <Packet.h>
+#include <PartitionMetadata.h>
 #include <WireFormatter.h>
 #include <PacketWriter.h>
 
@@ -37,11 +41,23 @@ class TopicMetadata : public WireFormatter, public PacketWriter
 {
   public:
 
-    int topicErrorCode;
+    short int topicErrorCode;
     string topicName;
+    int partitionMetadataArraySize;
+    PartitionMetadata **partitionMetadataArray;
 
     TopicMetadata(Packet *packet);
-    TopicMetadata(int topicErrorCode, string topicName);
+    TopicMetadata(short int topicErrorCode, string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray);
 
     unsigned char* toWireFormat(bool updateSize = true);
+
+  private:
+
+    bool releaseArrays;
 };
+
+ostream& operator<< (ostream& os, const TopicMetadata& b);
+inline bool operator==(const TopicMetadata& lhs, const TopicMetadata& rhs) { return ((lhs.topicErrorCode==rhs.topicErrorCode)&&(lhs.topicName==rhs.topicName)); }
+inline bool operator!=(const TopicMetadata& lhs, const TopicMetadata& rhs) { return !operator==(lhs,rhs); }
+
+#endif /* TOPICMETADATA_H */

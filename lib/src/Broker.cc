@@ -34,10 +34,10 @@ using namespace std;
 
 Broker::Broker(Packet *packet) : WireFormatter(), PacketWriter(packet)
 {
-  D(cout << "--------------Broker(buffer)\n";)
+  D(cout.flush() << "--------------Broker(buffer)\n";)
 
-    // Kafka Protocol: int nodeId
-    this->nodeId = this->packet->readInt32();
+  // Kafka Protocol: int nodeId
+  this->nodeId = this->packet->readInt32();
 
   // Kafka Protocol: kafka string host
   this->host = this->packet->readString();
@@ -48,16 +48,16 @@ Broker::Broker(Packet *packet) : WireFormatter(), PacketWriter(packet)
 
 Broker::Broker(int nodeId, string host, int port) : WireFormatter(), PacketWriter()
 {
-  D(cout << "--------------Broker(params)\n";)
+  D(cout.flush() << "--------------Broker(params)\n";)
 
-    this->nodeId = nodeId;
+  this->nodeId = nodeId;
   this->host = host;
   this->port = port;
 }
 
 unsigned char* Broker::toWireFormat(bool updateSize)
 {
-  D(cout << "--------------Broker::toWireFormat()\n";)
+  D(cout.flush() << "--------------Broker::toWireFormat()\n";)
 
   // Kafka Protocol: int nodeId
   this->packet->writeInt32(this->nodeId);

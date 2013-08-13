@@ -7,7 +7,7 @@ Dependencies
 ============
 
 * Google Test (yum install gtest or port install google-test)
-* Doxygen for C++ API documentation (yum install doxygen or port install doxygen)
+* (optional) Doxygen for C/C++ API documentation (yum install doxygen or port install doxygen)
 
 Installation
 ============

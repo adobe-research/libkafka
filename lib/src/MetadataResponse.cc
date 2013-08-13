@@ -35,20 +35,28 @@ using namespace std;
 
 MetadataResponse::MetadataResponse(unsigned char *buffer) : Response(buffer)
 {
-  D(cout << "--------------MetadataResponse(buffer)\n";)
+  D(cout.flush() << "--------------MetadataResponse(buffer)\n";)
 
-  // Kafka Protocol: Broker[] brokers
+  // Kafka Protocol: Broker[] broker
   this->brokerArraySize = this->packet->readInt32();
   this->brokerArray = new Broker*[this->brokerArraySize];
   for (int i=0; i<this->brokerArraySize; i++) {
     this->brokerArray[i] = new Broker(this->packet);
   }
+
+  // Kafka Protocol: TopicMetadata[] topicMetadata
+  this->topicMetadataArraySize = this->packet->readInt32();
+  this->topicMetadataArray = new TopicMetadata*[this->topicMetadataArraySize];
+  for (int i=0; i<this->topicMetadataArraySize; i++) {
+    this->topicMetadataArray[i] = new TopicMetadata(this->packet);
+  }
+
   this->releaseArrays = true;
 }
 
 MetadataResponse::MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray) : Response(correlationId)
 {
-  D(cout << "--------------MetadataResponse(params)\n";)
+  D(cout.flush() << "--------------MetadataResponse(params)\n";)
 
   // Kafka Protocol: Broker[] brokers
   this->brokerArraySize = brokerArraySize;
@@ -65,6 +73,10 @@ MetadataResponse::~MetadataResponse()
       delete this->brokerArray[i];
     }
     delete this->brokerArray;
+    for (int i=0; i<this->topicMetadataArraySize; i++) {
+      delete this->topicMetadataArray[i];
+    }
+    delete this->topicMetadataArray;
   }
 }
 
@@ -72,13 +84,20 @@ unsigned char* MetadataResponse::toWireFormat(bool updateSize)
 {
   unsigned char* buffer = this->Response::toWireFormat(false);
 
-  D(cout << "--------------MetadataResponse::toWireFormat()\n";)
+  D(cout.flush() << "--------------MetadataResponse::toWireFormat()\n";)
 
-    // Kafka Protocol: Broker[] brokers
-    this->packet->writeInt32(this->brokerArraySize);
+  // Kafka Protocol: Broker[] brokers
+  this->packet->writeInt32(this->brokerArraySize);
   for (int i=0; i<this->brokerArraySize; i++) {
     this->brokerArray[i]->packet = this->packet;
     this->brokerArray[i]->toWireFormat(false);
+  }
+  
+  // Kafka Protocol: TopicMetadata[] topicMetadata
+  this->packet->writeInt32(this->topicMetadataArraySize);
+  for (int i=0; i<this->topicMetadataArraySize; i++) {
+    this->topicMetadataArray[i]->packet = this->packet;
+    this->topicMetadataArray[i]->toWireFormat(false);
   }
 
   if (updateSize) this->packet->updatePacketSize();

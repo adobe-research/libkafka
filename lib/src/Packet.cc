@@ -35,7 +35,7 @@ using namespace std;
 // Constructor to parse incoming Kafka protocol packet
 Packet::Packet(unsigned char *buffer) : WireFormatter()
 {
-  D(cout << "--------------Packet(incoming)\n";)
+  D(cout.flush() << "--------------Packet(incoming)\n";)
 
   this->buffer = buffer;
   this->head = buffer;
@@ -46,27 +46,26 @@ Packet::Packet(unsigned char *buffer) : WireFormatter()
 // Constructor to construct outgoing Kafka protocol packet
 Packet::Packet(int bufferSize) : WireFormatter()
 {
-  D(cout << "--------------Packet(outgoing)\n";)
+  D(cout.flush() << "--------------Packet(outgoing)\n";)
   
   buffer = new unsigned char[bufferSize];
   head = buffer;
   this->size = 0;
+  writeInt32(this->size);
+
   this->releaseBuffer = true;
 }
 
 Packet::~Packet()
 {
-  D(cout << "--------------~Packet()\n";)
+  D(cout.flush() << "--------------~Packet()\n";)
 
   if (releaseBuffer) delete buffer;
 }
 
 unsigned char* Packet::toWireFormat(bool updateSize)
 {
-  D(cout << "--------------Packet::toWireFormat()\n";)
-
-  // Kafka Protocol: int32 size
-  writeInt32(this->size);
+  D(cout.flush() << "--------------Packet::toWireFormat()\n";)
 
   if (updateSize) updatePacketSize();
   return this->buffer;
@@ -76,7 +75,7 @@ short int Packet::readInt16()
 {
   short int value = *(int*)(this->head);
   this->head += sizeof(short int);
-  D(cout << "Packet::readInt16():" << value << "\n";)
+  D(cout.flush() << "Packet::readInt16():" << value << "\n";)
   return value;
 }
 
@@ -84,7 +83,7 @@ int Packet::readInt32()
 {
   int value = *(int*)(this->head);
   this->head += sizeof(int);
-  D(cout << "Packet::readInt32():" << value << "\n";)
+  D(cout.flush() << "Packet::readInt32():" << value << "\n";)
   return value;
 }
 
@@ -92,7 +91,7 @@ long int Packet::readInt64()
 {
   long int value = *(long int*)(this->head);
   this->head += sizeof(long int);
-  D(cout << "Packet::readInt64():" << value << "\n";)
+  D(cout.flush() << "Packet::readInt64():" << value << "\n";)
   return value;
 }
 
@@ -101,14 +100,14 @@ string Packet::readString()
   short int length = readInt16();
   string value = string((const char *)(this->head), length);
   this->head += length;
-  D(cout << "Packet::readString():" << length << ":" << value << "\n";)
+  D(cout.flush() << "Packet::readString():" << length << ":" << value << "\n";)
   return value;
 }
 
 void Packet::updatePacketSize()
 {
   memcpy(buffer, &(this->size), sizeof(int));
-  D(cout << "Packet::updatePacketSize():" << this->size << "\n";)
+  D(cout.flush() << "Packet::updatePacketSize():" << this->size << "\n";)
 }
 
 void Packet::writeInt16(short int value)
@@ -116,7 +115,7 @@ void Packet::writeInt16(short int value)
   memcpy(head, &value, sizeof(short int));
   head += sizeof(short int);
   this->size += sizeof(short int);
-  D(cout << "Packet::writeInt16():" << value << "\n";)
+  D(cout.flush() << "Packet::writeInt16():" << value << "\n";)
 }
 
 void Packet::writeInt32(int value)
@@ -124,7 +123,7 @@ void Packet::writeInt32(int value)
   memcpy(head, &value, sizeof(int));
   head += sizeof(int);
   this->size += sizeof(int);
-  D(cout << "Packet::writeInt32():" << value << "\n";)
+  D(cout.flush() << "Packet::writeInt32():" << value << "\n";)
 }
 
 void Packet::writeInt64(long int value)
@@ -132,7 +131,7 @@ void Packet::writeInt64(long int value)
   memcpy(head, &value, sizeof(long int));
   head += sizeof(long int);
   this->size += sizeof(long int);
-  D(cout << "Packet::writeInt64():" << value << "\n";)
+  D(cout.flush() << "Packet::writeInt64():" << value << "\n";)
 }
 
 void Packet::writeString(string value)
@@ -144,5 +143,11 @@ void Packet::writeString(string value)
   memcpy(head, value.c_str(), length);
   head += length;
   this->size += length;
-  D(cout << "Packet::writeString():" << length << ":" << value.c_str() << "\n";)
+  D(cout.flush() << "Packet::writeString():" << length << ":" << value.c_str() << "\n";)
+}
+
+void Packet::resetForReading()
+{
+  this->head = buffer;
+  this->size = readInt32();
 }

@@ -25,37 +25,42 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#include <iostream>
+#ifndef PARTITIONMETADATA_H
+#define PARTITIONMETADATA_H
 
-#include <Response.h>
+#include <string>
+#include <Debug.h>
+#include <Packet.h>
+#include <PartitionMetadata.h>
+#include <WireFormatter.h>
+#include <PacketWriter.h>
 
 using namespace std;
 
-Response::Response(unsigned char *buffer) : RequestOrResponse(buffer)
+class PartitionMetadata : public WireFormatter, public PacketWriter
 {
-  D(cout.flush() << "--------------Response(buffer)\n";)
- 
-  // Kafka Protocol: int correlationId
-  this->correlationId = this->packet->readInt32();
-}
+  public:
 
-Response::Response(int correlationId) : RequestOrResponse()
-{
-  D(cout.flush() << "--------------Response(params)\n";)
- 
-  // Kafka Protocol: int correlationId
-  this->correlationId = correlationId;
-}
+    short int partitionErrorCode;
+    int partitionId;
+    int leader;
+    int replicaArraySize;
+    int *replicaArray;
+    int isrArraySize;
+    int *isrArray;
 
-unsigned char* Response::toWireFormat(bool updateSize)
-{
-  unsigned char* buffer = this->RequestOrResponse::toWireFormat(false);
+    PartitionMetadata(Packet *packet);
+    PartitionMetadata(short int partitionErrorCode, int partitionId, int leader, int replicaArraySize, int *replicaArray, int isrArraySize, int *isrArray);
 
-  D(cout.flush() << "--------------Response::toWireFormat()\n";)
+    unsigned char* toWireFormat(bool updateSize = true);
 
-  // Kafka Protocol: int correlationId
-  this->packet->writeInt32(this->correlationId);
+  private:
 
-  if (updateSize) this->packet->updatePacketSize();
-  return buffer;
-}
+    bool releaseArrays;
+};
+
+ostream& operator<< (ostream& os, const PartitionMetadata& b);
+inline bool operator==(const PartitionMetadata& lhs, const PartitionMetadata& rhs) { return ((lhs.partitionErrorCode==rhs.partitionErrorCode)&&(lhs.partitionId==rhs.partitionId)&&(lhs.leader==rhs.leader)); }
+inline bool operator!=(const PartitionMetadata& lhs, const PartitionMetadata& rhs) { return !operator==(lhs,rhs); }
+
+#endif /* PARTITIONMETADATA_H */

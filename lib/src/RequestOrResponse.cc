@@ -36,7 +36,7 @@ RequestOrResponse::RequestOrResponse(unsigned char *buffer) : WireFormatter()
 {
   this->packet = new Packet(buffer);
 
-  D(cout << "--------------RequestOrResponse(buffer)\n";)
+  D(cout.flush() << "--------------RequestOrResponse(buffer)\n";)
 
   // Kafka Protocol: int32 size - managed within the Packet class
 }
@@ -45,19 +45,19 @@ RequestOrResponse::RequestOrResponse() : WireFormatter()
 {
   this->packet = new Packet();
 
-  D(cout << "--------------RequestOrResponse(params)\n";)
+  D(cout.flush() << "--------------RequestOrResponse(params)\n";)
 }
 
 RequestOrResponse::~RequestOrResponse()
 {
   delete this->packet;
 
-  D(cout << "--------------~RequestOrResponse()\n";)
+  D(cout.flush() << "--------------~RequestOrResponse()\n";)
 }
 
 unsigned char* RequestOrResponse::toWireFormat(bool updateSize)
 {
-  D(cout << "--------------RequestOrResponse::toWireFormat()\n";)
+  D(cout.flush() << "--------------RequestOrResponse::toWireFormat()\n";)
 
   // Kafka Protocol: int32 size - managed within the Packet class
   unsigned char *buffer = this->packet->toWireFormat(false);

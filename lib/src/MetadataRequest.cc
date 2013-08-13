@@ -33,7 +33,7 @@ using namespace std;
 
 MetadataRequest::MetadataRequest(unsigned char *buffer) : Request(buffer)
 {
-  D(cout << "--------------MetadataRequest(buffer)\n";)
+  D(cout.flush() << "--------------MetadataRequest(buffer)\n";)
 
   // Kafka Protocol: string[] topic_name
   this->topicNameArraySize = this->packet->readInt32();
@@ -45,7 +45,7 @@ MetadataRequest::MetadataRequest(unsigned char *buffer) : Request(buffer)
 
 MetadataRequest::MetadataRequest(short int apiKey, short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]) : Request(apiKey, apiVersion, correlationId, clientId)
 {
-  D(cout << "--------------MetadataRequest(params)\n";)
+  D(cout.flush() << "--------------MetadataRequest(params)\n";)
 
   // Kafka Protocol: string[] topicName
   this->topicNameArraySize = topicNameArraySize;
@@ -56,7 +56,7 @@ unsigned char* MetadataRequest::toWireFormat(bool updateSize)
 {
   unsigned char* buffer = this->Request::toWireFormat(false);
 
-  D(cout << "--------------MetadataRequest::toWireFormat()\n";)
+  D(cout.flush() << "--------------MetadataRequest::toWireFormat()\n";)
 
   // Kafka Protocol: string[] topicName
   this->packet->writeInt32(this->topicNameArraySize);

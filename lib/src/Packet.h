@@ -59,6 +59,7 @@ class Packet : public WireFormatter
     void writeString(string value);
     
     void updatePacketSize();
+    void resetForReading();
 
     unsigned char* toWireFormat(bool updateSize = true);
 
