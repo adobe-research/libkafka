@@ -25,23 +25,20 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#include <string>
+#ifndef PACKET_WRITER_H
+#define PACKET_WRITER_H
+
 #include <Debug.h>
 #include <Packet.h>
-#include <WireFormatter.h>
-#include <PacketWriter.h>
 
-using namespace std;
-
-class RequestOrResponse : public WireFormatter, public PacketWriter
+class PacketWriter
 {
   public:
 
-    RequestOrResponse();
-    RequestOrResponse(unsigned char *buffer);
-    ~RequestOrResponse();
-
-    int size();
-
-    unsigned char* toWireFormat(bool updateSize = true);
+    PacketWriter() { }
+    PacketWriter(Packet *packet) { this->packet = packet; }
+    
+    Packet *packet;
 };
+
+#endif /* PACKET_WRITER_H */

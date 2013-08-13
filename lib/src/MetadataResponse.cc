@@ -25,84 +25,62 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifdef __cpp
-extern "C" {
-#endif
+#include <iostream>
+#include <vector>
 
-#pragma pack(push, 1)
+#include <MetadataResponse.h>
+#include <Broker.h>
 
-struct ProtocolString
+using namespace std;
+
+MetadataResponse::MetadataResponse(unsigned char *buffer) : Response(buffer)
 {
-  short int length;
-  char byteArray[];
-};
+  D(cout << "--------------MetadataResponse(buffer)\n";)
 
-template <typename T>
-struct ProtocolArray
-{
-  int length;
-  T typeArray[];
-};
-
-struct RequestOrResponse
-{
-  int size;
-};
-
-struct RequestMessage : RequestOrResponse
-{
-  short int apiKey;
-  short int apiVersion;
-  int correlationId;
-  ProtocolString clientId;
-};
-
-struct ResponseMessage : RequestOrResponse
-{
-  int correlationId;
-};
-
-struct MetaDataRequest : RequestMessage
-{
-  ProtocolArray<ProtocolString> topicNameArray;
-};
-typedef struct MetaDataRequest metadata_request;
-
-struct Broker
-{
-  int nodeId;
-  ProtocolString host;
-  int port;
-};
-
-struct PartitionMetadata
-{
-  short int partitionErrorCode;
-  int partitionId;
-  int leader;
-  ProtocolArray<int> replicaArray;
-  ProtocolArray<int> isrArray;
-};
-
-struct TopicMetadata
-{
-  short int topicErrorCode;
-  ProtocolString topicName;
-  ProtocolArray<PartitionMetadata> partitionMetadataArray;
-};
-
-struct MetaDataResponse : ResponseMessage
-{
-  ProtocolArray<Broker> brokerArray;
-  ProtocolArray<TopicMetadata> topicMetadataArray;
-};
-typedef struct MetaDataResponse metadata_response;
-
-#pragma pack(pop)
-
-// C API functions
-metadata_request *create_metadata_request(char *topic_name);
-
-#ifdef __cpp
+  // Kafka Protocol: Broker[] brokers
+  this->brokerArraySize = this->packet->readInt32();
+  this->brokerArray = new Broker*[this->brokerArraySize];
+  for (int i=0; i<this->brokerArraySize; i++) {
+    this->brokerArray[i] = new Broker(this->packet);
+  }
+  this->releaseArrays = true;
 }
-#endif
+
+MetadataResponse::MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray) : Response(correlationId)
+{
+  D(cout << "--------------MetadataResponse(params)\n";)
+
+  // Kafka Protocol: Broker[] brokers
+  this->brokerArraySize = brokerArraySize;
+  this->brokerArray = brokerArray;
+  this->topicMetadataArraySize = topicMetadataArraySize;
+  this->topicMetadataArray = topicMetadataArray;
+  this->releaseArrays = false;
+}
+
+MetadataResponse::~MetadataResponse()
+{
+  if (releaseArrays) {
+    for (int i=0; i<this->brokerArraySize; i++) {
+      delete this->brokerArray[i];
+    }
+    delete this->brokerArray;
+  }
+}
+
+unsigned char* MetadataResponse::toWireFormat(bool updateSize)
+{
+  unsigned char* buffer = this->Response::toWireFormat(false);
+
+  D(cout << "--------------MetadataResponse::toWireFormat()\n";)
+
+    // Kafka Protocol: Broker[] brokers
+    this->packet->writeInt32(this->brokerArraySize);
+  for (int i=0; i<this->brokerArraySize; i++) {
+    this->brokerArray[i]->packet = this->packet;
+    this->brokerArray[i]->toWireFormat(false);
+  }
+
+  if (updateSize) this->packet->updatePacketSize();
+  return buffer;
+}

@@ -26,22 +26,54 @@
 //////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <Debug.h>
-#include <Packet.h>
-#include <WireFormatter.h>
-#include <PacketWriter.h>
+#include <iostream>
+
+#include <Broker.h>
 
 using namespace std;
 
-class RequestOrResponse : public WireFormatter, public PacketWriter
+Broker::Broker(Packet *packet) : WireFormatter(), PacketWriter(packet)
 {
-  public:
+  D(cout << "--------------Broker(buffer)\n";)
 
-    RequestOrResponse();
-    RequestOrResponse(unsigned char *buffer);
-    ~RequestOrResponse();
+    // Kafka Protocol: int nodeId
+    this->nodeId = this->packet->readInt32();
 
-    int size();
+  // Kafka Protocol: kafka string host
+  this->host = this->packet->readString();
 
-    unsigned char* toWireFormat(bool updateSize = true);
-};
+  // Kafka Protocol: int port
+  this->port = this->packet->readInt32();
+}
+
+Broker::Broker(int nodeId, string host, int port) : WireFormatter(), PacketWriter()
+{
+  D(cout << "--------------Broker(params)\n";)
+
+    this->nodeId = nodeId;
+  this->host = host;
+  this->port = port;
+}
+
+unsigned char* Broker::toWireFormat(bool updateSize)
+{
+  D(cout << "--------------Broker::toWireFormat()\n";)
+
+  // Kafka Protocol: int nodeId
+  this->packet->writeInt32(this->nodeId);
+
+  // Kafka Protocol: kafka string host
+  this->packet->writeString(this->host);
+
+  // Kafka Protocol: int port
+  this->packet->writeInt32(this->port);
+
+  if (updateSize) this->packet->updatePacketSize();
+  return this->packet->getBuffer();
+}
+
+ostream& operator<< (ostream& os, const Broker& b)
+{
+  os << b.nodeId << ":" << b.host << ":" << b.port << "\n";
+  return os;
+}

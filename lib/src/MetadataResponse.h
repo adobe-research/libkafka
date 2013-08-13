@@ -25,6 +25,9 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#ifndef METADATARESPONSE_H
+#define METADATARESPONSE_H
+
 #include <string>
 #include <Response.h>
 #include <Broker.h>
@@ -37,13 +40,19 @@ class MetadataResponse : public Response
   public:
 
     int brokerArraySize;
-    Broker *brokerArray;
-
+    Broker **brokerArray;
     int topicMetadataArraySize;
-    TopicMetadata *topicMetadataArray;
+    TopicMetadata **topicMetadataArray;
 
     MetadataResponse(unsigned char *buffer);
-    MetadataResponse(int correlationId, int brokerArraySize, Broker brokerArray[], int topicMetadataArraySize, TopicMetadata topicMetadataArray[]);
+    MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray);
+    ~MetadataResponse();
 
     unsigned char* toWireFormat(bool updateSize = true);
+
+  private:
+
+    bool releaseArrays;
 };
+
+#endif /* METADATARESPONSE_H */

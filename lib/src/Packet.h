@@ -25,6 +25,9 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#ifndef PACKET_H
+#define PACKET_H
+
 #include <string>
 #include <Debug.h>
 #include <WireFormatter.h>
@@ -42,6 +45,8 @@ class Packet : public WireFormatter
     Packet(int bufferSize = DEFAULT_BUFFER_SIZE);
     Packet(unsigned char *buffer);
     ~Packet();
+
+    unsigned char *getBuffer() { return this->buffer; }
 
     short int readInt16();
     int readInt32();
@@ -66,3 +71,5 @@ class Packet : public WireFormatter
 
     bool releaseBuffer;
 };
+
+#endif /* PACKET_H */

@@ -25,6 +25,9 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#ifndef BROKER_H
+#define BROKER_H
+
 #include <string>
 #include <Debug.h>
 #include <Packet.h>
@@ -33,15 +36,23 @@
 
 using namespace std;
 
-class RequestOrResponse : public WireFormatter, public PacketWriter
+class Broker : public WireFormatter, public PacketWriter
 {
   public:
 
-    RequestOrResponse();
-    RequestOrResponse(unsigned char *buffer);
-    ~RequestOrResponse();
+    int nodeId;
+    string host;
+    int port;
 
-    int size();
+    Broker(Packet *packet);
+    Broker(int nodeId, string host, int port);
 
     unsigned char* toWireFormat(bool updateSize = true);
+
 };
+    
+ostream& operator<< (ostream& os, const Broker& b);
+inline bool operator==(const Broker& lhs, const Broker& rhs) { return ((lhs.nodeId==rhs.nodeId)&&(lhs.port==rhs.port)&&(lhs.host==rhs.host)); }
+inline bool operator!=(const Broker& lhs, const Broker& rhs) { return !operator==(lhs,rhs); }
+
+#endif /* BROKER_H */

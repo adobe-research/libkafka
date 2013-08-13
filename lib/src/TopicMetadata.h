@@ -33,15 +33,15 @@
 
 using namespace std;
 
-class RequestOrResponse : public WireFormatter, public PacketWriter
+class TopicMetadata : public WireFormatter, public PacketWriter
 {
   public:
 
-    RequestOrResponse();
-    RequestOrResponse(unsigned char *buffer);
-    ~RequestOrResponse();
+    int topicErrorCode;
+    string topicName;
 
-    int size();
+    TopicMetadata(Packet *packet);
+    TopicMetadata(int topicErrorCode, string topicName);
 
     unsigned char* toWireFormat(bool updateSize = true);
 };
