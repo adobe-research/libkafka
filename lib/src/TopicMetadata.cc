@@ -64,7 +64,7 @@ TopicMetadata::TopicMetadata(short int topicErrorCode, string topicName, int par
   this->releaseArrays = false;
 }
 
-unsigned char* TopicMetadata::toWireFormat(bool updateSize)
+unsigned char* TopicMetadata::toWireFormat(bool updatePacketSize)
 {
   D(cout.flush() << "--------------TopicMetadata::toWireFormat()\n";)
   
@@ -81,8 +81,25 @@ unsigned char* TopicMetadata::toWireFormat(bool updateSize)
     this->partitionMetadataArray[i]->toWireFormat(false);
   }
 
-  if (updateSize) this->packet->updatePacketSize();
+  if (updatePacketSize) this->packet->updatePacketSize();
   return this->packet->getBuffer();
+}
+
+int TopicMetadata::getWireFormatSize(bool includePacketSize)
+{
+  D(cout.flush() << "--------------TopicMetadata::getWireFormatSize()\n";)
+  
+  // Packet.size
+  // topicErrorCode + topicName + partitionMetadataArraySize
+  // partitionMetadataArraySize*PartitionMetadata
+
+  int size = 0;
+  if (includePacketSize) size += sizeof(int);
+  size += sizeof(short int) + sizeof(short int) + this->topicName.length() + sizeof(int);
+  for (int i=0; i<partitionMetadataArraySize; i++) {
+    size += partitionMetadataArray[i]->getWireFormatSize(false);
+  }
+  return size;
 }
 
 ostream& operator<< (ostream& os, const TopicMetadata& tm)

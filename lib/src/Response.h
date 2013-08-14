@@ -25,6 +25,9 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#ifndef RESPONSE_H
+#define RESPONSE_H
+
 #include <string>
 #include <RequestOrResponse.h>
 
@@ -39,5 +42,8 @@ class Response : public RequestOrResponse
     Response(unsigned char *buffer);
     Response(int correlationId);
 
-    unsigned char* toWireFormat(bool updateSize = true);
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = true);
 };
+
+#endif

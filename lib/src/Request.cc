@@ -58,7 +58,7 @@ Request::Request(short int apiKey, short int apiVersion, int correlationId, stri
   this->clientId = clientId;
 }
 
-unsigned char* Request::toWireFormat(bool updateSize)
+unsigned char* Request::toWireFormat(bool updatePacketSize)
 {
   unsigned char* buffer = this->RequestOrResponse::toWireFormat(false);
 
@@ -76,6 +76,18 @@ unsigned char* Request::toWireFormat(bool updateSize)
   // Kafka Protocol: kafka string clientId
   this->packet->writeString(this->clientId);
 
-  if (updateSize) this->packet->updatePacketSize();
+  if (updatePacketSize) this->packet->updatePacketSize();
   return buffer;
+}
+
+int Request::getWireFormatSize(bool includePacketSize)
+{
+  D(cout.flush() << "--------------Request::getWireFormatSize()\n";)
+
+  // RequestOrResponse.getWireFormatSize
+  // apiKey + apiVersion + correlationId + clientId
+
+  int size = RequestOrResponse::getWireFormatSize(includePacketSize);
+  size += sizeof(short int) + sizeof(short int) + sizeof(int) + sizeof(short int) + clientId.length();
+  return size;
 }

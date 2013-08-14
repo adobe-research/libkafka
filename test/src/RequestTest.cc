@@ -15,15 +15,12 @@ namespace {
   };
 
   TEST_F(RequestTest, Constructor) {
-    short int apiKey = 1;
-    short int apiVersion = 2;
-    int correlationId = 3;
-    string clientId = "testClientId";
 
     Request *r1 = new Request(apiKey, apiVersion, correlationId, clientId);
     EXPECT_NE(r1, (void*)0);
     unsigned char * message = r1->toWireFormat();
-    EXPECT_EQ(r1->size(), sizeof(int) + sizeof(short int) + sizeof(short int) + sizeof(int) + sizeof(short int) + clientId.length());
+    int size = r1->getWireFormatSize(true);
+    EXPECT_EQ(r1->size(), size);
 
     Request *r2 = new Request(message);
     EXPECT_NE(r2, (void*)0);

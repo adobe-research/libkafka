@@ -17,7 +17,8 @@ namespace {
     RequestOrResponse *r1 = new RequestOrResponse();
     EXPECT_NE(r1, (void*)0);
     unsigned char * message = r1->toWireFormat();
-    EXPECT_EQ(r1->size(), sizeof(int));
+    int size = r1->getWireFormatSize(true);
+    EXPECT_EQ(r1->size(), size);
 
     RequestOrResponse *r2 = new RequestOrResponse(message);
     EXPECT_NE(r2, (void*)0);

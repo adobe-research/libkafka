@@ -55,7 +55,7 @@ Broker::Broker(int nodeId, string host, int port) : WireFormatter(), PacketWrite
   this->port = port;
 }
 
-unsigned char* Broker::toWireFormat(bool updateSize)
+unsigned char* Broker::toWireFormat(bool updatePacketSize)
 {
   D(cout.flush() << "--------------Broker::toWireFormat()\n";)
 
@@ -68,8 +68,21 @@ unsigned char* Broker::toWireFormat(bool updateSize)
   // Kafka Protocol: int port
   this->packet->writeInt32(this->port);
 
-  if (updateSize) this->packet->updatePacketSize();
+  if (updatePacketSize) this->packet->updatePacketSize();
   return this->packet->getBuffer();
+}
+
+int Broker::getWireFormatSize(bool includePacketSize)
+{
+  D(cout.flush() << "--------------Broker::getWireFormatSize()\n";)
+
+  // Packet.size
+  // nodeId + host + port
+
+  int size = 0;
+  if (includePacketSize) size += sizeof(int);
+  size += sizeof(int) + sizeof(short int) + this->host.length() + sizeof(int);
+  return size;
 }
 
 ostream& operator<< (ostream& os, const Broker& b)

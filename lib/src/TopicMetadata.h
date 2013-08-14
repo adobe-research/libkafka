@@ -49,7 +49,8 @@ class TopicMetadata : public WireFormatter, public PacketWriter
     TopicMetadata(Packet *packet);
     TopicMetadata(short int topicErrorCode, string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray);
 
-    unsigned char* toWireFormat(bool updateSize = true);
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = false);
 
   private:
 

@@ -47,7 +47,7 @@ Packet::Packet(unsigned char *buffer) : WireFormatter()
 Packet::Packet(int bufferSize) : WireFormatter()
 {
   D(cout.flush() << "--------------Packet(outgoing)\n";)
-  
+
   buffer = new unsigned char[bufferSize];
   head = buffer;
   this->size = 0;
@@ -56,18 +56,29 @@ Packet::Packet(int bufferSize) : WireFormatter()
   this->releaseBuffer = true;
 }
 
+int Packet::getWireFormatSize(bool includeSize)
+{
+  D(cout.flush() << "--------------Packet::getWireFormatSize()\n";)
+
+  // Packet.size
+
+  int size = 0;
+  if (includeSize) size += sizeof(int);
+  return size;
+}
+
 Packet::~Packet()
 {
   D(cout.flush() << "--------------~Packet()\n";)
 
-  if (releaseBuffer) delete buffer;
+    if (releaseBuffer) delete buffer;
 }
 
 unsigned char* Packet::toWireFormat(bool updateSize)
 {
   D(cout.flush() << "--------------Packet::toWireFormat()\n";)
 
-  if (updateSize) updatePacketSize();
+    if (updateSize) updatePacketSize();
   return this->buffer;
 }
 
@@ -76,7 +87,7 @@ short int Packet::readInt16()
   short int value = *(int*)(this->head);
   this->head += sizeof(short int);
   D(cout.flush() << "Packet::readInt16():" << value << "\n";)
-  return value;
+    return value;
 }
 
 int Packet::readInt32()
@@ -84,7 +95,7 @@ int Packet::readInt32()
   int value = *(int*)(this->head);
   this->head += sizeof(int);
   D(cout.flush() << "Packet::readInt32():" << value << "\n";)
-  return value;
+    return value;
 }
 
 long int Packet::readInt64()
@@ -92,7 +103,7 @@ long int Packet::readInt64()
   long int value = *(long int*)(this->head);
   this->head += sizeof(long int);
   D(cout.flush() << "Packet::readInt64():" << value << "\n";)
-  return value;
+    return value;
 }
 
 string Packet::readString()
@@ -101,7 +112,7 @@ string Packet::readString()
   string value = string((const char *)(this->head), length);
   this->head += length;
   D(cout.flush() << "Packet::readString():" << length << ":" << value << "\n";)
-  return value;
+    return value;
 }
 
 void Packet::updatePacketSize()

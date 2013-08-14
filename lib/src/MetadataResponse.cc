@@ -80,7 +80,7 @@ MetadataResponse::~MetadataResponse()
   }
 }
 
-unsigned char* MetadataResponse::toWireFormat(bool updateSize)
+unsigned char* MetadataResponse::toWireFormat(bool updatePacketSize)
 {
   unsigned char* buffer = this->Response::toWireFormat(false);
 
@@ -100,6 +100,26 @@ unsigned char* MetadataResponse::toWireFormat(bool updateSize)
     this->topicMetadataArray[i]->toWireFormat(false);
   }
 
-  if (updateSize) this->packet->updatePacketSize();
+  if (updatePacketSize) this->packet->updatePacketSize();
   return buffer;
+}
+
+int MetadataResponse::getWireFormatSize(bool includePacketSize)
+{
+  D(cout.flush() << "--------------MetadataResponse::getWireFormatSize()\n";)
+
+  // Response.getWireFormatSize
+  // brokerArraySize + brokerArraySize*sizeof(Broker)
+  // topicMetadataArraySize + topicMetadataArraySize*sizeof(TopicMetadata)
+
+  int size = Response::getWireFormatSize(includePacketSize);
+  size += sizeof(int);
+  for (int i=0; i<brokerArraySize; i++) {
+    size += brokerArray[i]->getWireFormatSize(false);
+  }
+  size += sizeof(int);
+  for (int i=0; i<topicMetadataArraySize; i++) {
+    size += topicMetadataArray[i]->getWireFormatSize(false);
+  }
+  return size;
 }

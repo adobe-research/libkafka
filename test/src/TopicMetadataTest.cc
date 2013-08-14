@@ -21,7 +21,7 @@ namespace {
     EXPECT_NE(tm1, (void*)0);
     tm1->packet = new Packet();
     unsigned char * message = tm1->toWireFormat();
-    int size = getTopicMetadataPacketSize(tm1->topicName);
+    int size = tm1->getWireFormatSize(true);
     EXPECT_EQ(tm1->packet->size, size);
 
     tm1->packet->resetForReading();

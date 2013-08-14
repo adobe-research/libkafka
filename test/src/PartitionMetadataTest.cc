@@ -20,7 +20,7 @@ namespace {
     EXPECT_NE(pm1, (void*)0);
     pm1->packet = new Packet();
     unsigned char * message = pm1->toWireFormat();
-    int size = getPartitionMetadataPacketSize();
+    int size = pm1->getWireFormatSize(true);
     EXPECT_EQ(pm1->packet->size, size);
 
     pm1->packet->resetForReading();

@@ -47,7 +47,7 @@ Response::Response(int correlationId) : RequestOrResponse()
   this->correlationId = correlationId;
 }
 
-unsigned char* Response::toWireFormat(bool updateSize)
+unsigned char* Response::toWireFormat(bool updatePacketSize)
 {
   unsigned char* buffer = this->RequestOrResponse::toWireFormat(false);
 
@@ -56,6 +56,18 @@ unsigned char* Response::toWireFormat(bool updateSize)
   // Kafka Protocol: int correlationId
   this->packet->writeInt32(this->correlationId);
 
-  if (updateSize) this->packet->updatePacketSize();
+  if (updatePacketSize) this->packet->updatePacketSize();
   return buffer;
+}
+
+int Response::getWireFormatSize(bool includePacketSize)
+{
+  D(cout.flush() << "--------------Response::getWireFormatSize()\n";)
+
+  // RequestOrResponse.getWireFormatSize
+  // correlationId
+
+  int size = RequestOrResponse::getWireFormatSize(includePacketSize);
+  size += sizeof(int);
+  return size;
 }

@@ -47,8 +47,8 @@ class Broker : public WireFormatter, public PacketWriter
     Broker(Packet *packet);
     Broker(int nodeId, string host, int port);
 
-    unsigned char* toWireFormat(bool updateSize = true);
-
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = false);
 };
     
 ostream& operator<< (ostream& os, const Broker& b);

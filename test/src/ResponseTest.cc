@@ -15,13 +15,12 @@ namespace {
   };
 
   TEST_F(ResponseTest, Constructor) {
-    int size = 21;
-    int correlationId = 3;
 
     Response *r1 = new Response(correlationId);
     EXPECT_NE(r1, (void*)0);
     unsigned char * message = r1->toWireFormat();
-    EXPECT_EQ(r1->size(), sizeof(int) + sizeof(int));
+    int size = r1->getWireFormatSize(true);
+    EXPECT_EQ(r1->size(), size);
 
     Response *r2 = new Response(message);
     EXPECT_NE(r2, (void*)0);

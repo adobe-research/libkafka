@@ -48,7 +48,8 @@ class MetadataResponse : public Response
     MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray);
     ~MetadataResponse();
 
-    unsigned char* toWireFormat(bool updateSize = true);
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = true);
 
   private:
 

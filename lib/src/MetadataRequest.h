@@ -25,6 +25,9 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#ifndef METADATAREQUEST_H
+#define METADATAREQUEST_H
+
 #include <string>
 #include <Request.h>
 
@@ -40,5 +43,8 @@ class MetadataRequest : public Request
     MetadataRequest(unsigned char *buffer);
     MetadataRequest(short int apiKey, short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]);
 
-    unsigned char* toWireFormat(bool updateSize = true);
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = true);
 };
+
+#endif

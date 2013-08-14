@@ -15,15 +15,12 @@ namespace {
   };
 
   TEST_F(BrokerTest, Constructor) {
-    int nodeId = 1;
-    string host = string("testhost");
-    int port = 8000;
 
-    Broker *b1 = new Broker(nodeId, host, port);
+    Broker *b1 = createBroker();
     EXPECT_NE(b1, (void*)0);
     b1->packet = new Packet();
     unsigned char * message = b1->toWireFormat();
-    int size = sizeof(int) + sizeof(int) + sizeof(int) + sizeof(short int) + host.length();
+    int size = b1->getWireFormatSize(true);
     EXPECT_EQ(b1->packet->size, size);
 
     b1->packet->resetForReading();

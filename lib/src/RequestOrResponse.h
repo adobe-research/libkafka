@@ -25,6 +25,9 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
+#ifndef REQUESTORRESPONSE_H
+#define REQUESTORRESPONSE_H
+
 #include <string>
 #include <Debug.h>
 #include <Packet.h>
@@ -43,5 +46,8 @@ class RequestOrResponse : public WireFormatter, public PacketWriter
 
     int size();
 
-    unsigned char* toWireFormat(bool updateSize = true);
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = true);
 };
+
+#endif

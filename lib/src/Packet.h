@@ -62,6 +62,7 @@ class Packet : public WireFormatter
     void resetForReading();
 
     unsigned char* toWireFormat(bool updateSize = true);
+    int getWireFormatSize(bool includeSize = false);
 
   protected:
 

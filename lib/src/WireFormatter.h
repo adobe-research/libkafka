@@ -34,7 +34,8 @@ class WireFormatter
 {
   public:
 
-    virtual unsigned char* toWireFormat(bool updateSize = true) = 0;
+    virtual unsigned char* toWireFormat(bool updatePacketSize = true) = 0;
+    virtual int getWireFormatSize(bool includePacketSize = true) = 0;
 };
 
 #endif /* WIRE_FORMATTER_H */

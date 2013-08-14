@@ -16,6 +16,13 @@ int main(int argc, char **argv)
   return RUN_ALL_TESTS();
 }
 
+// Broker
+
+Broker* BaseTest::createBroker(string host)
+{
+  return new Broker(nodeId, host, port);
+}
+
 // TopicMetadata
 
 const PartitionMetadata* BaseTest::partitionMetadataArray[3];
@@ -30,21 +37,6 @@ TopicMetadata* BaseTest::createTopicMetadata(string topicName)
   return new TopicMetadata(topicErrorCode, topicName, partitionMetadataArraySize, (PartitionMetadata**)partitionMetadataArray);
 }
 
-int BaseTest::getTopicMetadataPacketSize(string topicName, bool includePacketSize)
-{
-  // Packet.size 
-  // topicErrorCode + topicName + partitionMetadataArraySize
-  // partitionMetadataArraySize*PartitionMetadata
-
-  int size = 0;
-  if (includePacketSize) size += sizeof(int);
-  size += sizeof(short int) + sizeof(short int) + topicName.length() + sizeof(int);
-  for (int i=0; i<partitionMetadataArraySize; i++) {
-    size += getPartitionMetadataPacketSize(false);
-  }
-  return size;
-}
-
 // PartitionMetadata
 
 const int BaseTest::replicaArray[3] = { 1, 2, 3 };
@@ -55,17 +47,36 @@ PartitionMetadata* BaseTest::createPartitionMetadata(int partitionId)
   return new PartitionMetadata(partitionErrorCode, partitionId, leader, replicaArraySize, (int*)replicaArray, isrArraySize, (int*)isrArray);
 }
 
-int BaseTest::getPartitionMetadataPacketSize(bool includePacketSize)
-{
-  // Packet.size 
-  // partitionErrorCode + partitionId + leader
-  // replicaArraySize + replicaArraySize*int32
-  // isrArraySize + isrArraySize*int32
+// MetadataResponse
 
-  int size = 0;
-  if (includePacketSize) size += sizeof(int);
-  size += sizeof(short int) + sizeof(int) + sizeof(int);
-  size += sizeof(int) + (replicaArraySize * sizeof(int));
-  size += sizeof(int) + (isrArraySize * sizeof(int));
-  return size;
+const Broker* BaseTest::brokerArray[3];
+const TopicMetadata* BaseTest::topicMetadataArray[3];
+
+MetadataResponse* BaseTest::createMetadataResponse()
+{
+  for (int i=0; i<brokerArraySize; i++) {
+    stringstream sstm;
+    sstm << "host" << i;
+    string host = sstm.str();
+    brokerArray[i] = createBroker(host);
+  }
+  
+  for (int i=0; i<topicMetadataArraySize; i++) {
+    stringstream sstm;
+    sstm << "topic" << i;
+    string topic = sstm.str();
+    topicMetadataArray[i] = createTopicMetadata(topic);
+  }
+
+  return new MetadataResponse(correlationId, brokerArraySize, (Broker**)brokerArray, topicMetadataArraySize, (TopicMetadata**)topicMetadataArray);
+}
+
+// MetadataRequest
+
+const string BaseTest::topicNameArray[3] = { string("testTopic1"), string("testTopic2"), string("testTopic3") };
+const string BaseTest::clientId = string("testClientId");
+
+MetadataRequest* BaseTest::createMetadataRequest()
+{
+  return new MetadataRequest(apiKey, apiVersion, correlationId, clientId, topicNameArraySize, (string*)topicNameArray);
 }

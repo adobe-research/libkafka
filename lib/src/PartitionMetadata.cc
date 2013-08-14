@@ -76,7 +76,7 @@ PartitionMetadata::PartitionMetadata(short int partitionErrorCode, int partition
   this->releaseArrays = false;
 }
 
-unsigned char* PartitionMetadata::toWireFormat(bool updateSize)
+unsigned char* PartitionMetadata::toWireFormat(bool updatePacketSize)
 {
   D(cout.flush() << "--------------PartitionMetadata::toWireFormat()\n";)
   
@@ -101,8 +101,25 @@ unsigned char* PartitionMetadata::toWireFormat(bool updateSize)
     this->packet->writeInt32(this->isrArray[i]);
   }
 
-  if (updateSize) this->packet->updatePacketSize();
+  if (updatePacketSize) this->packet->updatePacketSize();
   return this->packet->getBuffer();
+}
+
+int PartitionMetadata::getWireFormatSize(bool includePacketSize)
+{
+  D(cout.flush() << "--------------PartitionMetadata::getWireFormatSize()\n";)
+  
+  // Packet.size
+  // partitionErrorCode + partitionId + leader
+  // replicaArraySize + replicaArraySize*int32
+  // isrArraySize + isrArraySize*int32
+
+  int size = 0;
+  if (includePacketSize) size += sizeof(int);
+  size += sizeof(short int) + sizeof(int) + sizeof(int);
+  size += sizeof(int) + (replicaArraySize * sizeof(int));
+  size += sizeof(int) + (isrArraySize * sizeof(int));
+  return size;
 }
 
 ostream& operator<< (ostream& os, const PartitionMetadata& pm)

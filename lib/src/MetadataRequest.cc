@@ -52,7 +52,7 @@ MetadataRequest::MetadataRequest(short int apiKey, short int apiVersion, int cor
   this->topicNameArray = topicNameArray;
 }
 
-unsigned char* MetadataRequest::toWireFormat(bool updateSize)
+unsigned char* MetadataRequest::toWireFormat(bool updatePacketSize)
 {
   unsigned char* buffer = this->Request::toWireFormat(false);
 
@@ -64,6 +64,21 @@ unsigned char* MetadataRequest::toWireFormat(bool updateSize)
     this->packet->writeString(this->topicNameArray[i]);
   }
 
-  if (updateSize) this->packet->updatePacketSize();
+  if (updatePacketSize) this->packet->updatePacketSize();
   return buffer;
+}
+
+int MetadataRequest::getWireFormatSize(bool includePacketSize)
+{
+  D(cout.flush() << "--------------MetadataRequest::getWireFormatSize()\n";)
+
+  // Request.getWireFormatSize
+  // string[] topicName
+
+  int size = Request::getWireFormatSize(includePacketSize);
+  size += sizeof(int);
+  for (int i=0; i<topicNameArraySize; i++) {
+    size += sizeof(short int) + topicNameArray[i].length();
+  }
+  return size;
 }
