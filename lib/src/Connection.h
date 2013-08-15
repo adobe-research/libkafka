@@ -25,15 +25,41 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef CONNECTION_H
+#define CONNECTION_H
 
-#ifdef DEBUG 
-#define D(x) x
-#else 
-#define D(x)
-#endif
+#include <iostream>
+#include <string>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <Debug.h>
 
-#define E(x) cerr.flush() << x
+using namespace std;
 
-#endif /* DEBUG_H */
+class Connection
+{
+  public:
+
+    static const int SOCKET_UNINITIALIZED = -1;
+    static const int OPEN_CONNECTION_ERROR = -1;
+
+    Connection(string host, int port);
+    ~Connection();
+    
+    int openConnection();
+    void closeConnection();
+
+    string host;
+    int port;
+
+  protected:
+
+    int socketFd;
+    string portString;
+    struct addrinfo host_info;
+    struct addrinfo *host_info_list;
+};
+
+ostream& operator<< (ostream& os, const Connection& c);
+
+#endif /* CONNECTION_H */

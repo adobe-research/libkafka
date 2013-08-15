@@ -25,15 +25,13 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef UTIL_H
+#define UTIL_H
 
-#ifdef DEBUG 
-#define D(x) x
-#else 
-#define D(x)
-#endif
+#include <string>
 
-#define E(x) cerr.flush() << x
+using namespace std;
 
-#endif /* DEBUG_H */
+string intToString(int i);
+
+#endif /* UTIL_H */

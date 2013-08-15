@@ -25,15 +25,15 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#include <string>
+#include <sstream>
+#include <Util.h>
 
-#ifdef DEBUG 
-#define D(x) x
-#else 
-#define D(x)
-#endif
+using namespace std;
 
-#define E(x) cerr.flush() << x
-
-#endif /* DEBUG_H */
+string intToString(int i)
+{
+  ostringstream ss;
+  ss << i;
+  return ss.str();
+}
