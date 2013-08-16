@@ -41,13 +41,15 @@ class RequestOrResponse : public WireFormatter, public PacketWriter
   public:
 
     RequestOrResponse();
-    RequestOrResponse(unsigned char *buffer);
+    RequestOrResponse(unsigned char *buffer, bool releaseBuffer = false);
     ~RequestOrResponse();
 
-    int size();
+    int size() const;
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
 };
+
+ostream& operator<< (ostream& os, const RequestOrResponse& r);
 
 #endif

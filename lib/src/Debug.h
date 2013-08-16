@@ -34,6 +34,6 @@
 #define D(x)
 #endif
 
-#define E(x) cerr.flush() << x
+#define E(x) cout.flush() << x
 
 #endif /* DEBUG_H */

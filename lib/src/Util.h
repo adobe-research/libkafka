@@ -34,4 +34,9 @@ using namespace std;
 
 string intToString(int i);
 
+#ifndef ntohll
+#define ntohll(x) ( ( (uint64_t)(ntohl( (uint32_t)((x << 32) >> 32) )) << 32) | ntohl( ((uint32_t)(x >> 32)) ) )                                        
+#define htonll(x) ntohll(x)
+#endif
+
 #endif /* UTIL_H */

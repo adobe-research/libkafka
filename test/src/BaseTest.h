@@ -6,6 +6,7 @@
 #include <PartitionMetadata.h>
 #include <MetadataRequest.h>
 #include <MetadataResponse.h>
+#include <ApiConstants.h>
 
 using namespace std;
 
@@ -18,13 +19,13 @@ class BaseTest : public ::testing::Test {
     virtual void TearDown();
 
     // Broker
-    const static int nodeId = 1000;
+    const static int nodeId = 2;
     const static int port = 8000;
     Broker *createBroker(string host = string("test_host"));
 
     // PartitionMetadata
     const static short int partitionErrorCode = 2;
-    const static int leader = 21;
+    const static int leader = 2;
     const static int replicaArraySize = 3;
     const static int replicaArray[];
     const static int isrArraySize = 3;
@@ -38,7 +39,7 @@ class BaseTest : public ::testing::Test {
     TopicMetadata *createTopicMetadata(string topicName = string("test_topic"));
 
     // MetadataResponse
-    const static int correlationId = 7;
+    const static int correlationId = 212121;
     const static int brokerArraySize = 3;
     const static Broker *brokerArray[];
     const static int topicMetadataArraySize = 2;
@@ -46,10 +47,10 @@ class BaseTest : public ::testing::Test {
     MetadataResponse *createMetadataResponse();
 
     //MetadataRequest
-    const static short int apiKey = 1;
-    const static short int apiVersion = 2;
+    const static short int apiKey = ApiConstants::METADATA_REQUEST_KEY;
+    const static short int apiVersion = ApiConstants::API_VERSION;
     const static string clientId;
     const static int topicNameArraySize = 3;
     const static string topicNameArray[];
-    MetadataRequest *createMetadataRequest();
+    MetadataRequest *createMetadataRequest(bool emptyTopicArray = false);
 };

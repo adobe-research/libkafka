@@ -34,16 +34,16 @@
 
 using namespace std;
 
-#define DEFAULT_BUFFER_SIZE 1024
-
 class Packet : public WireFormatter
 {
   public:
 
+    static const int DEFAULT_BUFFER_SIZE = 1024;
+
     int size;
 
     Packet(int bufferSize = DEFAULT_BUFFER_SIZE);
-    Packet(unsigned char *buffer);
+    Packet(unsigned char *buffer, bool releaseBuffer = false);
     ~Packet();
 
     unsigned char *getBuffer() { return this->buffer; }

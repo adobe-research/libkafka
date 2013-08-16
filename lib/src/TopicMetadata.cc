@@ -104,6 +104,6 @@ int TopicMetadata::getWireFormatSize(bool includePacketSize)
 
 ostream& operator<< (ostream& os, const TopicMetadata& tm)
 {
-  os << tm.topicErrorCode << ":" << tm.topicName << ":" << tm.partitionMetadataArraySize << "\n";
+  os << tm.topicErrorCode << ":" << tm.topicName << ":" << tm.partitionMetadataArraySize;
   return os;
 }

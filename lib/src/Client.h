@@ -25,46 +25,40 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#ifndef CLIENT_H
+#define CLIENT_H
 
 #include <iostream>
 #include <string>
-#include <sys/socket.h>
-#include <netdb.h>
+#include <Connection.h>
+#include <Request.h>
+#include <Response.h>
+#include <MetadataRequest.h>
+#include <MetadataResponse.h>
 #include <Debug.h>
 
 using namespace std;
 
-class Connection
+class Client
 {
   public:
 
-    static const int DEFAULT_BUFFER_SIZE = 1024;
-    static const int SOCKET_UNINITIALIZED = -1;
-    static const int OPEN_CONNECTION_ERROR = -1;
-    static const int READ_ERROR = -1;
-    static const int WRITE_ERROR = -1;
+    Client(string brokerHost, int brokerPort);
+    ~Client();
 
-    Connection(string host, int port);
-    ~Connection();
-    
-    int open();
-    void close();
-    int read(int numBytes, unsigned char *buffer);
-    int write(int numBytes, unsigned char *buffer);
+    int sendRequest(Request *request);
+    template <typename ResponseClass>ResponseClass *receiveResponse();
 
-    string host;
-    int port;
+    MetadataResponse *sendMetadataRequest(MetadataRequest *request);
+
+    string brokerHost;
+    int brokerPort;
 
   protected:
 
-    int socketFd;
-    string portString;
-    struct addrinfo host_info;
-    struct addrinfo *host_info_list;
-};
+    Connection *connection;
 
-ostream& operator<< (ostream& os, const Connection& c);
+    void prepareConnection();
+};
 
 #endif /* CONNECTION_H */

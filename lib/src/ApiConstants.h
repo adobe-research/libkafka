@@ -25,15 +25,26 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-// API request key values
-#define ProduceRequest 		0
-#define FetchRequest 		1
-#define OffsetRequest 		2
-#define MetadataRequest 	3
-#define LeaderAndIsrRequest 	4
-#define StopReplicaRequest 	5
-#define OffsetCommitRequest 	6
-#define OffsetFetchRequest 	7 
+#ifndef APICONSTANTS_H
+#define APICONSTANTS_H
+
+class ApiConstants
+{
+  public:
+    
+    // API version key values
+    const static int API_VERSION = 0;
+
+    // API request key values
+    const static int PRODUCE_REQUEST_KEY = 0;
+    const static int FETCH_REQUEST_KEY = 1;
+    const static int OFFSET_REQUEST_KEY = 2;
+    const static int METADATA_REQUEST_KEY = 3;
+    const static int LEADER_AND_ISR_REQUEST_KEY = 4;
+    const static int STOP_REPLICA_REQUEST_KEY = 5;
+    const static int OFFSET_COMMIT_REQUEST_KEY = 6;
+    const static int OFFSET_FETCH_REQUEST_KEY = 7;
+};
 
 // API error codes
 
@@ -65,3 +76,5 @@
 #define StaleControllerEpochCode  	11
 // If you specify a string larger than configured maximum for offset metadata  
 #define OffsetMetadataTooLargeCode  	12
+
+#endif

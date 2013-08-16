@@ -28,10 +28,11 @@
 #include <iostream>
 
 #include <MetadataRequest.h>
+#include <ApiConstants.h>
 
 using namespace std;
 
-MetadataRequest::MetadataRequest(unsigned char *buffer) : Request(buffer)
+MetadataRequest::MetadataRequest(unsigned char *buffer, bool releaseBuffer) : Request(buffer, releaseBuffer)
 {
   D(cout.flush() << "--------------MetadataRequest(buffer)\n";)
 
@@ -43,7 +44,7 @@ MetadataRequest::MetadataRequest(unsigned char *buffer) : Request(buffer)
   }
 }
 
-MetadataRequest::MetadataRequest(short int apiKey, short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]) : Request(apiKey, apiVersion, correlationId, clientId)
+MetadataRequest::MetadataRequest(short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]) : Request(ApiConstants::METADATA_REQUEST_KEY, apiVersion, correlationId, clientId)
 {
   D(cout.flush() << "--------------MetadataRequest(params)\n";)
 
@@ -81,4 +82,14 @@ int MetadataRequest::getWireFormatSize(bool includePacketSize)
     size += sizeof(short int) + topicNameArray[i].length();
   }
   return size;
+}
+
+ostream& operator<< (ostream& os, const MetadataRequest& mr)
+{
+  os << (const Request&)mr;
+  os << "MetadataRequest.topicNameArraySize:" << mr.topicNameArraySize << "\n";
+  for (int i=0; i<mr.topicNameArraySize; i++) {
+    os << "MetadataRequest.topicNameArray[" << i << "]:" << mr.topicNameArray[i] << "\n";
+  }
+  return os;
 }

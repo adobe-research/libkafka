@@ -39,11 +39,13 @@ class Response : public RequestOrResponse
 
     int correlationId;
 
-    Response(unsigned char *buffer);
+    Response(unsigned char *buffer, bool releaseBuffer = false);
     Response(int correlationId);
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
 };
+
+ostream& operator<< (ostream& os, const Response& r);
 
 #endif

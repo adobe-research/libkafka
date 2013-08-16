@@ -25,46 +25,15 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#include <ApiConstants.h>
 
-#include <iostream>
-#include <string>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <Debug.h>
+const int ApiConstants::API_VERSION;
 
-using namespace std;
-
-class Connection
-{
-  public:
-
-    static const int DEFAULT_BUFFER_SIZE = 1024;
-    static const int SOCKET_UNINITIALIZED = -1;
-    static const int OPEN_CONNECTION_ERROR = -1;
-    static const int READ_ERROR = -1;
-    static const int WRITE_ERROR = -1;
-
-    Connection(string host, int port);
-    ~Connection();
-    
-    int open();
-    void close();
-    int read(int numBytes, unsigned char *buffer);
-    int write(int numBytes, unsigned char *buffer);
-
-    string host;
-    int port;
-
-  protected:
-
-    int socketFd;
-    string portString;
-    struct addrinfo host_info;
-    struct addrinfo *host_info_list;
-};
-
-ostream& operator<< (ostream& os, const Connection& c);
-
-#endif /* CONNECTION_H */
+const int ApiConstants::PRODUCE_REQUEST_KEY;
+const int ApiConstants::FETCH_REQUEST_KEY;
+const int ApiConstants::OFFSET_REQUEST_KEY;
+const int ApiConstants::METADATA_REQUEST_KEY;
+const int ApiConstants::LEADER_AND_ISR_REQUEST_KEY;
+const int ApiConstants::STOP_REPLICA_REQUEST_KEY;
+const int ApiConstants::OFFSET_COMMIT_REQUEST_KEY;
+const int ApiConstants::OFFSET_FETCH_REQUEST_KEY;

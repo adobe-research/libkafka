@@ -87,6 +87,6 @@ int Broker::getWireFormatSize(bool includePacketSize)
 
 ostream& operator<< (ostream& os, const Broker& b)
 {
-  os << b.nodeId << ":" << b.host << ":" << b.port << "\n";
+  os << b.nodeId << ":" << b.host << ":" << b.port;
   return os;
 }

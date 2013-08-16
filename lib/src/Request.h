@@ -42,11 +42,13 @@ class Request : public RequestOrResponse
     int correlationId;
     string clientId;
 
-    Request(unsigned char *buffer);
+    Request(unsigned char *buffer, bool releaseBuffer = false);
     Request(short int apiKey, short int apiVersion, int correlationId, string clientId);
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
 };
+
+ostream& operator<< (ostream& os, const Request& r);
 
 #endif

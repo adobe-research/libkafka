@@ -27,20 +27,24 @@
 
 #include <string>
 #include <iostream>
+#include <arpa/inet.h>
 
 #include <Packet.h>
+#include <Util.h>
 
 using namespace std;
 
+const int Packet::DEFAULT_BUFFER_SIZE;
+
 // Constructor to parse incoming Kafka protocol packet
-Packet::Packet(unsigned char *buffer) : WireFormatter()
+Packet::Packet(unsigned char *buffer, bool releaseBuffer) : WireFormatter()
 {
   D(cout.flush() << "--------------Packet(incoming)\n";)
 
   this->buffer = buffer;
   this->head = buffer;
   this->size = readInt32();
-  this->releaseBuffer = false;
+  this->releaseBuffer = releaseBuffer;
 }
 
 // Constructor to construct outgoing Kafka protocol packet
@@ -71,39 +75,42 @@ Packet::~Packet()
 {
   D(cout.flush() << "--------------~Packet()\n";)
 
-    if (releaseBuffer) delete buffer;
+  if (releaseBuffer) delete buffer;
 }
 
 unsigned char* Packet::toWireFormat(bool updateSize)
 {
   D(cout.flush() << "--------------Packet::toWireFormat()\n";)
 
-    if (updateSize) updatePacketSize();
+  if (updateSize) updatePacketSize();
   return this->buffer;
 }
 
 short int Packet::readInt16()
 {
-  short int value = *(int*)(this->head);
+  short int netValue = *(int*)(this->head);
+  short int hostValue = ntohs(netValue);
   this->head += sizeof(short int);
-  D(cout.flush() << "Packet::readInt16():" << value << "\n";)
-    return value;
+  D(cout.flush() << "Packet::readInt16():netValue(" << netValue << "):hostValue(" << hostValue << ")\n";)
+  return hostValue;
 }
 
 int Packet::readInt32()
 {
-  int value = *(int*)(this->head);
+  int netValue = *(int*)(this->head);
+  int hostValue = ntohl(netValue);
   this->head += sizeof(int);
-  D(cout.flush() << "Packet::readInt32():" << value << "\n";)
-    return value;
+  D(cout.flush() << "Packet::readInt32():netValue(" << netValue << "):hostValue(" << hostValue << ")\n";)
+  return hostValue;
 }
 
 long int Packet::readInt64()
 {
-  long int value = *(long int*)(this->head);
+  long int netValue = *(long int*)(this->head);
+  long int hostValue = ntohll(netValue);
   this->head += sizeof(long int);
-  D(cout.flush() << "Packet::readInt64():" << value << "\n";)
-    return value;
+  D(cout.flush() << "Packet::readInt64():netValue(" << netValue << "):hostValue(" << hostValue << ")\n";)
+  return hostValue;
 }
 
 string Packet::readString()
@@ -112,45 +119,47 @@ string Packet::readString()
   string value = string((const char *)(this->head), length);
   this->head += length;
   D(cout.flush() << "Packet::readString():" << length << ":" << value << "\n";)
-    return value;
+  return value;
 }
 
 void Packet::updatePacketSize()
 {
-  memcpy(buffer, &(this->size), sizeof(int));
-  D(cout.flush() << "Packet::updatePacketSize():" << this->size << "\n";)
+  int netValue = htonl((this->size) - sizeof(int)); // prior to sending, set packetSize exclusive of size (int)
+  memcpy(buffer, &netValue, sizeof(int));
+  D(cout.flush() << "Packet::updatePacketSize():hostValue(" << this->size << "(:netValue(" << netValue << ")\n";)
 }
 
-void Packet::writeInt16(short int value)
+void Packet::writeInt16(short int hostValue)
 {
-  memcpy(head, &value, sizeof(short int));
+  short int netValue = htons(hostValue);
+  memcpy(head, &netValue, sizeof(short int));
   head += sizeof(short int);
   this->size += sizeof(short int);
-  D(cout.flush() << "Packet::writeInt16():" << value << "\n";)
+  D(cout.flush() << "Packet::writeInt16():hostValue(" << hostValue << "):netValue(" << netValue << ")\n";)
 }
 
-void Packet::writeInt32(int value)
+void Packet::writeInt32(int hostValue)
 {
-  memcpy(head, &value, sizeof(int));
+  int netValue = htonl(hostValue);
+  memcpy(head, &netValue, sizeof(int));
   head += sizeof(int);
   this->size += sizeof(int);
-  D(cout.flush() << "Packet::writeInt32():" << value << "\n";)
+  D(cout.flush() << "Packet::writeInt32():hostValue(" << hostValue << "):netValue(" << netValue << ")\n";)
 }
 
-void Packet::writeInt64(long int value)
+void Packet::writeInt64(long int hostValue)
 {
-  memcpy(head, &value, sizeof(long int));
+  long int netValue = htonll(hostValue);
+  memcpy(head, &netValue, sizeof(long int));
   head += sizeof(long int);
   this->size += sizeof(long int);
-  D(cout.flush() << "Packet::writeInt64():" << value << "\n";)
+  D(cout.flush() << "Packet::writeInt64():Value(" << hostValue << "):netValue(" << netValue << ")\n";)
 }
 
 void Packet::writeString(string value)
 {
   short int length = value.length();
-  memcpy(head, &length, sizeof(short int));
-  head += sizeof(short int);
-  this->size += sizeof(short int);
+  writeInt16(length);
   memcpy(head, value.c_str(), length);
   head += length;
   this->size += length;

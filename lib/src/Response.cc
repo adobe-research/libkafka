@@ -31,7 +31,7 @@
 
 using namespace std;
 
-Response::Response(unsigned char *buffer) : RequestOrResponse(buffer)
+Response::Response(unsigned char *buffer, bool releaseBuffer) : RequestOrResponse(buffer, releaseBuffer)
 {
   D(cout.flush() << "--------------Response(buffer)\n";)
  
@@ -70,4 +70,11 @@ int Response::getWireFormatSize(bool includePacketSize)
   int size = RequestOrResponse::getWireFormatSize(includePacketSize);
   size += sizeof(int);
   return size;
+}
+
+ostream& operator<< (ostream& os, const Response& r)
+{
+  os << (const RequestOrResponse&)r;
+  os << "Response.correlationId:" << r.correlationId << "\n";
+  return os;
 }

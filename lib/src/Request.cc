@@ -31,7 +31,7 @@
 
 using namespace std;
 
-Request::Request(unsigned char *buffer) : RequestOrResponse(buffer)
+Request::Request(unsigned char *buffer, bool releaseBuffer) : RequestOrResponse(buffer, releaseBuffer)
 {
   D(cout.flush() << "--------------Request(buffer)\n";)
 
@@ -90,4 +90,14 @@ int Request::getWireFormatSize(bool includePacketSize)
   int size = RequestOrResponse::getWireFormatSize(includePacketSize);
   size += sizeof(short int) + sizeof(short int) + sizeof(int) + sizeof(short int) + clientId.length();
   return size;
+}
+
+ostream& operator<< (ostream& os, const Request& r)
+{
+  os << (const RequestOrResponse&)r;
+  os << "Request.apiKey:" << r.apiKey << "\n";
+  os << "Request.apiVersion:" << r.apiVersion << "\n";
+  os << "Request.correlationId:" << r.correlationId << "\n";
+  os << "Request.clientId:" << r.clientId << "\n";
+  return os;
 }

@@ -33,7 +33,7 @@
 
 using namespace std;
 
-MetadataResponse::MetadataResponse(unsigned char *buffer) : Response(buffer)
+MetadataResponse::MetadataResponse(unsigned char *buffer, bool releaseBuffer) : Response(buffer, releaseBuffer)
 {
   D(cout.flush() << "--------------MetadataResponse(buffer)\n";)
 
@@ -122,4 +122,18 @@ int MetadataResponse::getWireFormatSize(bool includePacketSize)
     size += topicMetadataArray[i]->getWireFormatSize(false);
   }
   return size;
+}
+
+ostream& operator<< (ostream& os, const MetadataResponse& mr)
+{
+  os << (const Response&)mr;
+  os << "MetadataResponse.brokerArraySize:" << mr.brokerArraySize << "\n";
+  for (int i=0; i<mr.brokerArraySize; i++) {
+    os << "MetadataResponse.brokerArray[" << i << "]:" << *(mr.brokerArray[i]) << "\n";
+  }
+  os << "MetadataResponse.topicMetadataArraySize:" << mr.topicMetadataArraySize << "\n";
+  for (int i=0; i<mr.topicMetadataArraySize; i++) {
+    os << "MetadataResponse.topicMetadataArray[" << i << "]:" << *(mr.topicMetadataArray[i]) << "\n";
+  }
+  return os;
 }

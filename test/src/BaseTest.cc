@@ -75,9 +75,14 @@ MetadataResponse* BaseTest::createMetadataResponse()
 // MetadataRequest
 
 const string BaseTest::topicNameArray[3] = { string("testTopic1"), string("testTopic2"), string("testTopic3") };
-const string BaseTest::clientId = string("testClientId");
+const string BaseTest::clientId = string("libkafka-test");
 
-MetadataRequest* BaseTest::createMetadataRequest()
+MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
 {
-  return new MetadataRequest(apiKey, apiVersion, correlationId, clientId, topicNameArraySize, (string*)topicNameArray);
+  if (emptyTopicArray)
+  {
+    return new MetadataRequest(apiVersion, correlationId, clientId, 0, (string*)NULL);
+  }
+  
+  return new MetadataRequest(apiVersion, correlationId, clientId, topicNameArraySize, (string*)topicNameArray);
 }

@@ -32,9 +32,9 @@
 
 using namespace std;
 
-RequestOrResponse::RequestOrResponse(unsigned char *buffer) : WireFormatter()
+RequestOrResponse::RequestOrResponse(unsigned char *buffer, bool releaseBuffer) : WireFormatter()
 {
-  this->packet = new Packet(buffer);
+  this->packet = new Packet(buffer, releaseBuffer);
 
   D(cout.flush() << "--------------RequestOrResponse(buffer)\n";)
 
@@ -76,7 +76,13 @@ int RequestOrResponse::getWireFormatSize(bool includePacketSize)
   return size;
 }
 
-int RequestOrResponse::size()
+int RequestOrResponse::size() const
 {
   return this->packet->size;
+}
+
+ostream& operator<< (ostream& os, const RequestOrResponse& r)
+{
+  os << "RequestOrResponse.size:" << r.size() << "\n";
+  return os;
 }

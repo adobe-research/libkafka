@@ -44,7 +44,7 @@ class MetadataResponse : public Response
     int topicMetadataArraySize;
     TopicMetadata **topicMetadataArray;
 
-    MetadataResponse(unsigned char *buffer);
+    MetadataResponse(unsigned char *buffer, bool releaseBuffer = false);
     MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray);
     ~MetadataResponse();
 
@@ -55,5 +55,7 @@ class MetadataResponse : public Response
 
     bool releaseArrays;
 };
+
+ostream& operator<< (ostream& os, const MetadataResponse& mr);
 
 #endif /* METADATARESPONSE_H */
