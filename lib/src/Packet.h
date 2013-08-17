@@ -40,7 +40,6 @@ class Packet : public WireFormatter
 
     static const int DEFAULT_BUFFER_SIZE = 1024;
 
-    int size;
 
     Packet(int bufferSize = DEFAULT_BUFFER_SIZE);
     Packet(unsigned char *buffer, bool releaseBuffer = false);
@@ -57,7 +56,8 @@ class Packet : public WireFormatter
     void writeInt32(int value);
     void writeInt64(int long value);
     void writeString(string value);
-    
+   
+    int getSize(bool includeProtocolSizeFieldLength = true);
     void updatePacketSize();
     void resetForReading();
 
@@ -65,6 +65,8 @@ class Packet : public WireFormatter
     int getWireFormatSize(bool includeSize = false);
 
   protected:
+    
+    int size; // size of packet, inclusive of initial protocol size int32 value
 
     unsigned char *buffer;
     unsigned char *head;

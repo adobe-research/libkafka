@@ -21,13 +21,13 @@ namespace {
     pm1->packet = new Packet();
     unsigned char * message = pm1->toWireFormat();
     int size = pm1->getWireFormatSize(true);
-    EXPECT_EQ(pm1->packet->size, size);
+    EXPECT_EQ(pm1->packet->getSize(), size);
 
     pm1->packet->resetForReading();
     PartitionMetadata *pm2 = new PartitionMetadata(pm1->packet);
 
     EXPECT_NE(pm2, (void*)0);
-    EXPECT_EQ(pm2->packet->size, pm1->packet->size);
+    EXPECT_EQ(pm2->packet->getSize(), pm1->packet->getSize());
     EXPECT_EQ(pm2->partitionErrorCode, pm1->partitionErrorCode);
     EXPECT_EQ(pm2->partitionId, pm1->partitionId);
     EXPECT_EQ(pm2->leader, pm1->leader);

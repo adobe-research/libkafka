@@ -44,7 +44,7 @@ class RequestOrResponse : public WireFormatter, public PacketWriter
     RequestOrResponse(unsigned char *buffer, bool releaseBuffer = false);
     ~RequestOrResponse();
 
-    int size() const;
+    int size(bool includeProtocolSizeFieldLength = true) const;
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);

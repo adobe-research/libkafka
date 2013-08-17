@@ -17,11 +17,11 @@ namespace {
     Packet *p1 = new Packet();
     EXPECT_NE(p1, (void*)0);
     unsigned char * message = p1->toWireFormat();
-    EXPECT_EQ(p1->size, sizeof(int));
+    EXPECT_EQ(p1->getSize(), sizeof(int));
 
     Packet *p2 = new Packet(message);
     EXPECT_NE(p2, (void*)0);
-    EXPECT_EQ(p2->size, p1->size);
+    EXPECT_EQ(p2->getSize(), p1->getSize());
   }
 
 }  // namespace

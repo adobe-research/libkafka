@@ -22,13 +22,13 @@ namespace {
     tm1->packet = new Packet();
     unsigned char * message = tm1->toWireFormat();
     int size = tm1->getWireFormatSize(true);
-    EXPECT_EQ(tm1->packet->size, size);
+    EXPECT_EQ(tm1->packet->getSize(), size);
 
     tm1->packet->resetForReading();
     TopicMetadata *tm2 = new TopicMetadata(tm1->packet);
 
     EXPECT_NE(tm2, (void*)0);
-    EXPECT_EQ(tm2->packet->size, tm1->packet->size);
+    EXPECT_EQ(tm2->packet->getSize(), tm1->packet->getSize());
     EXPECT_EQ(tm2->topicErrorCode, tm1->topicErrorCode);
     EXPECT_EQ(tm2->topicName, tm1->topicName);
     EXPECT_EQ(tm2->partitionMetadataArraySize, tm1->partitionMetadataArraySize);

@@ -76,9 +76,9 @@ int RequestOrResponse::getWireFormatSize(bool includePacketSize)
   return size;
 }
 
-int RequestOrResponse::size() const
+int RequestOrResponse::size(bool includeProtocolSizeFieldLength) const
 {
-  return this->packet->size;
+  return this->packet->getSize(includeProtocolSizeFieldLength);
 }
 
 ostream& operator<< (ostream& os, const RequestOrResponse& r)

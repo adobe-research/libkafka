@@ -43,7 +43,7 @@ Packet::Packet(unsigned char *buffer, bool releaseBuffer) : WireFormatter()
 
   this->buffer = buffer;
   this->head = buffer;
-  this->size = readInt32();
+  this->size = readInt32() + sizeof(int); // protocol size field is exclusive of size field length, size instance variable is inclusive of size field length
   this->releaseBuffer = releaseBuffer;
 }
 
@@ -170,4 +170,10 @@ void Packet::resetForReading()
 {
   this->head = buffer;
   this->size = readInt32();
+}
+
+int Packet::getSize(bool includeProtocolSizeFieldLength)
+{
+  if (includeProtocolSizeFieldLength) return this->size; // size instance variable is inclusive of size field length
+  return (this->size - sizeof(int)); // protocol size field is exclusive of size field length
 }
