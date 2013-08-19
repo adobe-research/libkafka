@@ -19,12 +19,10 @@ Maven
 * mvn test (runs protocol unit tests)
 
 Autoconf
+* ./autogen.sh
 * ./configure --enable-gtest (requires --enable-gtest due to Google Test m4 macro bug)
 * make install (builds and installs shared library)
 * make check (runs protocol unit tests)
-
-Autoconf changes require the following:
-* ./autogen.sh
 
 And to clean all autoconf generated files:
 * make maintainer-clean
