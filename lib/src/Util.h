@@ -30,9 +30,11 @@
 
 #include <string>
 
-using namespace std;
+namespace LibKafka {
 
-string intToString(int i);
+  std::string intToString(int i);
+
+}; // namespace LibKafka
 
 #ifndef ntohll
 #define ntohll(x) ( ( (uint64_t)(ntohl( (uint32_t)((x << 32) >> 32) )) << 32) | ntohl( ((uint32_t)(x >> 32)) ) )                                        

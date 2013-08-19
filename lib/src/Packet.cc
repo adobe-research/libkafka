@@ -34,6 +34,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 const int Packet::DEFAULT_BUFFER_SIZE;
 
 // Constructor to parse incoming Kafka protocol packet
@@ -177,3 +179,5 @@ int Packet::getSize(bool includeProtocolSizeFieldLength)
   if (includeProtocolSizeFieldLength) return this->size; // size instance variable is inclusive of size field length
   return (this->size - sizeof(int)); // protocol size field is exclusive of size field length
 }
+
+}; // namespace LibKafka

@@ -32,6 +32,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 MetadataRequest::MetadataRequest(unsigned char *buffer, bool releaseBuffer) : Request(buffer, releaseBuffer)
 {
   D(cout.flush() << "--------------MetadataRequest(buffer)\n";)
@@ -93,3 +95,5 @@ ostream& operator<< (ostream& os, const MetadataRequest& mr)
   }
   return os;
 }
+
+}; // namespace LibKafka

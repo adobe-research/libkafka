@@ -9,6 +9,7 @@
 #include <ApiConstants.h>
 
 using namespace std;
+using namespace LibKafka;
 
 class BaseTest : public ::testing::Test {
   protected:

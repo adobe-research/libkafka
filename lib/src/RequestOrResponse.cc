@@ -32,6 +32,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 RequestOrResponse::RequestOrResponse(unsigned char *buffer, bool releaseBuffer) : WireFormatter()
 {
   this->packet = new Packet(buffer, releaseBuffer);
@@ -86,3 +88,5 @@ ostream& operator<< (ostream& os, const RequestOrResponse& r)
   os << "RequestOrResponse.size:" << r.size() << "\n";
   return os;
 }
+
+}; // namespace LibKafka

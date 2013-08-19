@@ -31,6 +31,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 Response::Response(unsigned char *buffer, bool releaseBuffer) : RequestOrResponse(buffer, releaseBuffer)
 {
   D(cout.flush() << "--------------Response(buffer)\n";)
@@ -78,3 +80,5 @@ ostream& operator<< (ostream& os, const Response& r)
   os << "Response.correlationId:" << r.correlationId << "\n";
   return os;
 }
+
+}; // namespace LibKafka

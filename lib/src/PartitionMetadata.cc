@@ -32,6 +32,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 PartitionMetadata::PartitionMetadata(Packet *packet) : WireFormatter(), PacketWriter(packet)
 {
   D(cout.flush() << "--------------PartitionMetadata(buffer)\n";)
@@ -127,3 +129,5 @@ ostream& operator<< (ostream& os, const PartitionMetadata& pm)
   os << pm.partitionErrorCode << ":" << pm.partitionId << ":" << pm.leader << ":" << pm.replicaArray << ":" << pm.isrArray << "\n";
   return os;
 }
+
+}; // namespace LibKafka

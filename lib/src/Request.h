@@ -31,7 +31,7 @@
 #include <string>
 #include <RequestOrResponse.h>
 
-using namespace std;
+namespace LibKafka {
 
 class Request : public RequestOrResponse
 {
@@ -40,15 +40,17 @@ class Request : public RequestOrResponse
     short int apiKey;
     short int apiVersion;
     int correlationId;
-    string clientId;
+    std::string clientId;
 
     Request(unsigned char *buffer, bool releaseBuffer = false);
-    Request(short int apiKey, short int apiVersion, int correlationId, string clientId);
+    Request(short int apiKey, short int apiVersion, int correlationId, std::string clientId);
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
 };
 
-ostream& operator<< (ostream& os, const Request& r);
+std::ostream& operator<< (std::ostream& os, const Request& r);
+
+}; // namespace LibKafka
 
 #endif

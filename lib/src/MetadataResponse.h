@@ -33,7 +33,7 @@
 #include <Broker.h>
 #include <TopicMetadata.h>
 
-using namespace std;
+namespace LibKafka {
 
 class MetadataResponse : public Response
 {
@@ -56,6 +56,8 @@ class MetadataResponse : public Response
     bool releaseArrays;
 };
 
-ostream& operator<< (ostream& os, const MetadataResponse& mr);
+std::ostream& operator<< (std::ostream& os, const MetadataResponse& mr);
+
+}; // namespace LibKafka
 
 #endif /* METADATARESPONSE_H */

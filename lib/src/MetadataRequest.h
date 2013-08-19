@@ -31,22 +31,24 @@
 #include <string>
 #include <Request.h>
 
-using namespace std;
+namespace LibKafka {
 
 class MetadataRequest : public Request
 {
   public:
 
     int topicNameArraySize;
-    string *topicNameArray;
+    std::string *topicNameArray;
 
     MetadataRequest(unsigned char *buffer, bool releaseBuffer = false);
-    MetadataRequest(short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]);
+    MetadataRequest(short int apiVersion, int correlationId, std::string clientId, int topicNameArraySize, std::string topicNameArray[]);
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
 };
 
-ostream& operator<< (ostream& os, const MetadataRequest& mr);
+std::ostream& operator<< (std::ostream& os, const MetadataRequest& mr);
+
+}; // namespace LibKafka
 
 #endif

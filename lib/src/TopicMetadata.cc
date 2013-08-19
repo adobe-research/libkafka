@@ -33,6 +33,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 TopicMetadata::TopicMetadata(Packet *packet) : WireFormatter(), PacketWriter(packet)
 {
   D(cout.flush() << "--------------TopicMetadata(buffer)\n";)
@@ -107,3 +109,5 @@ ostream& operator<< (ostream& os, const TopicMetadata& tm)
   os << tm.topicErrorCode << ":" << tm.topicName << ":" << tm.partitionMetadataArraySize;
   return os;
 }
+
+}; // namespace LibKafka

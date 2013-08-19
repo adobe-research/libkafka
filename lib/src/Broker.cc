@@ -32,6 +32,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 Broker::Broker(Packet *packet) : WireFormatter(), PacketWriter(packet)
 {
   D(cout.flush() << "--------------Broker(buffer)\n";)
@@ -90,3 +92,5 @@ ostream& operator<< (ostream& os, const Broker& b)
   os << b.nodeId << ":" << b.host << ":" << b.port;
   return os;
 }
+
+}; // namespace LibKafka

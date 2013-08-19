@@ -34,7 +34,7 @@
 #include <netdb.h>
 #include <Debug.h>
 
-using namespace std;
+namespace LibKafka {
 
 class Connection
 {
@@ -46,7 +46,7 @@ class Connection
     static const int READ_ERROR = -1;
     static const int WRITE_ERROR = -1;
 
-    Connection(string host, int port);
+    Connection(std::string host, int port);
     ~Connection();
     
     int open();
@@ -54,17 +54,19 @@ class Connection
     int read(int numBytes, unsigned char *buffer);
     int write(int numBytes, unsigned char *buffer);
 
-    string host;
+    std::string host;
     int port;
 
   protected:
 
     int socketFd;
-    string portString;
+    std::string portString;
     struct addrinfo host_info;
     struct addrinfo *host_info_list;
 };
 
-ostream& operator<< (ostream& os, const Connection& c);
+std::ostream& operator<< (std::ostream& os, const Connection& c);
+
+}; // namespace LibKafka
 
 #endif /* CONNECTION_H */

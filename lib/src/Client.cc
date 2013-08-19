@@ -38,6 +38,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 Client::Client(string brokerHost, int brokerPort)
 {
   D(cout.flush() << "--------------Client(" << brokerHost << ":" << intToString(brokerPort) << "\n";)
@@ -118,3 +120,5 @@ void Client::prepareConnection()
   connection = new Connection(this->brokerHost, this->brokerPort);
   connection->open();
 }
+
+}; // namespace LibKafka

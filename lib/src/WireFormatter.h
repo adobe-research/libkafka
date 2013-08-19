@@ -30,6 +30,8 @@
 
 #include <Debug.h>
 
+namespace LibKafka {
+
 class WireFormatter
 {
   public:
@@ -37,5 +39,7 @@ class WireFormatter
     virtual unsigned char* toWireFormat(bool updatePacketSize = true) = 0;
     virtual int getWireFormatSize(bool includePacketSize = true) = 0;
 };
+
+}; // namespace LibKafka
 
 #endif /* WIRE_FORMATTER_H */

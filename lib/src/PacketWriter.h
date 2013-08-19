@@ -31,6 +31,8 @@
 #include <Debug.h>
 #include <Packet.h>
 
+namespace LibKafka {
+
 class PacketWriter
 {
   public:
@@ -40,5 +42,7 @@ class PacketWriter
     
     Packet *packet;
 };
+
+}; // namespace LibKafka
 
 #endif /* PACKET_WRITER_H */

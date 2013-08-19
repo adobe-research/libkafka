@@ -34,25 +34,27 @@
 #include <WireFormatter.h>
 #include <PacketWriter.h>
 
-using namespace std;
+namespace LibKafka {
 
 class Broker : public WireFormatter, public PacketWriter
 {
   public:
 
     int nodeId;
-    string host;
+    std::string host;
     int port;
 
     Broker(Packet *packet);
-    Broker(int nodeId, string host, int port);
+    Broker(int nodeId, std::string host, int port);
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);
 };
     
-ostream& operator<< (ostream& os, const Broker& b);
+std::ostream& operator<< (std::ostream& os, const Broker& b);
 inline bool operator==(const Broker& lhs, const Broker& rhs) { return ((lhs.nodeId==rhs.nodeId)&&(lhs.port==rhs.port)&&(lhs.host==rhs.host)); }
 inline bool operator!=(const Broker& lhs, const Broker& rhs) { return !operator==(lhs,rhs); }
+
+}; // namespace LibKafka
 
 #endif /* BROKER_H */

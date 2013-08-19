@@ -37,13 +37,13 @@
 #include <MetadataResponse.h>
 #include <Debug.h>
 
-using namespace std;
+namespace LibKafka {
 
 class Client
 {
   public:
 
-    Client(string brokerHost, int brokerPort);
+    Client(std::string brokerHost, int brokerPort);
     ~Client();
 
     int sendRequest(Request *request);
@@ -51,7 +51,7 @@ class Client
 
     MetadataResponse *sendMetadataRequest(MetadataRequest *request);
 
-    string brokerHost;
+    std::string brokerHost;
     int brokerPort;
 
   protected:
@@ -60,5 +60,7 @@ class Client
 
     void prepareConnection();
 };
+
+}; // namespace LibKafka
 
 #endif /* CONNECTION_H */

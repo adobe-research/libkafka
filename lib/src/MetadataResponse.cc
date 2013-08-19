@@ -33,6 +33,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 MetadataResponse::MetadataResponse(unsigned char *buffer, bool releaseBuffer) : Response(buffer, releaseBuffer)
 {
   D(cout.flush() << "--------------MetadataResponse(buffer)\n";)
@@ -137,3 +139,5 @@ ostream& operator<< (ostream& os, const MetadataResponse& mr)
   }
   return os;
 }
+
+}; // namespace LibKafka

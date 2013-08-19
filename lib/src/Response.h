@@ -31,7 +31,7 @@
 #include <string>
 #include <RequestOrResponse.h>
 
-using namespace std;
+namespace LibKafka {
 
 class Response : public RequestOrResponse
 {
@@ -46,6 +46,8 @@ class Response : public RequestOrResponse
     int getWireFormatSize(bool includePacketSize = true);
 };
 
-ostream& operator<< (ostream& os, const Response& r);
+std::ostream& operator<< (std::ostream& os, const Response& r);
+
+}; // namespace LibKafka
 
 #endif

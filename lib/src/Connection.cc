@@ -36,6 +36,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 const int Connection::DEFAULT_BUFFER_SIZE;
 const int Connection::SOCKET_UNINITIALIZED;
 const int Connection::OPEN_CONNECTION_ERROR;
@@ -133,3 +135,5 @@ ostream& operator<< (ostream& os, const Connection& c)
   os << c.host << ":" << c.host << "\n";
   return os;
 }
+
+}; // namespace LibKafka

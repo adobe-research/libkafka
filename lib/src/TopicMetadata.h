@@ -35,19 +35,19 @@
 #include <WireFormatter.h>
 #include <PacketWriter.h>
 
-using namespace std;
+namespace LibKafka {
 
 class TopicMetadata : public WireFormatter, public PacketWriter
 {
   public:
 
     short int topicErrorCode;
-    string topicName;
+    std::string topicName;
     int partitionMetadataArraySize;
     PartitionMetadata **partitionMetadataArray;
 
     TopicMetadata(Packet *packet);
-    TopicMetadata(short int topicErrorCode, string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray);
+    TopicMetadata(short int topicErrorCode, std::string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray);
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);
@@ -57,8 +57,10 @@ class TopicMetadata : public WireFormatter, public PacketWriter
     bool releaseArrays;
 };
 
-ostream& operator<< (ostream& os, const TopicMetadata& b);
+std::ostream& operator<< (std::ostream& os, const TopicMetadata& b);
 inline bool operator==(const TopicMetadata& lhs, const TopicMetadata& rhs) { return ((lhs.topicErrorCode==rhs.topicErrorCode)&&(lhs.topicName==rhs.topicName)); }
 inline bool operator!=(const TopicMetadata& lhs, const TopicMetadata& rhs) { return !operator==(lhs,rhs); }
+
+}; // namespace LibKafka
 
 #endif /* TOPICMETADATA_H */

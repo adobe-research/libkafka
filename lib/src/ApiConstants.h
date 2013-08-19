@@ -28,6 +28,8 @@
 #ifndef APICONSTANTS_H
 #define APICONSTANTS_H
 
+namespace LibKafka {
+
 class ApiConstants
 {
   public:
@@ -76,5 +78,7 @@ class ApiConstants
 #define StaleControllerEpochCode  	11
 // If you specify a string larger than configured maximum for offset metadata  
 #define OffsetMetadataTooLargeCode  	12
+
+}; // namespace LibKafka
 
 #endif

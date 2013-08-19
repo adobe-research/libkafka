@@ -27,6 +27,8 @@
 
 #include <ApiConstants.h>
 
+namespace LibKafka {
+
 const int ApiConstants::API_VERSION;
 
 const int ApiConstants::PRODUCE_REQUEST_KEY;
@@ -37,3 +39,5 @@ const int ApiConstants::LEADER_AND_ISR_REQUEST_KEY;
 const int ApiConstants::STOP_REPLICA_REQUEST_KEY;
 const int ApiConstants::OFFSET_COMMIT_REQUEST_KEY;
 const int ApiConstants::OFFSET_FETCH_REQUEST_KEY;
+
+}; // namespace LibKafka

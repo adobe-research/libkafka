@@ -31,9 +31,13 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 string intToString(int i)
 {
   ostringstream ss;
   ss << i;
   return ss.str();
 }
+
+}; // namespace LibKafka

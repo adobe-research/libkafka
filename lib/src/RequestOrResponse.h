@@ -34,7 +34,7 @@
 #include <WireFormatter.h>
 #include <PacketWriter.h>
 
-using namespace std;
+namespace LibKafka {
 
 class RequestOrResponse : public WireFormatter, public PacketWriter
 {
@@ -50,6 +50,8 @@ class RequestOrResponse : public WireFormatter, public PacketWriter
     int getWireFormatSize(bool includePacketSize = true);
 };
 
-ostream& operator<< (ostream& os, const RequestOrResponse& r);
+std::ostream& operator<< (std::ostream& os, const RequestOrResponse& r);
+
+}; // namespace LibKafka
 
 #endif

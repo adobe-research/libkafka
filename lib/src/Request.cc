@@ -31,6 +31,8 @@
 
 using namespace std;
 
+namespace LibKafka {
+
 Request::Request(unsigned char *buffer, bool releaseBuffer) : RequestOrResponse(buffer, releaseBuffer)
 {
   D(cout.flush() << "--------------Request(buffer)\n";)
@@ -101,3 +103,5 @@ ostream& operator<< (ostream& os, const Request& r)
   os << "Request.clientId:" << r.clientId << "\n";
   return os;
 }
+
+}; // namespace LibKafka

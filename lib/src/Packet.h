@@ -32,7 +32,7 @@
 #include <Debug.h>
 #include <WireFormatter.h>
 
-using namespace std;
+namespace LibKafka {
 
 class Packet : public WireFormatter
 {
@@ -50,12 +50,12 @@ class Packet : public WireFormatter
     short int readInt16();
     int readInt32();
     long int readInt64();
-    string readString();
+    std::string readString();
 
     void writeInt16(short int value);
     void writeInt32(int value);
     void writeInt64(int long value);
-    void writeString(string value);
+    void writeString(std::string value);
    
     int getSize(bool includeProtocolSizeFieldLength = true);
     void updatePacketSize();
@@ -75,5 +75,7 @@ class Packet : public WireFormatter
 
     bool releaseBuffer;
 };
+
+}; // namespace LibKafka
 
 #endif /* PACKET_H */
