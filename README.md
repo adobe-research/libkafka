@@ -12,5 +12,19 @@ Dependencies
 Installation
 ============
 
+Supports both autoconf and maven builds:
+
+Maven
 * mvn clean install (builds shared library, command line apps)
-* mvn test (to run protocol unit tests)
+* mvn test (runs protocol unit tests)
+
+Autoconf
+* ./configure --enable-gtest (requires --enable-gtest due to Google Test m4 macro bug)
+* make install (builds and installs shared library)
+* make check (runs protocol unit tests)
+
+Autoconf changes require the following:
+* ./autogen.sh
+
+And to clean all autoconf generated files:
+* make maintainer-clean
