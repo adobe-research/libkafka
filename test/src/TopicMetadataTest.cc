@@ -35,6 +35,10 @@ namespace {
     for (int i=0; i<tm2->partitionMetadataArraySize; i++) {
       EXPECT_EQ(*(tm2->partitionMetadataArray[i]), *(tm1->partitionMetadataArray[i]));
     }
+
+    delete tm1->packet;
+    delete tm1;
+    delete tm2;
   }
 
 }  // namespace

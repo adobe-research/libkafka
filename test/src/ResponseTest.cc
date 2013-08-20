@@ -26,6 +26,9 @@ namespace {
     EXPECT_NE(r2, (void*)0);
     EXPECT_EQ(r2->size(), r1->size());
     EXPECT_EQ(r2->correlationId, r1->correlationId);
+
+    delete r1;
+    delete r2;
   }
 
 }  // namespace

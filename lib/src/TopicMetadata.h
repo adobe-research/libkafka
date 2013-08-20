@@ -48,6 +48,7 @@ class TopicMetadata : public WireFormatter, public PacketWriter
 
     TopicMetadata(Packet *packet);
     TopicMetadata(short int topicErrorCode, std::string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray);
+    ~TopicMetadata();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);

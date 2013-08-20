@@ -1,0 +1,22 @@
+{
+  ImageLoaderMach0
+  Memcheck:Leak
+  ...
+  fun:_ZN16ImageLoaderMachO16doInitializationERKN11ImageLoader11LinkContextE
+}
+
+{
+  libSystem_initializer
+  Memcheck:Leak
+  ...
+  fun:libSystem_initializer
+}
+
+{
+  map_images
+  Memcheck:Leak
+  ...
+  fun:map_images_nolock
+  fun:map_images
+  ...
+}

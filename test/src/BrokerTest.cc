@@ -31,6 +31,10 @@ namespace {
     EXPECT_EQ(b2->nodeId, b1->nodeId);
     EXPECT_EQ(b2->host, b1->host);
     EXPECT_EQ(b2->port, b1->port);
+
+    delete b1->packet;
+    delete b1;
+    delete b2;
   }
 
 }  // namespace

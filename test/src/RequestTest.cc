@@ -29,6 +29,9 @@ namespace {
     EXPECT_EQ(r2->apiVersion, r1->apiVersion);
     EXPECT_EQ(r2->correlationId, r1->correlationId);
     EXPECT_EQ(r2->clientId, r1->clientId);
+
+    delete r1;
+    delete r2;
   }
 
 }  // namespace

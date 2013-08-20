@@ -51,6 +51,7 @@ class PartitionMetadata : public WireFormatter, public PacketWriter
 
     PartitionMetadata(Packet *packet);
     PartitionMetadata(short int partitionErrorCode, int partitionId, int leader, int replicaArraySize, int *replicaArray, int isrArraySize, int *isrArray);
+    ~PartitionMetadata();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);

@@ -44,6 +44,7 @@ MetadataRequest::MetadataRequest(unsigned char *buffer, bool releaseBuffer) : Re
   for (int i=0 ; i<this->topicNameArraySize; i++) {
     this->topicNameArray[i] = this->packet->readString();
   }
+  this->releaseArray = true;
 }
 
 MetadataRequest::MetadataRequest(short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[]) : Request(ApiConstants::METADATA_REQUEST_KEY, apiVersion, correlationId, clientId)
@@ -53,6 +54,15 @@ MetadataRequest::MetadataRequest(short int apiVersion, int correlationId, string
   // Kafka Protocol: string[] topicName
   this->topicNameArraySize = topicNameArraySize;
   this->topicNameArray = topicNameArray;
+  this->releaseArray = false;
+}
+
+MetadataRequest::~MetadataRequest()
+{
+  if (this->releaseArray)
+  {
+    delete[] this->topicNameArray;
+  }
 }
 
 unsigned char* MetadataRequest::toWireFormat(bool updatePacketSize)

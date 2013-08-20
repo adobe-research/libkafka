@@ -74,11 +74,11 @@ MetadataResponse::~MetadataResponse()
     for (int i=0; i<this->brokerArraySize; i++) {
       delete this->brokerArray[i];
     }
-    delete this->brokerArray;
+    delete[] this->brokerArray;
     for (int i=0; i<this->topicMetadataArraySize; i++) {
       delete this->topicMetadataArray[i];
     }
-    delete this->topicMetadataArray;
+    delete[] this->topicMetadataArray;
   }
 }
 

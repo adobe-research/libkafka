@@ -23,6 +23,9 @@ namespace {
     RequestOrResponse *r2 = new RequestOrResponse(message);
     EXPECT_NE(r2, (void*)0);
     EXPECT_EQ(r2->size(), r1->size());
+
+    delete r1;
+    delete r2;
   }
 
 }  // namespace

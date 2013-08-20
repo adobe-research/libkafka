@@ -27,7 +27,10 @@ namespace {
     unsigned char* buffer = new unsigned char[1024];
     int numBytesReceived = c->read(1024, buffer);
     EXPECT_GT(numBytesReceived, 0);
+
     c->close();
+    delete buffer;
+    delete c;
   }
 
 }  // namespace

@@ -58,15 +58,13 @@ MetadataResponse* BaseTest::createMetadataResponse()
   for (int i=0; i<brokerArraySize; i++) {
     stringstream sstm;
     sstm << "host" << i;
-    string host = sstm.str();
-    brokerArray[i] = createBroker(host);
+    brokerArray[i] = createBroker(sstm.str());
   }
   
   for (int i=0; i<topicMetadataArraySize; i++) {
     stringstream sstm;
     sstm << "topic" << i;
-    string topic = sstm.str();
-    topicMetadataArray[i] = createTopicMetadata(topic);
+    topicMetadataArray[i] = createTopicMetadata(sstm.str());
   }
 
   return new MetadataResponse(correlationId, brokerArraySize, (Broker**)brokerArray, topicMetadataArraySize, (TopicMetadata**)topicMetadataArray);

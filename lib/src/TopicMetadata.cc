@@ -66,6 +66,17 @@ TopicMetadata::TopicMetadata(short int topicErrorCode, string topicName, int par
   this->releaseArrays = false;
 }
 
+TopicMetadata::~TopicMetadata()
+{
+  if (this->releaseArrays)
+  {
+    for (int i=0; i<this->partitionMetadataArraySize; i++) {
+      delete this->partitionMetadataArray[i];
+    }
+    delete[] this->partitionMetadataArray;
+  }
+}
+
 unsigned char* TopicMetadata::toWireFormat(bool updatePacketSize)
 {
   D(cout.flush() << "--------------TopicMetadata::toWireFormat()\n";)

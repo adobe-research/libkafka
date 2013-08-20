@@ -104,8 +104,17 @@ void Connection::close()
 {
   D(cout.flush() << "--------------Connection::close()\n";)
 
-    if (this->host_info_list != NULL) freeaddrinfo(this->host_info_list);
-  if (this->socketFd != SOCKET_UNINITIALIZED) ::close(this->socketFd);
+  if (this->host_info_list != NULL)
+  {
+    freeaddrinfo(this->host_info_list);
+    this->host_info_list = NULL;
+  }
+
+  if (this->socketFd != SOCKET_UNINITIALIZED)
+  {
+    ::close(this->socketFd);
+    this->socketFd = SOCKET_UNINITIALIZED;
+  }
 }
 
 int Connection::read(int numBytes, unsigned char* buffer)

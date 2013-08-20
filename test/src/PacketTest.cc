@@ -22,6 +22,9 @@ namespace {
     Packet *p2 = new Packet(message);
     EXPECT_NE(p2, (void*)0);
     EXPECT_EQ(p2->getSize(), p1->getSize());
+
+    delete p1;
+    delete p2;
   }
 
 }  // namespace

@@ -42,9 +42,14 @@ class MetadataRequest : public Request
 
     MetadataRequest(unsigned char *buffer, bool releaseBuffer = false);
     MetadataRequest(short int apiVersion, int correlationId, std::string clientId, int topicNameArraySize, std::string topicNameArray[]);
+    ~MetadataRequest();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
+
+  private:
+
+    bool releaseArray;
 };
 
 std::ostream& operator<< (std::ostream& os, const MetadataRequest& mr);

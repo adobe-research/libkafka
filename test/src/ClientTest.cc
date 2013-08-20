@@ -22,7 +22,10 @@ namespace {
     EXPECT_NE(mr1, (void*)0);
     MetadataResponse *mr2 = c->sendMetadataRequest(mr1);
     EXPECT_NE(mr2, (void*)0);
+
     delete c;
+    delete mr1;
+    delete mr2;
   }
 
 }  // namespace

@@ -39,6 +39,10 @@ namespace {
     for (int i=0; i<pm2->isrArraySize; i++) {
       EXPECT_EQ(pm2->isrArray[i], pm1->isrArray[i]);
     }
+
+    delete pm1->packet;
+    delete pm1;
+    delete pm2;
   }
 
 }  // namespace

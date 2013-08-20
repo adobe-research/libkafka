@@ -78,6 +78,15 @@ PartitionMetadata::PartitionMetadata(short int partitionErrorCode, int partition
   this->releaseArrays = false;
 }
 
+PartitionMetadata::~PartitionMetadata()
+{
+  if (this->releaseArrays)
+  {
+    delete[] this->replicaArray;
+    delete[] this->isrArray;
+  }
+}
+
 unsigned char* PartitionMetadata::toWireFormat(bool updatePacketSize)
 {
   D(cout.flush() << "--------------PartitionMetadata::toWireFormat()\n";)

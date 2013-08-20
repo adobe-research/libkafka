@@ -35,6 +35,9 @@ namespace {
     for (int i=0; i<mr2->topicMetadataArraySize; i++) {
       EXPECT_EQ(*(mr2->topicMetadataArray[i]), *(mr1->topicMetadataArray[i]));
     }
+
+    delete mr1;
+    delete mr2;
   }
 
 }  // namespace
