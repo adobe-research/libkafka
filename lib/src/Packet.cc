@@ -88,6 +88,15 @@ unsigned char* Packet::toWireFormat(bool updateSize)
   return this->buffer;
 }
 
+signed char Packet::readInt8()
+{
+  signed char netValue = *(signed char*)(this->head);
+  // netValue == hostValue for single bytes
+  this->head += sizeof(signed char);
+  D(cout.flush() << "Packet::readInt8():netValue(" << netValue << "):hostValue(" << netValue << ")\n";)
+  return netValue;
+}
+
 short int Packet::readInt16()
 {
   short int netValue = *(int*)(this->head);
@@ -124,11 +133,29 @@ string Packet::readString()
   return value;
 }
 
+unsigned char* Packet::readBytes(int numBytes)
+{
+  // returns a pointer to the bytes within the Packet buffer, and increments head
+  unsigned char* bytes = this->head;
+  this->head += numBytes;
+  D(cout.flush() << "Packet::readBytes():" << numBytes << "\n";)
+  return bytes;
+}
+
 void Packet::updatePacketSize()
 {
   int netValue = htonl((this->size) - sizeof(int)); // prior to sending, set packetSize exclusive of size (int)
   memcpy(buffer, &netValue, sizeof(int));
   D(cout.flush() << "Packet::updatePacketSize():hostValue(" << this->size << "(:netValue(" << netValue << ")\n";)
+}
+
+void Packet::writeInt8(signed char hostValue)
+{
+  // netValue == hostValue for single bytes
+  memcpy(head, &hostValue, sizeof(signed char));
+  head += sizeof(signed char);
+  this->size += sizeof(signed char);
+  D(cout.flush() << "Packet::writeInt8():hostValue(" << hostValue << "):netValue(" << hostValue << ")\n";)
 }
 
 void Packet::writeInt16(short int hostValue)
@@ -166,6 +193,14 @@ void Packet::writeString(string value)
   head += length;
   this->size += length;
   D(cout.flush() << "Packet::writeString():" << length << ":" << value.c_str() << "\n";)
+}
+
+void Packet::writeBytes(unsigned char* bytes, int numBytes)
+{
+  memcpy(head, bytes, numBytes);
+  head += numBytes;
+  this->size += numBytes;
+  D(cout.flush() << "Packet::writeBytes():" << numBytes << "\n";)
 }
 
 void Packet::resetForReading()

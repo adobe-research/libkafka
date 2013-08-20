@@ -6,6 +6,7 @@
 #include <PartitionMetadata.h>
 #include <MetadataRequest.h>
 #include <MetadataResponse.h>
+#include <Message.h>
 #include <ApiConstants.h>
 
 using namespace std;
@@ -47,11 +48,22 @@ class BaseTest : public ::testing::Test {
     static TopicMetadata **topicMetadataArray;
     MetadataResponse *createMetadataResponse();
 
-    //MetadataRequest
+    // MetadataRequest
     const static short int apiKey = ApiConstants::METADATA_REQUEST_KEY;
     const static short int apiVersion = ApiConstants::API_VERSION;
     const static string clientId;
     const static int topicNameArraySize = 3;
     static string *topicNameArray;
     MetadataRequest *createMetadataRequest(bool emptyTopicArray = false);
+
+    // Message
+    const static long int offset = 21;
+    const static int crc = 1001;
+    const static signed char magicByte = -1;
+    const static signed char attributes = -2;
+    const static int keyLength = 10;
+    static unsigned char *key;
+    const static int valueLength = 20;
+    static unsigned char *value;
+    Message *createMessage();
 };

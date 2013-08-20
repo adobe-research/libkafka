@@ -25,61 +25,47 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef PACKET_H
-#define PACKET_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
 #include <string>
 #include <Debug.h>
+#include <Packet.h>
 #include <WireFormatter.h>
+#include <PacketWriter.h>
 
 namespace LibKafka {
 
-class Packet : public WireFormatter
+class Message: public WireFormatter, public PacketWriter
 {
   public:
 
-    static const int DEFAULT_BUFFER_SIZE = 1024;
+    long int offset;
+    int messageSize; // exclusive of offset and messageSize protocol lengths
+    int crc;
+    unsigned char magicByte;
+    unsigned char attributes;
+    int keyLength;
+    unsigned char* key;
+    int valueLength;
+    unsigned char* value;
 
+    Message(Packet *packet);
+    Message(long int offset, int messageSize, int crc, unsigned char magicByte, unsigned char attributes, int keyLength, unsigned char* key, int valueLength, unsigned char* value, bool releaseArrays = false);
+    ~Message();
 
-    Packet(int bufferSize = DEFAULT_BUFFER_SIZE);
-    Packet(unsigned char *buffer, bool releaseBuffer = false);
-    ~Packet();
-
-    unsigned char *getBuffer() { return this->buffer; }
-
-    signed char readInt8();
-    short int readInt16();
-    int readInt32();
-    long int readInt64();
-    std::string readString();
-    unsigned char* readBytes(int numBytes);
-
-    void writeInt8(signed char value);
-    void writeInt16(short int value);
-    void writeInt32(int value);
-    void writeInt64(int long value);
-    void writeString(std::string value);
-    void writeBytes(unsigned char* bytes, int numBytes);
-   
-    int getSize(bool includeProtocolSizeFieldLength = true);
-    void updatePacketSize();
-    void resetForReading();
-
-    unsigned char* toWireFormat(bool updateSize = true);
-    int getWireFormatSize(bool includeSize = false);
-
-  protected:
-    
-    int size; // size of packet, inclusive of initial protocol size int32 value
-
-    unsigned char *buffer;
-    unsigned char *head;
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = false);
 
   private:
 
-    bool releaseBuffer;
+    bool releaseArrays;
 };
+
+std::ostream& operator<< (std::ostream& os, const Message& t);
+inline bool operator==(const Message& lhs, const Message& rhs) { return ((lhs.offset==rhs.offset)&&(lhs.messageSize==rhs.messageSize)&&(lhs.crc==rhs.crc)&&(lhs.magicByte==rhs.magicByte)&&(lhs.attributes==rhs.attributes)); }
+inline bool operator!=(const Message& lhs, const Message& rhs) { return !operator==(lhs,rhs); }
 
 }; // namespace LibKafka
 
-#endif /* PACKET_H */
+#endif /* MESSAGE_H */

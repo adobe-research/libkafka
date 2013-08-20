@@ -104,3 +104,19 @@ MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
 
   return new MetadataRequest(apiVersion, correlationId, clientId, topicNameArraySize, topicNameArray, true);
 }
+
+// Message
+
+unsigned char* BaseTest::key;
+unsigned char* BaseTest::value;
+
+Message* BaseTest::createMessage()
+{
+  key = new unsigned char[keyLength];
+  value = new unsigned char[valueLength];
+
+  // crc + magicByte + attributes + key + value
+  int messageSize = sizeof(int) + sizeof(signed char) + sizeof(signed char) + sizeof(int) + keyLength + sizeof(int) + valueLength;
+
+  return new Message(offset, messageSize, crc, magicByte, attributes, keyLength, key, valueLength, value, true);
+}
