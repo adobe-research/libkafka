@@ -45,7 +45,7 @@ class MetadataResponse : public Response
     TopicMetadata **topicMetadataArray;
 
     MetadataResponse(unsigned char *buffer, bool releaseBuffer = false);
-    MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray);
+    MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray, bool releaseArrays = false);
     ~MetadataResponse();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

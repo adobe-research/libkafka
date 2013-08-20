@@ -26,35 +26,46 @@ Broker* BaseTest::createBroker(string host)
 
 // TopicMetadata
 
-const PartitionMetadata* BaseTest::partitionMetadataArray[3];
+PartitionMetadata** BaseTest::partitionMetadataArray;
 
 TopicMetadata* BaseTest::createTopicMetadata(string topicName)
 {
+  partitionMetadataArray = new PartitionMetadata*[partitionMetadataArraySize];
+
   for (int i=0; i<partitionMetadataArraySize; i++) {
     int partitionId = i;
     partitionMetadataArray[i] = createPartitionMetadata(partitionId);
   }
 
-  return new TopicMetadata(topicErrorCode, topicName, partitionMetadataArraySize, (PartitionMetadata**)partitionMetadataArray);
+  return new TopicMetadata(topicErrorCode, topicName, partitionMetadataArraySize, partitionMetadataArray, true);
 }
 
 // PartitionMetadata
 
-const int BaseTest::replicaArray[3] = { 1, 2, 3 };
-const int BaseTest::isrArray[3] = { 4, 5, 6 };
+int* BaseTest::replicaArray;
+int* BaseTest::isrArray;
 
 PartitionMetadata* BaseTest::createPartitionMetadata(int partitionId)
 {
-  return new PartitionMetadata(partitionErrorCode, partitionId, leader, replicaArraySize, (int*)replicaArray, isrArraySize, (int*)isrArray);
+  replicaArray = new int[replicaArraySize];
+  isrArray = new int[isrArraySize];
+
+  for (int i=0; i<replicaArraySize; i++) { replicaArray[i] = i; }
+  for (int i=0; i<isrArraySize; i++) { isrArray[i] = i; }
+
+  return new PartitionMetadata(partitionErrorCode, partitionId, leader, replicaArraySize, replicaArray, isrArraySize, isrArray, true);
 }
 
 // MetadataResponse
 
-const Broker* BaseTest::brokerArray[3];
-const TopicMetadata* BaseTest::topicMetadataArray[3];
+Broker** BaseTest::brokerArray;
+TopicMetadata** BaseTest::topicMetadataArray;
 
 MetadataResponse* BaseTest::createMetadataResponse()
 {
+  brokerArray = new Broker*[brokerArraySize];
+  topicMetadataArray = new TopicMetadata*[topicNameArraySize];
+
   for (int i=0; i<brokerArraySize; i++) {
     stringstream sstm;
     sstm << "host" << i;
@@ -67,12 +78,12 @@ MetadataResponse* BaseTest::createMetadataResponse()
     topicMetadataArray[i] = createTopicMetadata(sstm.str());
   }
 
-  return new MetadataResponse(correlationId, brokerArraySize, (Broker**)brokerArray, topicMetadataArraySize, (TopicMetadata**)topicMetadataArray);
+  return new MetadataResponse(correlationId, brokerArraySize, brokerArray, topicMetadataArraySize, topicMetadataArray, true);
 }
 
 // MetadataRequest
 
-const string BaseTest::topicNameArray[3] = { string("testTopic1"), string("testTopic2"), string("testTopic3") };
+string* BaseTest::topicNameArray;
 const string BaseTest::clientId = string("libkafka-test");
 
 MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
@@ -82,5 +93,14 @@ MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
     return new MetadataRequest(apiVersion, correlationId, clientId, 0, (string*)NULL);
   }
   
-  return new MetadataRequest(apiVersion, correlationId, clientId, topicNameArraySize, (string*)topicNameArray);
+  topicNameArray = new string[topicNameArraySize];
+
+  for (int i=0; i<topicNameArraySize; i++)
+  {
+    stringstream sstm;
+    sstm << "topic" << i;
+    topicNameArray[i] = sstm.str();
+  }
+
+  return new MetadataRequest(apiVersion, correlationId, clientId, topicNameArraySize, topicNameArray, true);
 }

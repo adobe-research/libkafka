@@ -50,7 +50,7 @@ class PartitionMetadata : public WireFormatter, public PacketWriter
     int *isrArray;
 
     PartitionMetadata(Packet *packet);
-    PartitionMetadata(short int partitionErrorCode, int partitionId, int leader, int replicaArraySize, int *replicaArray, int isrArraySize, int *isrArray);
+    PartitionMetadata(short int partitionErrorCode, int partitionId, int leader, int replicaArraySize, int *replicaArray, int isrArraySize, int *isrArray, bool releaseArrays = false);
     ~PartitionMetadata();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

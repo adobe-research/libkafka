@@ -56,7 +56,7 @@ MetadataResponse::MetadataResponse(unsigned char *buffer, bool releaseBuffer) : 
   this->releaseArrays = true;
 }
 
-MetadataResponse::MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray) : Response(correlationId)
+MetadataResponse::MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray, bool releaseArrays) : Response(correlationId)
 {
   D(cout.flush() << "--------------MetadataResponse(params)\n";)
 
@@ -65,7 +65,7 @@ MetadataResponse::MetadataResponse(int correlationId, int brokerArraySize, Broke
   this->brokerArray = brokerArray;
   this->topicMetadataArraySize = topicMetadataArraySize;
   this->topicMetadataArray = topicMetadataArray;
-  this->releaseArrays = false;
+  this->releaseArrays = releaseArrays;
 }
 
 MetadataResponse::~MetadataResponse()

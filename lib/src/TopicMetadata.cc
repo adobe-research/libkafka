@@ -55,7 +55,7 @@ TopicMetadata::TopicMetadata(Packet *packet) : WireFormatter(), PacketWriter(pac
   this->releaseArrays = true;
 }
 
-TopicMetadata::TopicMetadata(short int topicErrorCode, string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray) : WireFormatter(), PacketWriter()
+TopicMetadata::TopicMetadata(short int topicErrorCode, string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray, bool releaseArrays) : WireFormatter(), PacketWriter()
 {
   D(cout.flush() << "--------------TopicMetadata(params)\n";)
 
@@ -63,7 +63,7 @@ TopicMetadata::TopicMetadata(short int topicErrorCode, string topicName, int par
   this->topicName = topicName;
   this->partitionMetadataArraySize = partitionMetadataArraySize;
   this->partitionMetadataArray = partitionMetadataArray;
-  this->releaseArrays = false;
+  this->releaseArrays = releaseArrays;
 }
 
 TopicMetadata::~TopicMetadata()

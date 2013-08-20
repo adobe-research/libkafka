@@ -64,7 +64,7 @@ PartitionMetadata::PartitionMetadata(Packet *packet) : WireFormatter(), PacketWr
   this->releaseArrays = true;
 }
 
-PartitionMetadata::PartitionMetadata(short int partitionErrorCode, int partitionId, int leader, int replicaArraySize, int *replicaArray, int isrArraySize, int *isrArray) : WireFormatter(), PacketWriter()
+PartitionMetadata::PartitionMetadata(short int partitionErrorCode, int partitionId, int leader, int replicaArraySize, int *replicaArray, int isrArraySize, int *isrArray, bool releaseArrays) : WireFormatter(), PacketWriter()
 {
   D(cout.flush() << "--------------PartitionMetadata(params)\n";)
 
@@ -75,7 +75,7 @@ PartitionMetadata::PartitionMetadata(short int partitionErrorCode, int partition
   this->replicaArray = replicaArray;
   this->isrArraySize = isrArraySize;
   this->isrArray = isrArray;
-  this->releaseArrays = false;
+  this->releaseArrays = releaseArrays;
 }
 
 PartitionMetadata::~PartitionMetadata()

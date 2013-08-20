@@ -47,7 +47,7 @@ class TopicMetadata : public WireFormatter, public PacketWriter
     PartitionMetadata **partitionMetadataArray;
 
     TopicMetadata(Packet *packet);
-    TopicMetadata(short int topicErrorCode, std::string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray);
+    TopicMetadata(short int topicErrorCode, std::string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray, bool releaseArrays = false);
     ~TopicMetadata();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

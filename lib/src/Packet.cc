@@ -77,7 +77,7 @@ Packet::~Packet()
 {
   D(cout.flush() << "--------------~Packet()\n";)
 
-  if (releaseBuffer) delete buffer;
+  if (releaseBuffer) delete[] buffer;
 }
 
 unsigned char* Packet::toWireFormat(bool updateSize)

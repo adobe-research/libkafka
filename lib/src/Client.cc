@@ -107,9 +107,9 @@ ResponseClass *Client::receiveResponse()
   if (numBytesReceived == Connection::READ_ERROR) { E("Client::receiveResponse():read error on size:" << strerror(errno) << "\n"); return NULL; }
   int hostValueSize = ntohl(netValueSize);
   D(cout.flush() << "Client::receiveResponse():incoming response:size:" << hostValueSize << "\n";)
-  unsigned char *buffer = new unsigned char[hostValueSize];
+  unsigned char *buffer = new unsigned char[hostValueSize+sizeof(int)]; // add space for int32 size
   memcpy(buffer, &netValueSize, sizeof(int));
-  numBytesReceived = this->connection->read(hostValueSize - sizeof(int), buffer + sizeof(int));
+  numBytesReceived = this->connection->read(hostValueSize, buffer + sizeof(int));
   if (numBytesReceived == Connection::READ_ERROR) { E("Client::receiveResponse():read error on body:" << strerror(errno) << "\n"); return NULL; }
   return new ResponseClass(buffer, true); // true specfies delete buffer on ~Response()
 }
