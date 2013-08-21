@@ -6,7 +6,10 @@
 #include <PartitionMetadata.h>
 #include <MetadataRequest.h>
 #include <MetadataResponse.h>
-#include <Message.h>
+#include <MessageSet.h>
+#include <ProduceTopic.h>
+#include <ProduceMessageSet.h>
+#include <ProduceRequest.h>
 #include <ApiConstants.h>
 
 using namespace std;
@@ -49,14 +52,13 @@ class BaseTest : public ::testing::Test {
     MetadataResponse *createMetadataResponse();
 
     // MetadataRequest
-    const static short int apiKey = ApiConstants::METADATA_REQUEST_KEY;
     const static short int apiVersion = ApiConstants::API_VERSION;
     const static string clientId;
     const static int topicNameArraySize = 3;
     static string *topicNameArray;
     MetadataRequest *createMetadataRequest(bool emptyTopicArray = false);
 
-    // Message
+    // MessageSet
     const static long int offset = 21;
     const static int crc = 1001;
     const static signed char magicByte = -1;
@@ -65,5 +67,23 @@ class BaseTest : public ::testing::Test {
     static unsigned char *key;
     const static int valueLength = 20;
     static unsigned char *value;
-    Message *createMessage();
+    MessageSet *createMessageSet();
+
+    // ProduceMessageSet
+    const static int partition = 1;
+    static MessageSet *messageSet;
+    ProduceMessageSet *createProduceMessageSet();
+
+    // ProduceTopic
+    const static string topicName;
+    const static int produceMessageSetArraySize = 2;
+    static ProduceMessageSet **produceMessageSetArray;
+    ProduceTopic *createProduceTopic();
+
+    // ProduceRequest
+    const static int requiredAcks = 1;
+    const static int timeout = 20;
+    const static int produceTopicArraySize = 2;
+    static ProduceTopic **produceTopicArray;
+    ProduceRequest *createProduceRequest();
 };

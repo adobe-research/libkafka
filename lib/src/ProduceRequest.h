@@ -25,47 +25,39 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef PRODUCEREQUEST_H
+#define PRODUCEREQUEST_H
 
 #include <string>
-#include <Debug.h>
-#include <Packet.h>
-#include <WireFormatter.h>
-#include <PacketWriter.h>
+#include <Request.h>
+#include <ProduceTopic.h>
 
 namespace LibKafka {
 
-class Message: public WireFormatter, public PacketWriter
+class ProduceRequest : public Request
 {
   public:
 
-    long int offset;
-    int messageSize; // exclusive of offset and messageSize protocol lengths
-    int crc;
-    unsigned char magicByte;
-    unsigned char attributes;
-    int keyLength;
-    unsigned char* key;
-    int valueLength;
-    unsigned char* value;
+    short int requiredAcks;
+    int timeout;
 
-    Message(Packet *packet);
-    Message(long int offset, int messageSize, int crc, unsigned char magicByte, unsigned char attributes, int keyLength, unsigned char* key, int valueLength, unsigned char* value, bool releaseArrays = false);
-    ~Message();
+    int produceTopicArraySize;
+    ProduceTopic **produceTopicArray;
+
+    ProduceRequest(unsigned char *buffer, bool releaseBuffer = false);
+    ProduceRequest(short int apiVersion, int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, ProduceTopic **produceTopicArray, bool releaseArrays = false);
+    ~ProduceRequest();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
-    int getWireFormatSize(bool includePacketSize = false);
+    int getWireFormatSize(bool includePacketSize = true);
 
   private:
 
     bool releaseArrays;
 };
 
-std::ostream& operator<< (std::ostream& os, const Message& t);
-inline bool operator==(const Message& lhs, const Message& rhs) { return ((lhs.offset==rhs.offset)&&(lhs.messageSize==rhs.messageSize)&&(lhs.crc==rhs.crc)&&(lhs.magicByte==rhs.magicByte)&&(lhs.attributes==rhs.attributes)); }
-inline bool operator!=(const Message& lhs, const Message& rhs) { return !operator==(lhs,rhs); }
+std::ostream& operator<< (std::ostream& os, const ProduceRequest& pr);
 
 }; // namespace LibKafka
 
-#endif /* MESSAGE_H */
+#endif

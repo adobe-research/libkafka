@@ -28,15 +28,15 @@
 #include <string>
 #include <iostream>
 
-#include <Message.h>
+#include <MessageSet.h>
 
 using namespace std;
 
 namespace LibKafka {
 
-Message::Message(Packet *packet) : WireFormatter(), PacketWriter(packet)
+MessageSet::MessageSet(Packet *packet) : WireFormatter(), PacketWriter(packet)
 {
-  D(cout.flush() << "--------------Message(buffer)\n";)
+  D(cout.flush() << "--------------MessageSet(buffer)\n";)
 
   // Kafka Protocol: long int offset
   this->offset = this->packet->readInt64();
@@ -64,9 +64,9 @@ Message::Message(Packet *packet) : WireFormatter(), PacketWriter(packet)
   this->releaseArrays = false; // key and value point into the Packet buffer, not new memory
 }
 
-Message::Message(long int offset, int messageSize, int crc, unsigned char magicByte, unsigned char attributes, int keyLength, unsigned char* key, int valueLength, unsigned char* value, bool releaseArrays) : WireFormatter(), PacketWriter()
+MessageSet::MessageSet(long int offset, int messageSize, int crc, unsigned char magicByte, unsigned char attributes, int keyLength, unsigned char* key, int valueLength, unsigned char* value, bool releaseArrays) : WireFormatter(), PacketWriter()
 {
-  D(cout.flush() << "--------------Message(params)\n";)
+  D(cout.flush() << "--------------MessageSet(params)\n";)
 
   this->offset = offset;
   this->messageSize = messageSize;
@@ -80,7 +80,7 @@ Message::Message(long int offset, int messageSize, int crc, unsigned char magicB
   this->releaseArrays = releaseArrays;
 }
 
-Message::~Message()
+MessageSet::~MessageSet()
 {
   if (this->releaseArrays)
   {
@@ -89,9 +89,9 @@ Message::~Message()
   }
 }
 
-unsigned char* Message::toWireFormat(bool updatePacketSize)
+unsigned char* MessageSet::toWireFormat(bool updatePacketSize)
 {
-  D(cout.flush() << "--------------Message::toWireFormat()\n";)
+  D(cout.flush() << "--------------MessageSet::toWireFormat()\n";)
   
   // Kafka Protocol: long int offset
   this->packet->writeInt64(this->offset);
@@ -120,9 +120,9 @@ unsigned char* Message::toWireFormat(bool updatePacketSize)
   return this->packet->getBuffer();
 }
 
-int Message::getWireFormatSize(bool includePacketSize)
+int MessageSet::getWireFormatSize(bool includePacketSize)
 {
-  D(cout.flush() << "--------------Message::getWireFormatSize()\n";)
+  D(cout.flush() << "--------------MessageSet::getWireFormatSize()\n";)
   
   // Packet.size
   // offset + messageSize + crc + magicByte + attributes
@@ -137,7 +137,7 @@ int Message::getWireFormatSize(bool includePacketSize)
   return size;
 }
 
-ostream& operator<< (ostream& os, const Message& m)
+ostream& operator<< (ostream& os, const MessageSet& m)
 {
   os << m.offset << ":" << m.messageSize << ":" << m.crc << ":" << m.magicByte << ":" << m.attributes << ":" << m.keyLength << ":" << m.valueLength;
   return os;

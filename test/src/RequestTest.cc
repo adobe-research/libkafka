@@ -16,7 +16,7 @@ namespace {
 
   TEST_F(RequestTest, Constructor) {
 
-    Request *r1 = new Request(apiKey, apiVersion, correlationId, clientId);
+    Request *r1 = new Request(ApiConstants::METADATA_REQUEST_KEY, apiVersion, correlationId, clientId);
     EXPECT_NE(r1, (void*)0);
     unsigned char * message = r1->toWireFormat();
     int size = r1->getWireFormatSize(true);

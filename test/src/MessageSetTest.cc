@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <BaseTest.h>
 #include <Packet.h>
-#include <Message.h>
+#include <MessageSet.h>
 #include <PartitionMetadata.h>
 
 namespace {
@@ -17,7 +17,7 @@ namespace {
   };
 
   TEST_F(MessageTest, Constructor) {
-    Message *m1 = createMessage();
+    MessageSet *m1 = createMessageSet();
     EXPECT_NE(m1, (void*)0);
     m1->packet = new Packet();
     unsigned char * message = m1->toWireFormat();
@@ -25,7 +25,7 @@ namespace {
     EXPECT_EQ(m1->packet->getSize(), size);
 
     m1->packet->resetForReading();
-    Message *m2 = new Message(m1->packet);
+    MessageSet *m2 = new MessageSet(m1->packet);
 
     EXPECT_NE(m2, (void*)0);
     EXPECT_EQ(m2->packet->getSize(), m1->packet->getSize());

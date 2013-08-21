@@ -105,12 +105,12 @@ MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
   return new MetadataRequest(apiVersion, correlationId, clientId, topicNameArraySize, topicNameArray, true);
 }
 
-// Message
+// MessageSet
 
 unsigned char* BaseTest::key;
 unsigned char* BaseTest::value;
 
-Message* BaseTest::createMessage()
+MessageSet* BaseTest::createMessageSet()
 {
   key = new unsigned char[keyLength];
   value = new unsigned char[valueLength];
@@ -118,5 +118,42 @@ Message* BaseTest::createMessage()
   // crc + magicByte + attributes + key + value
   int messageSize = sizeof(int) + sizeof(signed char) + sizeof(signed char) + sizeof(int) + keyLength + sizeof(int) + valueLength;
 
-  return new Message(offset, messageSize, crc, magicByte, attributes, keyLength, key, valueLength, value, true);
+  return new MessageSet(offset, messageSize, crc, magicByte, attributes, keyLength, key, valueLength, value, true);
+}
+
+// ProduceMessageSet
+
+MessageSet* BaseTest::messageSet;
+
+ProduceMessageSet* BaseTest::createProduceMessageSet()
+{
+  messageSet = createMessageSet();
+  int messageSetSize = messageSet->getWireFormatSize(false);
+  return new ProduceMessageSet(partition, messageSetSize, messageSet, true);
+}
+
+// ProduceTopic
+
+ProduceMessageSet** BaseTest::produceMessageSetArray;
+const string BaseTest::topicName = string("test_topic");
+
+ProduceTopic* BaseTest::createProduceTopic()
+{
+  produceMessageSetArray = new ProduceMessageSet*[produceMessageSetArraySize];
+  for (int i=0; i<produceMessageSetArraySize; i++) {
+    produceMessageSetArray[i] = createProduceMessageSet();
+  }
+  return new ProduceTopic(topicName, produceMessageSetArraySize, produceMessageSetArray, true);
+}
+
+// ProduceRequest
+ProduceTopic** BaseTest::produceTopicArray;
+
+ProduceRequest* BaseTest::createProduceRequest()
+{
+  produceTopicArray = new ProduceTopic*[produceTopicArraySize];
+  for (int i=0; i<produceTopicArraySize; i++) {
+    produceTopicArray[i] = createProduceTopic();
+  }
+  return new ProduceRequest(apiVersion, correlationId, clientId, requiredAcks, timeout, produceTopicArraySize, produceTopicArray, true);
 }
