@@ -25,42 +25,39 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef PRODUCETOPIC_H
-#define PRODUCETOPIC_H
+#ifndef METADATARESPONSE_H
+#define METADATARESPONSE_H
 
 #include <string>
-#include <Debug.h>
-#include <Packet.h>
-#include <ProduceMessageSet.h>
-#include <WireFormatter.h>
-#include <PacketWriter.h>
+#include "../Response.h"
+#include "Broker.h"
+#include "TopicMetadata.h"
 
 namespace LibKafka {
 
-class ProduceTopic : public WireFormatter, public PacketWriter
+class MetadataResponse : public Response
 {
   public:
 
-    std::string topicName;
-    int produceMessageSetArraySize;
-    ProduceMessageSet **produceMessageSetArray;
+    int brokerArraySize;
+    Broker **brokerArray;
+    int topicMetadataArraySize;
+    TopicMetadata **topicMetadataArray;
 
-    ProduceTopic(Packet *packet);
-    ProduceTopic(std::string topicName, int produceMessageSetArraySize, ProduceMessageSet **produceMessageSetArray, bool releaseArrays = false);
-    ~ProduceTopic();
+    MetadataResponse(unsigned char *buffer, bool releaseBuffer = false);
+    MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray, bool releaseArrays = false);
+    ~MetadataResponse();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
-    int getWireFormatSize(bool includePacketSize = false);
+    int getWireFormatSize(bool includePacketSize = true);
 
   private:
 
     bool releaseArrays;
 };
 
-std::ostream& operator<< (std::ostream& os, const ProduceTopic& b);
-inline bool operator==(const ProduceTopic& lhs, const ProduceTopic& rhs) { return ((lhs.topicName==rhs.topicName)&&(lhs.produceMessageSetArraySize==rhs.produceMessageSetArraySize)); }
-inline bool operator!=(const ProduceTopic& lhs, const ProduceTopic& rhs) { return !operator==(lhs,rhs); }
+std::ostream& operator<< (std::ostream& os, const MetadataResponse& mr);
 
 }; // namespace LibKafka
 
-#endif /* PRODUCETOPIC_H */
+#endif /* METADATARESPONSE_H */

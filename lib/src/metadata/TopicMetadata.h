@@ -25,39 +25,43 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef PRODUCEREQUEST_H
-#define PRODUCEREQUEST_H
+#ifndef TOPICMETADATA_H
+#define TOPICMETADATA_H
 
 #include <string>
-#include <Request.h>
-#include <ProduceTopic.h>
+#include "../Debug.h"
+#include "../Packet.h"
+#include "../WireFormatter.h"
+#include "../PacketWriter.h"
+#include "PartitionMetadata.h"
 
 namespace LibKafka {
 
-class ProduceRequest : public Request
+class TopicMetadata : public WireFormatter, public PacketWriter
 {
   public:
 
-    short int requiredAcks;
-    int timeout;
+    short int topicErrorCode;
+    std::string topicName;
+    int partitionMetadataArraySize;
+    PartitionMetadata **partitionMetadataArray;
 
-    int produceTopicArraySize;
-    ProduceTopic **produceTopicArray;
-
-    ProduceRequest(unsigned char *buffer, bool releaseBuffer = false);
-    ProduceRequest(int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, ProduceTopic **produceTopicArray, bool releaseArrays = false);
-    ~ProduceRequest();
+    TopicMetadata(Packet *packet);
+    TopicMetadata(short int topicErrorCode, std::string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray, bool releaseArrays = false);
+    ~TopicMetadata();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
-    int getWireFormatSize(bool includePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = false);
 
   private:
 
     bool releaseArrays;
 };
 
-std::ostream& operator<< (std::ostream& os, const ProduceRequest& pr);
+std::ostream& operator<< (std::ostream& os, const TopicMetadata& b);
+inline bool operator==(const TopicMetadata& lhs, const TopicMetadata& rhs) { return ((lhs.topicErrorCode==rhs.topicErrorCode)&&(lhs.topicName==rhs.topicName)); }
+inline bool operator!=(const TopicMetadata& lhs, const TopicMetadata& rhs) { return !operator==(lhs,rhs); }
 
 }; // namespace LibKafka
 
-#endif
+#endif /* TOPICMETADATA_H */

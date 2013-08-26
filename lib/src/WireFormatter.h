@@ -28,7 +28,7 @@
 #ifndef WIRE_FORMATTER_H
 #define WIRE_FORMATTER_H
 
-#include <Debug.h>
+#include "Debug.h"
 
 namespace LibKafka {
 

@@ -25,30 +25,29 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef TOPICMETADATA_H
-#define TOPICMETADATA_H
+#ifndef PRODUCEMESSAGESET_H
+#define PRODUCEMESSAGESET_H
 
 #include <string>
-#include <Debug.h>
-#include <Packet.h>
-#include <WireFormatter.h>
-#include <PacketWriter.h>
-#include <PartitionMetadata.h>
+#include "../Debug.h"
+#include "../Packet.h"
+#include "../MessageSet.h"
+#include "../WireFormatter.h"
+#include "../PacketWriter.h"
 
 namespace LibKafka {
 
-class TopicMetadata : public WireFormatter, public PacketWriter
+class ProduceMessageSet : public WireFormatter, public PacketWriter
 {
   public:
 
-    short int topicErrorCode;
-    std::string topicName;
-    int partitionMetadataArraySize;
-    PartitionMetadata **partitionMetadataArray;
+    int partition;
+    int messageSetSize;
+    MessageSet *messageSet;
 
-    TopicMetadata(Packet *packet);
-    TopicMetadata(short int topicErrorCode, std::string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray, bool releaseArrays = false);
-    ~TopicMetadata();
+    ProduceMessageSet(Packet *packet);
+    ProduceMessageSet(int partition, int messageSetSize, MessageSet *messageSet, bool releaseArrays = false);
+    ~ProduceMessageSet();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);
@@ -58,10 +57,10 @@ class TopicMetadata : public WireFormatter, public PacketWriter
     bool releaseArrays;
 };
 
-std::ostream& operator<< (std::ostream& os, const TopicMetadata& b);
-inline bool operator==(const TopicMetadata& lhs, const TopicMetadata& rhs) { return ((lhs.topicErrorCode==rhs.topicErrorCode)&&(lhs.topicName==rhs.topicName)); }
-inline bool operator!=(const TopicMetadata& lhs, const TopicMetadata& rhs) { return !operator==(lhs,rhs); }
+std::ostream& operator<< (std::ostream& os, const ProduceMessageSet& pm);
+inline bool operator==(const ProduceMessageSet& lhs, const ProduceMessageSet& rhs) { return ((lhs.partition==rhs.partition)&&(lhs.messageSetSize==rhs.messageSetSize)); }
+inline bool operator!=(const ProduceMessageSet& lhs, const ProduceMessageSet& rhs) { return !operator==(lhs,rhs); }
 
 }; // namespace LibKafka
 
-#endif /* TOPICMETADATA_H */
+#endif /* PRODUCEMESSAGESET_H */

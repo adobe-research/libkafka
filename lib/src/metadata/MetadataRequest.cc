@@ -27,8 +27,8 @@
 
 #include <iostream>
 
-#include <MetadataRequest.h>
-#include <ApiConstants.h>
+#include "MetadataRequest.h"
+#include "../ApiConstants.h"
 
 using namespace std;
 

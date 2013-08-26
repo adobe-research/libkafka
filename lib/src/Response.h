@@ -29,7 +29,7 @@
 #define RESPONSE_H
 
 #include <string>
-#include <RequestOrResponse.h>
+#include "RequestOrResponse.h"
 
 namespace LibKafka {
 

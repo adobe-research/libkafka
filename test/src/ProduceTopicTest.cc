@@ -1,9 +1,9 @@
 #include <string>
 #include <gtest/gtest.h>
-#include <BaseTest.h>
+#include "BaseTest.h"
 #include <Packet.h>
-#include <ProduceTopic.h>
-#include <ProduceMessageSet.h>
+#include <produce/ProduceTopic.h>
+#include <produce/ProduceMessageSet.h>
 
 namespace {
 

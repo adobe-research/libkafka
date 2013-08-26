@@ -25,42 +25,35 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef PRODUCEMESSAGESET_H
-#define PRODUCEMESSAGESET_H
+#ifndef METADATAREQUEST_H
+#define METADATAREQUEST_H
 
 #include <string>
-#include <Debug.h>
-#include <Packet.h>
-#include <MessageSet.h>
-#include <WireFormatter.h>
-#include <PacketWriter.h>
+#include "../Request.h"
 
 namespace LibKafka {
 
-class ProduceMessageSet : public WireFormatter, public PacketWriter
+class MetadataRequest : public Request
 {
   public:
 
-    int partition;
-    int messageSetSize;
-    MessageSet *messageSet;
+    int topicNameArraySize;
+    std::string *topicNameArray;
 
-    ProduceMessageSet(Packet *packet);
-    ProduceMessageSet(int partition, int messageSetSize, MessageSet *messageSet, bool releaseArrays = false);
-    ~ProduceMessageSet();
+    MetadataRequest(unsigned char *buffer, bool releaseBuffer = false);
+    MetadataRequest(int correlationId, std::string clientId, int topicNameArraySize, std::string topicNameArray[], bool releaseArrays = false);
+    ~MetadataRequest();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
-    int getWireFormatSize(bool includePacketSize = false);
+    int getWireFormatSize(bool includePacketSize = true);
 
   private:
 
     bool releaseArrays;
 };
 
-std::ostream& operator<< (std::ostream& os, const ProduceMessageSet& pm);
-inline bool operator==(const ProduceMessageSet& lhs, const ProduceMessageSet& rhs) { return ((lhs.partition==rhs.partition)&&(lhs.messageSetSize==rhs.messageSetSize)); }
-inline bool operator!=(const ProduceMessageSet& lhs, const ProduceMessageSet& rhs) { return !operator==(lhs,rhs); }
+std::ostream& operator<< (std::ostream& os, const MetadataRequest& mr);
 
 }; // namespace LibKafka
 
-#endif /* PRODUCEMESSAGESET_H */
+#endif

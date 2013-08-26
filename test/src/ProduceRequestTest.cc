@@ -1,8 +1,8 @@
 #include <string>
 #include <gtest/gtest.h>
-#include <BaseTest.h>
-#include <ProduceRequest.h>
-#include <ProduceTopic.h>
+#include "BaseTest.h"
+#include <produce/ProduceRequest.h>
+#include <produce/ProduceTopic.h>
 
 namespace {
 

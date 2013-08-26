@@ -32,7 +32,7 @@
 #include <string>
 #include <sys/socket.h>
 #include <netdb.h>
-#include <Debug.h>
+#include "Debug.h"
 
 namespace LibKafka {
 

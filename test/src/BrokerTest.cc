@@ -1,7 +1,7 @@
 #include <string>
 #include <gtest/gtest.h>
-#include <BaseTest.h>
-#include <Broker.h>
+#include "BaseTest.h"
+#include <metadata/Broker.h>
 
 namespace {
 

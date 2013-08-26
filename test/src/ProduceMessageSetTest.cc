@@ -1,7 +1,7 @@
 #include <string>
 #include <gtest/gtest.h>
-#include <BaseTest.h>
-#include <ProduceMessageSet.h>
+#include "BaseTest.h"
+#include <produce/ProduceMessageSet.h>
 
 namespace {
 

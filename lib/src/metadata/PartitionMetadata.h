@@ -29,10 +29,10 @@
 #define PARTITIONMETADATA_H
 
 #include <string>
-#include <Debug.h>
-#include <Packet.h>
-#include <WireFormatter.h>
-#include <PacketWriter.h>
+#include "../Debug.h"
+#include "../Packet.h"
+#include "../WireFormatter.h"
+#include "../PacketWriter.h"
 
 namespace LibKafka {
 

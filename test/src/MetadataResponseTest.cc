@@ -1,8 +1,8 @@
 #include <string>
 #include <gtest/gtest.h>
-#include <BaseTest.h>
-#include <MetadataResponse.h>
-#include <Broker.h>
+#include "BaseTest.h"
+#include <metadata/MetadataResponse.h>
+#include <metadata/Broker.h>
 
 namespace {
 

@@ -28,8 +28,8 @@
 #ifndef PACKET_WRITER_H
 #define PACKET_WRITER_H
 
-#include <Debug.h>
-#include <Packet.h>
+#include "Debug.h"
+#include "Packet.h"
 
 namespace LibKafka {
 

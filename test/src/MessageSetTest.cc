@@ -1,9 +1,9 @@
 #include <string>
 #include <gtest/gtest.h>
-#include <BaseTest.h>
+#include "BaseTest.h"
 #include <Packet.h>
 #include <MessageSet.h>
-#include <PartitionMetadata.h>
+#include <metadata/PartitionMetadata.h>
 
 namespace {
 

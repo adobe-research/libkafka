@@ -25,35 +25,36 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef METADATAREQUEST_H
-#define METADATAREQUEST_H
+#ifndef BROKER_H
+#define BROKER_H
 
 #include <string>
-#include <Request.h>
+#include "../Debug.h"
+#include "../Packet.h"
+#include "../WireFormatter.h"
+#include "../PacketWriter.h"
 
 namespace LibKafka {
 
-class MetadataRequest : public Request
+class Broker : public WireFormatter, public PacketWriter
 {
   public:
 
-    int topicNameArraySize;
-    std::string *topicNameArray;
+    int nodeId;
+    std::string host;
+    int port;
 
-    MetadataRequest(unsigned char *buffer, bool releaseBuffer = false);
-    MetadataRequest(int correlationId, std::string clientId, int topicNameArraySize, std::string topicNameArray[], bool releaseArrays = false);
-    ~MetadataRequest();
+    Broker(Packet *packet);
+    Broker(int nodeId, std::string host, int port);
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
-    int getWireFormatSize(bool includePacketSize = true);
-
-  private:
-
-    bool releaseArrays;
+    int getWireFormatSize(bool includePacketSize = false);
 };
-
-std::ostream& operator<< (std::ostream& os, const MetadataRequest& mr);
+    
+std::ostream& operator<< (std::ostream& os, const Broker& b);
+inline bool operator==(const Broker& lhs, const Broker& rhs) { return ((lhs.nodeId==rhs.nodeId)&&(lhs.port==rhs.port)&&(lhs.host==rhs.host)); }
+inline bool operator!=(const Broker& lhs, const Broker& rhs) { return !operator==(lhs,rhs); }
 
 }; // namespace LibKafka
 
-#endif
+#endif /* BROKER_H */

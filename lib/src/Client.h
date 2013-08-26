@@ -30,12 +30,13 @@
 
 #include <iostream>
 #include <string>
-#include <Connection.h>
-#include <Request.h>
-#include <Response.h>
-#include <Debug.h>
-#include <MetadataRequest.h>
-#include <MetadataResponse.h>
+
+#include "Connection.h"
+#include "Request.h"
+#include "Response.h"
+#include "Debug.h"
+#include "metadata/MetadataRequest.h"
+#include "metadata/MetadataResponse.h"
 
 namespace LibKafka {
 

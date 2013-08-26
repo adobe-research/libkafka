@@ -29,8 +29,8 @@
 #define PACKET_H
 
 #include <string>
-#include <Debug.h>
-#include <WireFormatter.h>
+#include "Debug.h"
+#include "WireFormatter.h"
 
 namespace LibKafka {
 

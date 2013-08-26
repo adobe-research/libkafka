@@ -1,15 +1,15 @@
 #include <string>
 #include <gtest/gtest.h>
 #include <Debug.h>
-#include <Broker.h>
-#include <TopicMetadata.h>
-#include <PartitionMetadata.h>
-#include <MetadataRequest.h>
-#include <MetadataResponse.h>
+#include <metadata/Broker.h>
+#include <metadata/TopicMetadata.h>
+#include <metadata/PartitionMetadata.h>
+#include <metadata/MetadataRequest.h>
+#include <metadata/MetadataResponse.h>
 #include <MessageSet.h>
-#include <ProduceTopic.h>
-#include <ProduceMessageSet.h>
-#include <ProduceRequest.h>
+#include <produce/ProduceTopic.h>
+#include <produce/ProduceMessageSet.h>
+#include <produce/ProduceRequest.h>
 #include <ApiConstants.h>
 
 using namespace std;

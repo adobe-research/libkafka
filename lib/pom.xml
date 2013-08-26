@@ -67,6 +67,18 @@
 	      </includes>
 	    </source>
 	    <source>
+	      <directory>src/metadata</directory> 
+	      <includes>
+		<include>*.cc</include>
+	      </includes>
+	    </source>
+	    <source>
+	      <directory>src/produce</directory> 
+	      <includes>
+		<include>*.cc</include>
+	      </includes>
+	    </source>
+	    <source>
 	      <directory>/opt/local/include</directory>
 	      <dependencyAnalysisParticipation>false</dependencyAnalysisParticipation>
 	    </source>

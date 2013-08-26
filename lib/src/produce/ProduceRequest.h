@@ -25,28 +25,28 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef METADATARESPONSE_H
-#define METADATARESPONSE_H
+#ifndef PRODUCEREQUEST_H
+#define PRODUCEREQUEST_H
 
 #include <string>
-#include <Response.h>
-#include <Broker.h>
-#include <TopicMetadata.h>
+#include "../Request.h"
+#include "ProduceTopic.h"
 
 namespace LibKafka {
 
-class MetadataResponse : public Response
+class ProduceRequest : public Request
 {
   public:
 
-    int brokerArraySize;
-    Broker **brokerArray;
-    int topicMetadataArraySize;
-    TopicMetadata **topicMetadataArray;
+    short int requiredAcks;
+    int timeout;
 
-    MetadataResponse(unsigned char *buffer, bool releaseBuffer = false);
-    MetadataResponse(int correlationId, int brokerArraySize, Broker **brokerArray, int topicMetadataArraySize, TopicMetadata **topicMetadataArray, bool releaseArrays = false);
-    ~MetadataResponse();
+    int produceTopicArraySize;
+    ProduceTopic **produceTopicArray;
+
+    ProduceRequest(unsigned char *buffer, bool releaseBuffer = false);
+    ProduceRequest(int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, ProduceTopic **produceTopicArray, bool releaseArrays = false);
+    ~ProduceRequest();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
@@ -56,8 +56,8 @@ class MetadataResponse : public Response
     bool releaseArrays;
 };
 
-std::ostream& operator<< (std::ostream& os, const MetadataResponse& mr);
+std::ostream& operator<< (std::ostream& os, const ProduceRequest& pr);
 
 }; // namespace LibKafka
 
-#endif /* METADATARESPONSE_H */
+#endif
