@@ -41,7 +41,7 @@ class MetadataRequest : public Request
     std::string *topicNameArray;
 
     MetadataRequest(unsigned char *buffer, bool releaseBuffer = false);
-    MetadataRequest(short int apiVersion, int correlationId, std::string clientId, int topicNameArraySize, std::string topicNameArray[], bool releaseArrays = false);
+    MetadataRequest(int correlationId, std::string clientId, int topicNameArraySize, std::string topicNameArray[], bool releaseArrays = false);
     ~MetadataRequest();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

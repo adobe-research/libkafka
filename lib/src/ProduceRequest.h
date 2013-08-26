@@ -45,7 +45,7 @@ class ProduceRequest : public Request
     ProduceTopic **produceTopicArray;
 
     ProduceRequest(unsigned char *buffer, bool releaseBuffer = false);
-    ProduceRequest(short int apiVersion, int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, ProduceTopic **produceTopicArray, bool releaseArrays = false);
+    ProduceRequest(int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, ProduceTopic **produceTopicArray, bool releaseArrays = false);
     ~ProduceRequest();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

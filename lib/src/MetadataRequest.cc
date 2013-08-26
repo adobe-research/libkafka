@@ -47,7 +47,7 @@ MetadataRequest::MetadataRequest(unsigned char *buffer, bool releaseBuffer) : Re
   this->releaseArrays = true;
 }
 
-MetadataRequest::MetadataRequest(short int apiVersion, int correlationId, string clientId, int topicNameArraySize, string topicNameArray[], bool releaseArrays) : Request(ApiConstants::METADATA_REQUEST_KEY, apiVersion, correlationId, clientId)
+MetadataRequest::MetadataRequest(int correlationId, string clientId, int topicNameArraySize, string topicNameArray[], bool releaseArrays) : Request(ApiConstants::METADATA_REQUEST_KEY, ApiConstants::API_VERSION, correlationId, clientId)
 {
   D(cout.flush() << "--------------MetadataRequest(params)\n";)
 

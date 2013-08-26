@@ -52,7 +52,6 @@ class BaseTest : public ::testing::Test {
     MetadataResponse *createMetadataResponse();
 
     // MetadataRequest
-    const static short int apiVersion = ApiConstants::API_VERSION;
     const static string clientId;
     const static int topicNameArraySize = 3;
     static string *topicNameArray;

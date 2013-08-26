@@ -90,7 +90,7 @@ MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
 {
   if (emptyTopicArray)
   {
-    return new MetadataRequest(apiVersion, correlationId, clientId, 0, (string*)NULL);
+    return new MetadataRequest(correlationId, clientId, 0, (string*)NULL);
   }
   
   topicNameArray = new string[topicNameArraySize];
@@ -102,7 +102,7 @@ MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
     topicNameArray[i] = sstm.str();
   }
 
-  return new MetadataRequest(apiVersion, correlationId, clientId, topicNameArraySize, topicNameArray, true);
+  return new MetadataRequest(correlationId, clientId, topicNameArraySize, topicNameArray, true);
 }
 
 // MessageSet
@@ -155,5 +155,5 @@ ProduceRequest* BaseTest::createProduceRequest()
   for (int i=0; i<produceTopicArraySize; i++) {
     produceTopicArray[i] = createProduceTopic();
   }
-  return new ProduceRequest(apiVersion, correlationId, clientId, requiredAcks, timeout, produceTopicArraySize, produceTopicArray, true);
+  return new ProduceRequest(correlationId, clientId, requiredAcks, timeout, produceTopicArraySize, produceTopicArray, true);
 }
