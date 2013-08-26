@@ -28,7 +28,8 @@
 #include <string>
 #include <iostream>
 
-#include <ProduceResponsePartition.h>
+#include "ProduceResponsePartition.h"
+#include "../ApiConstants.h"
 
 using namespace std;
 
@@ -93,7 +94,7 @@ int ProduceResponsePartition::getWireFormatSize(bool includePacketSize)
 
 ostream& operator<< (ostream& os, const ProduceResponsePartition& pm)
 {
-  os << pm.partition << ":" << pm.errorCode << ":" << pm.offset << "\n";
+  os << pm.partition << ":" << pm.errorCode << ":" << pm.offset << ":" << ApiConstants::getErrorString(pm.errorCode) << "\n";
   return os;
 }
 

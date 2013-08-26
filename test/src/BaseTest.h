@@ -65,9 +65,11 @@ class BaseTest : public ::testing::Test {
     const static int crc = 1001;
     const static signed char magicByte = -1;
     const static signed char attributes = -2;
-    const static int keyLength = 10;
+    const static char *defaultKey; // "test_key", null terminated
+    const static int keyLength = 9;
     static unsigned char *key;
-    const static int valueLength = 20;
+    const static char *defaultValue; // "test_value", null terminated
+    const static int valueLength = 11;
     static unsigned char *value;
     MessageSet *createMessageSet();
 

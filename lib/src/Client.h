@@ -37,6 +37,8 @@
 #include "Debug.h"
 #include "metadata/MetadataRequest.h"
 #include "metadata/MetadataResponse.h"
+#include "produce/ProduceRequest.h"
+#include "produce/ProduceResponse.h"
 
 namespace LibKafka {
 
@@ -48,6 +50,7 @@ class Client
     ~Client();
 
     MetadataResponse *sendMetadataRequest(MetadataRequest *request);
+    ProduceResponse *sendProduceRequest(ProduceRequest *request);
 
   protected:
 

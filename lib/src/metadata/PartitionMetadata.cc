@@ -28,7 +28,8 @@
 #include <string>
 #include <iostream>
 
-#include <PartitionMetadata.h>
+#include "PartitionMetadata.h"
+#include "../ApiConstants.h"
 
 using namespace std;
 
@@ -135,7 +136,7 @@ int PartitionMetadata::getWireFormatSize(bool includePacketSize)
 
 ostream& operator<< (ostream& os, const PartitionMetadata& pm)
 {
-  os << pm.partitionErrorCode << ":" << pm.partitionId << ":" << pm.leader << ":" << pm.replicaArray << ":" << pm.isrArray << "\n";
+  os << pm.partitionErrorCode << ":" << ApiConstants::getErrorString(pm.partitionErrorCode) << ":" << pm.partitionId << ":" << pm.leader << ":" << pm.replicaArray << ":" << pm.isrArray << "\n";
   return os;
 }
 

@@ -28,8 +28,9 @@
 #include <string>
 #include <iostream>
 
-#include <TopicMetadata.h>
-#include <PartitionMetadata.h>
+#include "TopicMetadata.h"
+#include "PartitionMetadata.h"
+#include "../ApiConstants.h"
 
 using namespace std;
 
@@ -117,7 +118,7 @@ int TopicMetadata::getWireFormatSize(bool includePacketSize)
 
 ostream& operator<< (ostream& os, const TopicMetadata& tm)
 {
-  os << tm.topicErrorCode << ":" << tm.topicName << ":" << tm.partitionMetadataArraySize;
+  os << tm.topicErrorCode << ":" << ApiConstants::getErrorString(tm.topicErrorCode) << ":" << tm.topicName << ":" << tm.partitionMetadataArraySize;
   return os;
 }
 

@@ -34,83 +34,87 @@ using namespace std;
 
 namespace LibKafka {
 
-ProduceResponseTopic::ProduceResponseTopic(Packet *packet) : WireFormatter(), PacketWriter(packet)
-{
-  D(cout.flush() << "--------------ProduceResponseTopic(buffer)\n";)
-
-  // Kafka Protocol: kafka string topicName
-  this->topicName = this->packet->readString();
-
-  // Kafka Protocol: ProduceResponsePartition[]
-  this->produceResponsePartitionArraySize = this->packet->readInt32();
-  this->produceResponsePartitionArray = new ProduceResponsePartition*[this->produceResponsePartitionArraySize];
-  for (int i=0; i<this->produceResponsePartitionArraySize; i++) {
-    this->produceResponsePartitionArray[i] = new ProduceResponsePartition(this->packet);
-  }
-  
-  this->releaseArrays = true;
-}
-
-ProduceResponseTopic::ProduceResponseTopic(string topicName, int produceResponsePartitionArraySize, ProduceResponsePartition **produceResponsePartitionArray, bool releaseArrays) : WireFormatter(), PacketWriter()
-{
-  D(cout.flush() << "--------------ProduceResponseTopic(params)\n";)
-
-  this->topicName = topicName;
-  this->produceResponsePartitionArraySize = produceResponsePartitionArraySize;
-  this->produceResponsePartitionArray = produceResponsePartitionArray;
-  this->releaseArrays = releaseArrays;
-}
-
-ProduceResponseTopic::~ProduceResponseTopic()
-{
-  if (this->releaseArrays)
+  ProduceResponseTopic::ProduceResponseTopic(Packet *packet) : WireFormatter(), PacketWriter(packet)
   {
+    D(cout.flush() << "--------------ProduceResponseTopic(buffer)\n";)
+
+      // Kafka Protocol: kafka string topicName
+      this->topicName = this->packet->readString();
+
+    // Kafka Protocol: ProduceResponsePartition[]
+    this->produceResponsePartitionArraySize = this->packet->readInt32();
+    this->produceResponsePartitionArray = new ProduceResponsePartition*[this->produceResponsePartitionArraySize];
     for (int i=0; i<this->produceResponsePartitionArraySize; i++) {
-      delete this->produceResponsePartitionArray[i];
+      this->produceResponsePartitionArray[i] = new ProduceResponsePartition(this->packet);
     }
-    delete[] this->produceResponsePartitionArray;
-  }
-}
 
-unsigned char* ProduceResponseTopic::toWireFormat(bool updatePacketSize)
-{
-  D(cout.flush() << "--------------ProduceResponseTopic::toWireFormat()\n";)
-  
-  // Kafka Protocol: kafka string topicName
-  this->packet->writeString(this->topicName);
-
-  // Kafka Protocol: ProduceResponsePartition[]
-  this->packet->writeInt32(this->produceResponsePartitionArraySize);
-  for (int i=0; i<this->produceResponsePartitionArraySize; i++) {
-    this->produceResponsePartitionArray[i]->packet = this->packet;
-    this->produceResponsePartitionArray[i]->toWireFormat(false);
+    this->releaseArrays = true;
   }
 
-  if (updatePacketSize) this->packet->updatePacketSize();
-  return this->packet->getBuffer();
-}
+  ProduceResponseTopic::ProduceResponseTopic(string topicName, int produceResponsePartitionArraySize, ProduceResponsePartition **produceResponsePartitionArray, bool releaseArrays) : WireFormatter(), PacketWriter()
+  {
+    D(cout.flush() << "--------------ProduceResponseTopic(params)\n";)
 
-int ProduceResponseTopic::getWireFormatSize(bool includePacketSize)
-{
-  D(cout.flush() << "--------------ProduceResponseTopic::getWireFormatSize()\n";)
-  
-  // Packet.size
-  // topicName
-  // produceResponsePartitionArraySize*ProduceResponsePartition
-
-  int size = 0;
-  if (includePacketSize) size += sizeof(int);
-  size += sizeof(short int) + this->topicName.length() + sizeof(int);
-  for (int i=0; i<produceResponsePartitionArraySize; i++) {
-    size += produceResponsePartitionArray[i]->getWireFormatSize(false);
+      this->topicName = topicName;
+    this->produceResponsePartitionArraySize = produceResponsePartitionArraySize;
+    this->produceResponsePartitionArray = produceResponsePartitionArray;
+    this->releaseArrays = releaseArrays;
   }
-  return size;
-}
 
-ostream& operator<< (ostream& os, const ProduceResponseTopic& pt)
-{
-  os << pt.topicName << ":" << pt.produceResponsePartitionArraySize;
-  return os;
-}
+  ProduceResponseTopic::~ProduceResponseTopic()
+  {
+    if (this->releaseArrays)
+    {
+      for (int i=0; i<this->produceResponsePartitionArraySize; i++) {
+	delete this->produceResponsePartitionArray[i];
+      }
+      delete[] this->produceResponsePartitionArray;
+    }
+  }
+
+  unsigned char* ProduceResponseTopic::toWireFormat(bool updatePacketSize)
+  {
+    D(cout.flush() << "--------------ProduceResponseTopic::toWireFormat()\n";)
+
+      // Kafka Protocol: kafka string topicName
+      this->packet->writeString(this->topicName);
+
+    // Kafka Protocol: ProduceResponsePartition[]
+    this->packet->writeInt32(this->produceResponsePartitionArraySize);
+    for (int i=0; i<this->produceResponsePartitionArraySize; i++) {
+      this->produceResponsePartitionArray[i]->packet = this->packet;
+      this->produceResponsePartitionArray[i]->toWireFormat(false);
+    }
+
+    if (updatePacketSize) this->packet->updatePacketSize();
+    return this->packet->getBuffer();
+  }
+
+  int ProduceResponseTopic::getWireFormatSize(bool includePacketSize)
+  {
+    D(cout.flush() << "--------------ProduceResponseTopic::getWireFormatSize()\n";)
+
+      // Packet.size
+      // topicName
+      // produceResponsePartitionArraySize*ProduceResponsePartition
+
+      int size = 0;
+    if (includePacketSize) size += sizeof(int);
+    size += sizeof(short int) + this->topicName.length() + sizeof(int);
+    for (int i=0; i<produceResponsePartitionArraySize; i++) {
+      size += produceResponsePartitionArray[i]->getWireFormatSize(false);
+    }
+    return size;
+  }
+
+  ostream& operator<< (ostream& os, const ProduceResponseTopic& pt)
+  {
+    os << "ProduceResponse.topicName:" << pt.topicName << "\n";
+    os << "ProduceResponse.produceResponsePartitionArraySize:" << pt.produceResponsePartitionArraySize << "\n";
+    for (int i=0; i<pt.produceResponsePartitionArraySize; i++) {
+      os << "ProduceResponse.produceResponsePartitionArray[" << i << "]:" << *(pt.produceResponsePartitionArray[i]) << "\n";
+    }
+    return os;
+  }
 
 }; // namespace LibKafka

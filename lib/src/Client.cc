@@ -61,6 +61,11 @@ MetadataResponse *Client::sendMetadataRequest(MetadataRequest *request)
   return apiCall<MetadataRequest, MetadataResponse>(request);
 }
 
+ProduceResponse *Client::sendProduceRequest(ProduceRequest *request)
+{
+  return apiCall<ProduceRequest, ProduceResponse>(request);
+}
+
 template <typename RequestClass, typename ResponseClass>
 ResponseClass *Client::apiCall(RequestClass *request)
 {

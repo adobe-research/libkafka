@@ -105,13 +105,17 @@ MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
 
 // MessageSet
 
+const char* BaseTest::defaultKey = "test_key";
 unsigned char* BaseTest::key;
+const char* BaseTest::defaultValue = "test_value";
 unsigned char* BaseTest::value;
 
 MessageSet* BaseTest::createMessageSet()
 {
   key = new unsigned char[keyLength];
+  memcpy(key, defaultKey, keyLength);
   value = new unsigned char[valueLength];
+  memcpy(value, defaultValue, valueLength);
 
   // crc + magicByte + attributes + key + value
   int messageSize = sizeof(int) + sizeof(signed char) + sizeof(signed char) + sizeof(int) + keyLength + sizeof(int) + valueLength;
