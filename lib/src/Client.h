@@ -33,9 +33,9 @@
 #include <Connection.h>
 #include <Request.h>
 #include <Response.h>
+#include <Debug.h>
 #include <MetadataRequest.h>
 #include <MetadataResponse.h>
-#include <Debug.h>
 
 namespace LibKafka {
 
@@ -46,19 +46,18 @@ class Client
     Client(std::string brokerHost, int brokerPort);
     ~Client();
 
-    int sendRequest(Request *request);
-    template <typename ResponseClass>ResponseClass *receiveResponse();
-
     MetadataResponse *sendMetadataRequest(MetadataRequest *request);
-
-    std::string brokerHost;
-    int brokerPort;
 
   protected:
 
     Connection *connection;
+    std::string brokerHost;
+    int brokerPort;
 
     void prepareConnection();
+    int sendRequest(Request *request);
+    template <typename ResponseClass> ResponseClass *receiveResponse();
+    template <typename RequestClass, typename ResponseClass> ResponseClass *apiCall(RequestClass *request);
 };
 
 }; // namespace LibKafka

@@ -44,7 +44,7 @@ Client::Client(string brokerHost, int brokerPort)
 {
   D(cout.flush() << "--------------Client(" << brokerHost << ":" << intToString(brokerPort) << "\n";)
 
-    this->brokerHost = brokerHost;
+  this->brokerHost = brokerHost;
   this->brokerPort = brokerPort;
   this->connection = NULL; // lazy connect
 }
@@ -58,28 +58,33 @@ Client::~Client()
 
 MetadataResponse *Client::sendMetadataRequest(MetadataRequest *request)
 {
-  D(cout.flush() << "--------------Client::MetadataRequest()\n";)
-  D(cout.flush() << "MetadataRequest:request:\n" << *request;)
+  return apiCall<MetadataRequest, MetadataResponse>(request);
+}
+
+template <typename RequestClass, typename ResponseClass>
+ResponseClass *Client::apiCall(RequestClass *request)
+{
+  D(cout.flush() << "--------------Client::apiCall():" << typeid(RequestClass).name() << "\n";)
 
   this->prepareConnection();
 
   int status = this->sendRequest(request);
   if (status == Connection::WRITE_ERROR)
   {
-    E("Client::sendMetadataRequest():sendRequest() error:" << strerror(errno) << "\n");
+    E("Client::apiCall():sendRequest() error:" << strerror(errno) << "\n");
     return NULL;
   }
 
-  D(cout.flush() << "Client::sendMetadataRequest:request sent:\n" << *request;)
+  D(cout.flush() << "Client::apiCall:" << typeid(RequestClass).name() << " sent:\n" << *request;)
 
-  MetadataResponse *response = this->receiveResponse<MetadataResponse>();
+  ResponseClass *response = this->receiveResponse<ResponseClass>();
   if (response == NULL)
   {
-    E("Client::sendMetadataRequest():receiveResponse() error:" << strerror(errno) << "\n");
+    E("Client::apiCall():receiveResponse() error:" << strerror(errno) << "\n");
     return NULL;
   }
 
-  D(cout.flush() << "Client::sendMetadataRequest:response received:\n" << *response;)
+  D(cout.flush() << "Client::apiCall:" << typeid(ResponseClass).name() << " received:\n" << *response;)
   return response;
 }
 

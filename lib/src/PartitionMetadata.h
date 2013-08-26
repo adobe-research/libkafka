@@ -31,7 +31,6 @@
 #include <string>
 #include <Debug.h>
 #include <Packet.h>
-#include <PartitionMetadata.h>
 #include <WireFormatter.h>
 #include <PacketWriter.h>
 
