@@ -4,8 +4,6 @@
 #include <gtest/gtest.h>
 #include "BaseTest.h"
 
-using namespace std;
-
 BaseTest::BaseTest() { }
 BaseTest::~BaseTest() { }
 void BaseTest::SetUp() { } 

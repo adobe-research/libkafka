@@ -31,8 +31,8 @@
 #include <netdb.h>
 #include <errno.h>
 
-#include <Connection.h>
-#include <Util.h>
+#include "Connection.h"
+#include "Util.h"
 
 using namespace std;
 

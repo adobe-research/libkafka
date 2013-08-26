@@ -32,9 +32,9 @@
 #include <netdb.h>
 #include <errno.h>
 
-#include <Client.h>
-#include <Util.h>
-#include <Debug.h>
+#include "Client.h"
+#include "Util.h"
+#include "Debug.h"
 
 using namespace std;
 

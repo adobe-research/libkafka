@@ -13,43 +13,51 @@ EXTRA_DIST += $(m4data_DATA)
 
 # We define the global AM_CPPFLAGS as everything we compile includes from these
 # directories.
-AM_CPPFLAGS = -I$(srcdir) -Ilib/src
+AM_CPPFLAGS = -I$(srcdir) -Ilib/src/metadata -Ilib/src/produce
 
 # Build rules for libraries.
 lib_LTLIBRARIES = lib/libkafka.la
 
 lib_libkafka_la_SOURCES = \
   lib/src/ApiConstants.cc \
-  lib/src/Broker.cc \
   lib/src/Client.cc \
   lib/src/Connection.cc \
-  lib/src/MetadataRequest.cc \
-  lib/src/MetadataResponse.cc \
+  lib/src/Util.cc \
   lib/src/Packet.cc \
-  lib/src/PartitionMetadata.cc \
   lib/src/Request.cc \
   lib/src/RequestOrResponse.cc \
   lib/src/Response.cc \
-  lib/src/TopicMetadata.cc \
-  lib/src/Util.cc
+  lib/src/MessageSet.cc \
+  lib/src/metadata/Broker.cc \
+  lib/src/metadata/MetadataRequest.cc \
+  lib/src/metadata/MetadataResponse.cc \
+  lib/src/metadata/PartitionMetadata.cc \
+  lib/src/metadata/TopicMetadata.cc \
+  lib/src/produce/ProduceRequest.cc \
+  lib/src/produce/ProduceMessageSet.cc \
+  lib/src/produce/ProduceTopic.cc
 
 pkginclude_HEADERS = \
   lib/src/ApiConstants.h \
-  lib/src/Broker.h \
   lib/src/Client.h \
   lib/src/Connection.h \
   lib/src/Debug.h \
-  lib/src/MetadataRequest.h \
-  lib/src/MetadataResponse.h \
   lib/src/Packet.h \
   lib/src/PacketWriter.h \
-  lib/src/PartitionMetadata.h \
   lib/src/Request.h \
   lib/src/RequestOrResponse.h \
   lib/src/Response.h \
-  lib/src/TopicMetadata.h \
+  lib/src/MessageSet.h \
   lib/src/Util.h \
-  lib/src/WireFormatter.h
+  lib/src/WireFormatter.h \
+  lib/src/metadata/MetadataRequest.h \
+  lib/src/metadata/MetadataResponse.h \
+  lib/src/metadata/Broker.h \
+  lib/src/metadata/PartitionMetadata.h \
+  lib/src/metadata/TopicMetadata.h \
+  lib/src/produce/ProduceRequest.h \
+  lib/src/produce/ProduceMessageSet.h \
+  lib/src/produce/ProduceTopic.h
 
 # Bulid rules for samples and tests. Automake's naming for some of
 # these variables isn't terribly obvious, so this is a brief
@@ -66,17 +74,20 @@ TESTS += test/libkafka_unit_tests
 check_PROGRAMS += test/libkafka_unit_tests
 test_libkafka_unit_tests_SOURCES = \
   test/src/BaseTest.cc \
-  test/src/BrokerTest.cc \
   test/src/ClientTest.cc \
   test/src/ConnectionTest.cc \
+  test/src/BrokerTest.cc \
   test/src/MetadataRequestTest.cc \
   test/src/MetadataResponseTest.cc \
-  test/src/PacketTest.cc \
   test/src/PartitionMetadataTest.cc \
+  test/src/TopicMetadataTest.cc \
+  test/src/PacketTest.cc \
   test/src/RequestOrResponseTest.cc \
   test/src/RequestTest.cc \
   test/src/ResponseTest.cc \
-  test/src/TopicMetadataTest.cc
+  test/src/ProduceRequestTest.cc \
+  test/src/ProduceMessageSetTest.cc \
+  test/src/ProduceTopicTest.cc
 test_libkafka_unit_tests_CPPFLAGS = -I"test/src" -I"lib/src" $(GTEST_CPPFLAGS)
 test_libkafka_unit_tests_LDFLAGS = $(GTEST_LDFLAGS) $(GTEST_LIBS)
 test_libkafka_unit_tests_LDADD = lib/libkafka.la

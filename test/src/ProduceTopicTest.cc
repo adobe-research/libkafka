@@ -3,7 +3,6 @@
 #include "BaseTest.h"
 #include <Packet.h>
 #include <produce/ProduceTopic.h>
-#include <produce/ProduceMessageSet.h>
 
 namespace {
 

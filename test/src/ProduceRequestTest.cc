@@ -1,8 +1,6 @@
 #include <string>
 #include <gtest/gtest.h>
 #include "BaseTest.h"
-#include <produce/ProduceRequest.h>
-#include <produce/ProduceTopic.h>
 
 namespace {
 
