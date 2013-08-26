@@ -155,3 +155,35 @@ ProduceRequest* BaseTest::createProduceRequest()
   }
   return new ProduceRequest(correlationId, clientId, requiredAcks, timeout, produceTopicArraySize, produceTopicArray, true);
 }
+
+// ProduceResponsePartition
+
+ProduceResponsePartition* BaseTest::createProduceResponsePartition()
+{
+  return new ProduceResponsePartition(partition, errorCode, offset);
+}
+
+// ProduceResponseTopic
+
+ProduceResponsePartition** BaseTest::produceResponsePartitionArray;
+
+ProduceResponseTopic* BaseTest::createProduceResponseTopic()
+{
+  produceResponsePartitionArray = new ProduceResponsePartition*[produceResponsePartitionArraySize];
+  for (int i=0; i<produceResponsePartitionArraySize; i++) {
+    produceResponsePartitionArray[i] = createProduceResponsePartition();
+  }
+  return new ProduceResponseTopic(topicName, produceResponsePartitionArraySize, produceResponsePartitionArray, true);
+}
+
+// ProduceResponse
+ProduceResponseTopic** BaseTest::produceResponseTopicArray;
+
+ProduceResponse* BaseTest::createProduceResponse()
+{
+  produceResponseTopicArray = new ProduceResponseTopic*[produceResponseTopicArraySize];
+  for (int i=0; i<produceResponseTopicArraySize; i++) {
+    produceResponseTopicArray[i] = createProduceResponseTopic();
+  }
+  return new ProduceResponse(correlationId, produceResponseTopicArraySize, produceResponseTopicArray, true);
+}

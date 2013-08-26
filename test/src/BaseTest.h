@@ -10,6 +10,9 @@
 #include <produce/ProduceTopic.h>
 #include <produce/ProduceMessageSet.h>
 #include <produce/ProduceRequest.h>
+#include <produce/ProduceResponseTopic.h>
+#include <produce/ProduceResponsePartition.h>
+#include <produce/ProduceResponse.h>
 #include <ApiConstants.h>
 
 using namespace std;
@@ -85,4 +88,18 @@ class BaseTest : public ::testing::Test {
     const static int produceTopicArraySize = 2;
     static ProduceTopic **produceTopicArray;
     ProduceRequest *createProduceRequest();
+
+    // ProduceResponsePartition
+    const static short int errorCode = 0;
+    ProduceResponsePartition *createProduceResponsePartition();
+    
+    // ProduceResponseTopic
+    const static int produceResponsePartitionArraySize = 2;
+    static ProduceResponsePartition **produceResponsePartitionArray;
+    ProduceResponseTopic *createProduceResponseTopic();
+
+    // ProduceResponse
+    const static int produceResponseTopicArraySize = 3;
+    static ProduceResponseTopic **produceResponseTopicArray;
+    ProduceResponse *createProduceResponse();
 };

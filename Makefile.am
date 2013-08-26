@@ -35,7 +35,10 @@ lib_libkafka_la_SOURCES = \
   lib/src/metadata/TopicMetadata.cc \
   lib/src/produce/ProduceRequest.cc \
   lib/src/produce/ProduceMessageSet.cc \
-  lib/src/produce/ProduceTopic.cc
+  lib/src/produce/ProduceTopic.cc \
+  lib/src/produce/ProduceResponse.cc \
+  lib/src/produce/ProduceResponseTopic.cc \
+  lib/src/produce/ProduceResponsePartition.cc
 
 pkginclude_HEADERS = \
   lib/src/ApiConstants.h \
@@ -57,7 +60,10 @@ pkginclude_HEADERS = \
   lib/src/metadata/TopicMetadata.h \
   lib/src/produce/ProduceRequest.h \
   lib/src/produce/ProduceMessageSet.h \
-  lib/src/produce/ProduceTopic.h
+  lib/src/produce/ProduceTopic.h \
+  lib/src/produce/ProduceResponse.h \
+  lib/src/produce/ProduceResponseTopic.h \
+  lib/src/produce/ProduceResponsePartition.h
 
 # Bulid rules for samples and tests. Automake's naming for some of
 # these variables isn't terribly obvious, so this is a brief
@@ -87,7 +93,10 @@ test_libkafka_unit_tests_SOURCES = \
   test/src/ResponseTest.cc \
   test/src/ProduceRequestTest.cc \
   test/src/ProduceMessageSetTest.cc \
-  test/src/ProduceTopicTest.cc
+  test/src/ProduceTopicTest.cc \
+  test/src/ProduceResponseTest.cc \
+  test/src/ProduceResponseTopicTest.cc \
+  test/src/ProduceResponsePartitionTest.cc
 test_libkafka_unit_tests_CPPFLAGS = -I"test/src" -I"lib/src" $(GTEST_CPPFLAGS)
 test_libkafka_unit_tests_LDFLAGS = $(GTEST_LDFLAGS) $(GTEST_LIBS)
 test_libkafka_unit_tests_LDADD = lib/libkafka.la
