@@ -80,7 +80,7 @@
 	    <compilerStartOption>${compiler.debug} -fPIC -O2 -g -ffast-math -funit-at-a-time -x c++ -std=c++11</compilerStartOption>
 	  </compilerStartOptions>
 	  <linkerStartOptions>
-	    <linkerStartOption>-lstdc++ -L /opt/local/lib -L ../lib/target -lgtest -lkafka</linkerStartOption> 
+	    <linkerStartOption>-lstdc++ -L /opt/local/lib -L ../lib/target -lgtest -lkafka -lz</linkerStartOption> 
 	  </linkerStartOptions>
 	</configuration>
       </plugin>

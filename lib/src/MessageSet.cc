@@ -99,8 +99,9 @@ unsigned char* MessageSet::toWireFormat(bool updatePacketSize)
   // Kafka Protocol: int messageSize
   this->packet->writeInt32(this->messageSize);
 
-  // Kafka Protocol: int crc
-  this->packet->writeInt32(this->crc);
+  // Kafka Protocol: int crc (see beginCRC32()/endCRC32() semantics in Packet.cc)
+  // crc defined in the protocol as CRC for remaining bytes in message
+  this->packet->beginCRC32();
 
   // Kafka Protocol: signed char magicByte
   this->packet->writeInt8(this->magicByte);
@@ -115,6 +116,9 @@ unsigned char* MessageSet::toWireFormat(bool updatePacketSize)
   // Kafka Protocol: bytes value
   this->packet->writeInt32(this->valueLength);
   this->packet->writeBytes(this->value, this->valueLength);
+
+  // calculate and update crc field (see beginCRC32()/endCRC32() semantics in Packet.cc)
+  this->crc = this->packet->endCRC32();
   
   if (updatePacketSize) this->packet->updatePacketSize();
   return this->packet->getBuffer();

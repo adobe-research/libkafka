@@ -40,7 +40,6 @@ class Packet : public WireFormatter
 
     static const int DEFAULT_BUFFER_SIZE = 1024;
 
-
     Packet(int bufferSize = DEFAULT_BUFFER_SIZE);
     Packet(unsigned char *buffer, bool releaseBuffer = false);
     ~Packet();
@@ -60,7 +59,11 @@ class Packet : public WireFormatter
     void writeInt64(int long value);
     void writeString(std::string value);
     void writeBytes(unsigned char* bytes, int numBytes);
-   
+
+    // see CRC32 usage assumptions in Packet.cc
+    void beginCRC32();
+    int endCRC32(); // returns *signed int* CRC32 calculation
+
     int getSize(bool includeProtocolSizeFieldLength = true);
     void updatePacketSize();
     void resetForReading();
@@ -74,6 +77,9 @@ class Packet : public WireFormatter
 
     unsigned char *buffer;
     unsigned char *head;
+
+    unsigned char *crcField;
+    unsigned char *crcHead;
 
   private:
 

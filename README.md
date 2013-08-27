@@ -6,6 +6,7 @@ A C++ client libray for Apache Kafka. Also includes C API.
 Dependencies
 ============
 
+* zlib (yum install zlib or port install zlib)
 * Google Test (yum install gtest or port install google-test)
 * (optional) Doxygen for C/C++ API documentation (yum install doxygen or port install doxygen)
 

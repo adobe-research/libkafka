@@ -28,6 +28,7 @@
 #include <string>
 #include <iostream>
 #include <arpa/inet.h>
+#include <zlib.h>
 
 #include "Packet.h"
 #include "Util.h"
@@ -146,7 +147,7 @@ void Packet::updatePacketSize()
 {
   int netValue = htonl((this->size) - sizeof(int)); // prior to sending, set packetSize exclusive of size (int)
   memcpy(buffer, &netValue, sizeof(int));
-  D(cout.flush() << "Packet::updatePacketSize():hostValue(" << this->size << "(:netValue(" << netValue << ")\n";)
+  D(cout.flush() << "Packet::updatePacketSize():hostValue(" << this->size << "):netValue(" << netValue << ")\n";)
 }
 
 void Packet::writeInt8(signed char hostValue)
@@ -213,6 +214,41 @@ int Packet::getSize(bool includeProtocolSizeFieldLength)
 {
   if (includeProtocolSizeFieldLength) return this->size; // size instance variable is inclusive of size field length
   return (this->size - sizeof(int)); // protocol size field is exclusive of size field length
+}
+
+// The CRC32 functions make the following assumptions:
+// 1 - head is pointing to an int32 crc field when beginCRC32() is called
+// 2 - head is incremented past the crc field, and the next N bytes (to be CRC32'd) are written
+// 3 - when endCRC32() is called, N bytes (this->head - this->crcHead) are CRC32'd, and the result written to the intial crc field (this->crcHead - sizeof(crc))
+// 4 - the functions can't be used concurrently
+void Packet::beginCRC32()
+{
+  D(cout.flush() << "Packet::beginCRC32()\n";)
+  this->writeInt32(0); // will be updated @ endCRC32()
+  this->crcHead = this->head;
+}
+
+int Packet::endCRC32()
+{
+  D(cout.flush() << "Packet::endCRC32()\n";)
+  
+  int crcLength = this->head - this->crcHead;
+  D(cout.flush() << "Packet::endCRC32():crcLength:" << crcLength << "\n";)
+
+  uLong initCrc = crc32(0L, Z_NULL, 0);
+  uLong crc = crc32(initCrc, this->crcHead, crcLength);
+  if (crc == initCrc)
+  {
+    E("Packet::endCRC32():error:updated crc matches initial (null) crc\n");
+    return -1;
+  }
+  D(cout.flush() << "Packet::endCRC32():unsigned crc:" << crc << "\n";)
+  int signedCrc = (int)crc;
+  D(cout.flush() << "Packet::endCRC32():signed crc:" << signedCrc << "\n";)
+  int netValueCRC = htonl(signedCrc);
+  memcpy(this->crcHead - sizeof(int), &netValueCRC, sizeof(int));
+  D(cout.flush() << "Packet::endCRC32():hostValueCRC(" << signedCrc << "):netValueCRC(" << netValueCRC << ")\n";)
+  return signedCrc;
 }
 
 }; // namespace LibKafka

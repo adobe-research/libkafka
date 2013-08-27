@@ -64,7 +64,7 @@ class BaseTest : public ::testing::Test {
     const static long int offset = 21;
     const static int crc = 1001;
     const static signed char magicByte = -1;
-    const static signed char attributes = -2;
+    const static signed char attributes = 0; // last three bits must be zero to disable gzip compression
     const static char *defaultKey; // "test_key", null terminated
     const static int keyLength = 9;
     static unsigned char *key;
