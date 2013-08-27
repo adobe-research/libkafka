@@ -79,6 +79,12 @@
 	      </includes>
 	    </source>
 	    <source>
+	      <directory>src/fetch</directory> 
+	      <includes>
+		<include>*.cc</include>
+	      </includes>
+	    </source>
+	    <source>
 	      <directory>/opt/local/include</directory>
 	      <dependencyAnalysisParticipation>false</dependencyAnalysisParticipation>
 	    </source>

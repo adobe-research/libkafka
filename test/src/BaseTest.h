@@ -13,6 +13,9 @@
 #include <produce/ProduceResponseTopic.h>
 #include <produce/ProduceResponsePartition.h>
 #include <produce/ProduceResponse.h>
+#include <fetch/FetchTopic.h>
+#include <fetch/FetchPartition.h>
+#include <fetch/FetchRequest.h>
 #include <ApiConstants.h>
 
 using namespace std;
@@ -103,4 +106,22 @@ class BaseTest : public ::testing::Test {
     const static int produceResponseTopicArraySize = 3;
     static ProduceResponseTopic **produceResponseTopicArray;
     ProduceResponse *createProduceResponse();
+
+    // FetchRequest
+    const static int replicaId = 2;
+    const static int maxWaitTime = 10;
+    const static int minBytes = 0;
+    const static int fetchTopicArraySize = 1;
+    static FetchTopic **fetchTopicArray;
+    FetchRequest *createFetchRequest();
+
+    // FetchTopic
+    const static int fetchPartitionArraySize = 1;
+    static FetchPartition **fetchPartitionArray;
+    FetchTopic *createFetchTopic(string topicName = string("test_topic"));
+
+    // FetchPartition
+    const static long int fetchOffset = 0;
+    const static int maxBytes = 4096;
+    FetchPartition *createFetchPartition();
 };

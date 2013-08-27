@@ -191,3 +191,33 @@ ProduceResponse* BaseTest::createProduceResponse()
   }
   return new ProduceResponse(correlationId, produceResponseTopicArraySize, produceResponseTopicArray, true);
 }
+
+// FetchRequest
+FetchTopic** BaseTest::fetchTopicArray;
+
+FetchRequest* BaseTest::createFetchRequest()
+{
+  fetchTopicArray = new FetchTopic*[fetchTopicArraySize];
+  for (int i=0; i<fetchTopicArraySize; i++) {
+    fetchTopicArray[i] = createFetchTopic();
+  }
+  return new FetchRequest(correlationId, clientId, replicaId, maxWaitTime, minBytes, fetchTopicArraySize, fetchTopicArray, true);
+}
+
+// FetchTopic
+FetchPartition** BaseTest::fetchPartitionArray;
+
+FetchTopic* BaseTest::createFetchTopic(string topicName)
+{
+  fetchPartitionArray = new FetchPartition*[fetchPartitionArraySize];
+  for (int i=0; i<fetchPartitionArraySize; i++) {
+    fetchPartitionArray[i] = createFetchPartition();
+  }
+  return new FetchTopic(topicName, fetchPartitionArraySize, fetchPartitionArray, true);
+}
+
+// FetchPartition
+FetchPartition* BaseTest::createFetchPartition()
+{
+  return new FetchPartition(partition, fetchOffset, minBytes);
+}
