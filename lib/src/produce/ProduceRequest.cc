@@ -121,7 +121,7 @@ namespace LibKafka {
     os << "ProduceRequest.timeout:" << pr.timeout << "\n";
     os << "ProduceRequest.produceTopicArraySize:" << pr.produceTopicArraySize << "\n";
     for (int i=0; i<pr.produceTopicArraySize; i++) {
-      os << "ProduceRequest.produceTopicArray[" << i << "]:" << pr.produceTopicArray[i] << "\n";
+      os << "ProduceRequest.produceTopicArray[" << i << "]:" << *(pr.produceTopicArray[i]) << "\n";
     }
     return os;
   }

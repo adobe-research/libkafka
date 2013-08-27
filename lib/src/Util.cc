@@ -40,4 +40,15 @@ string intToString(int i)
   return ss.str();
 }
 
+string intArrayToString(int* array, int size)
+{
+  ostringstream ss;
+  ss << "[";
+  for (int i=0; i<size-1; i++)
+    ss << array[i] << ",";
+  ss << array[size-1];
+  ss << "]";
+  return ss.str();
+}
+
 }; // namespace LibKafka

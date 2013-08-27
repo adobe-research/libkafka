@@ -74,12 +74,11 @@ class BaseTest : public ::testing::Test {
     MessageSet *createMessageSet();
 
     // ProduceMessageSet
-    const static int partition = 1;
+    const static int partition = 0;
     static MessageSet *messageSet;
     ProduceMessageSet *createProduceMessageSet();
 
     // ProduceTopic
-    const static string topicName;
     const static int produceMessageSetArraySize = 2;
     static ProduceMessageSet **produceMessageSetArray;
     ProduceTopic *createProduceTopic();
@@ -87,7 +86,7 @@ class BaseTest : public ::testing::Test {
     // ProduceRequest
     const static int requiredAcks = 1;
     const static int timeout = 20;
-    const static int produceTopicArraySize = 2;
+    const static int produceTopicArraySize = 1;
     static ProduceTopic **produceTopicArray;
     ProduceRequest *createProduceRequest();
 

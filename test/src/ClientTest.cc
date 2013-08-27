@@ -25,12 +25,14 @@ namespace {
     EXPECT_NE(mr1, (void*)0);
     MetadataResponse *mr2 = c->sendMetadataRequest(mr1);
     EXPECT_NE(mr2, (void*)0);
+    cout << "ClientTest:MetadataRequest:\n" << *mr1;
     cout << "ClientTest:MetadataResponse:\n" << *mr2;
     
     ProduceRequest *pr1 = createProduceRequest();
     EXPECT_NE(pr1, (void*)0);
     ProduceResponse *pr2 = c->sendProduceRequest(pr1);
     EXPECT_NE(pr2, (void*)0);
+    cout << "ClientTest:ProduceRequest:\n" << *pr1;
     cout << "ClientTest:ProduceResponse:\n" << *pr2;
 
     delete c;

@@ -3,6 +3,7 @@
 #include <string>
 #include <gtest/gtest.h>
 #include "BaseTest.h"
+#include "TestConfig.h"
 
 BaseTest::BaseTest() { }
 BaseTest::~BaseTest() { }
@@ -137,7 +138,6 @@ ProduceMessageSet* BaseTest::createProduceMessageSet()
 // ProduceTopic
 
 ProduceMessageSet** BaseTest::produceMessageSetArray;
-const string BaseTest::topicName = string("test_topic");
 
 ProduceTopic* BaseTest::createProduceTopic()
 {
@@ -145,7 +145,7 @@ ProduceTopic* BaseTest::createProduceTopic()
   for (int i=0; i<produceMessageSetArraySize; i++) {
     produceMessageSetArray[i] = createProduceMessageSet();
   }
-  return new ProduceTopic(topicName, produceMessageSetArraySize, produceMessageSetArray, true);
+  return new ProduceTopic(TestConfig::PRODUCE_TOPIC_NAME, produceMessageSetArraySize, produceMessageSetArray, true);
 }
 
 // ProduceRequest
@@ -177,7 +177,7 @@ ProduceResponseTopic* BaseTest::createProduceResponseTopic()
   for (int i=0; i<produceResponsePartitionArraySize; i++) {
     produceResponsePartitionArray[i] = createProduceResponsePartition();
   }
-  return new ProduceResponseTopic(topicName, produceResponsePartitionArraySize, produceResponsePartitionArray, true);
+  return new ProduceResponseTopic(TestConfig::PRODUCE_TOPIC_NAME, produceResponsePartitionArraySize, produceResponsePartitionArray, true);
 }
 
 // ProduceResponse

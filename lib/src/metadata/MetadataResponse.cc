@@ -135,7 +135,7 @@ ostream& operator<< (ostream& os, const MetadataResponse& mr)
   }
   os << "MetadataResponse.topicMetadataArraySize:" << mr.topicMetadataArraySize << "\n";
   for (int i=0; i<mr.topicMetadataArraySize; i++) {
-    os << "MetadataResponse.topicMetadataArray[" << i << "]:" << *(mr.topicMetadataArray[i]) << "\n";
+    os << "MetadataResponse.topicMetadataArray[" << i << "]:" << *(mr.topicMetadataArray[i]);
   }
   return os;
 }

@@ -33,6 +33,7 @@
 namespace LibKafka {
 
   std::string intToString(int i);
+  std::string intArrayToString(int* i, int size);
 
 }; // namespace LibKafka
 
