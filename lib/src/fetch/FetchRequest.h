@@ -30,7 +30,8 @@
 
 #include <string>
 #include "../Request.h"
-#include "FetchTopic.h"
+#include "../TopicNameBlock.h"
+#include "FetchPartition.h"
 
 namespace LibKafka {
 
@@ -43,10 +44,10 @@ class FetchRequest : public Request
     int minBytes;
 
     int fetchTopicArraySize;
-    FetchTopic **fetchTopicArray;
+    TopicNameBlock<FetchPartition> **fetchTopicArray;
 
     FetchRequest(unsigned char *buffer, bool releaseBuffer = false);
-    FetchRequest(int correlationId, std::string clientId, int replicaId, int maxWaitTime, int minBytes, int fetchTopicArraySize, FetchTopic **fetchTopicArray, bool releaseArrays = false);
+    FetchRequest(int correlationId, std::string clientId, int replicaId, int maxWaitTime, int minBytes, int fetchTopicArraySize, TopicNameBlock<FetchPartition> **fetchTopicArray, bool releaseArrays = false);
     ~FetchRequest();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

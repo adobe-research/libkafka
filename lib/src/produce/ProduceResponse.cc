@@ -29,7 +29,6 @@
 #include <vector>
 
 #include <ProduceResponse.h>
-#include <ProduceResponseTopic.h>
 
 using namespace std;
 
@@ -39,21 +38,21 @@ ProduceResponse::ProduceResponse(unsigned char *buffer, bool releaseBuffer) : Re
 {
   D(cout.flush() << "--------------ProduceResponse(buffer)\n";)
 
-  // Kafka Protocol: ProduceResponseTopic[] produceResponseTopicArray
+  // Kafka Protocol: TopicNameBlock<ProduceResponsePartition>[] produceResponseTopicArray
   this->produceResponseTopicArraySize = this->packet->readInt32();
-  this->produceResponseTopicArray = new ProduceResponseTopic*[this->produceResponseTopicArraySize];
+  this->produceResponseTopicArray = new TopicNameBlock<ProduceResponsePartition>*[this->produceResponseTopicArraySize];
   for (int i=0; i<this->produceResponseTopicArraySize; i++) {
-    this->produceResponseTopicArray[i] = new ProduceResponseTopic(this->packet);
+    this->produceResponseTopicArray[i] = new TopicNameBlock<ProduceResponsePartition>(this->packet);
   }
 
   this->releaseArrays = true;
 }
 
-ProduceResponse::ProduceResponse(int correlationId, int produceResponseTopicArraySize, ProduceResponseTopic **produceResponseTopicArray, bool releaseArrays) : Response(correlationId)
+ProduceResponse::ProduceResponse(int correlationId, int produceResponseTopicArraySize, TopicNameBlock<ProduceResponsePartition> **produceResponseTopicArray, bool releaseArrays) : Response(correlationId)
 {
   D(cout.flush() << "--------------ProduceResponse(params)\n";)
 
-  // Kafka Protocol: ProduceResponseTopic[] produceResponseTopicArray
+  // Kafka Protocol: TopicNameBlock<ProduceResponsePartition>[] produceResponseTopicArray
   this->produceResponseTopicArraySize = produceResponseTopicArraySize;
   this->produceResponseTopicArray = produceResponseTopicArray;
   this->releaseArrays = releaseArrays;
@@ -75,7 +74,7 @@ unsigned char* ProduceResponse::toWireFormat(bool updatePacketSize)
 
   D(cout.flush() << "--------------ProduceResponse::toWireFormat()\n";)
 
-  // Kafka Protocol: ProduceResponseTopic[] produceResponseTopicArray
+  // Kafka Protocol: TopicNameBlock<ProduceResponsePartition>[] produceResponseTopicArray
   this->packet->writeInt32(this->produceResponseTopicArraySize);
   for (int i=0; i<this->produceResponseTopicArraySize; i++) {
     this->produceResponseTopicArray[i]->packet = this->packet;
@@ -91,7 +90,7 @@ int ProduceResponse::getWireFormatSize(bool includePacketSize)
   D(cout.flush() << "--------------ProduceResponse::getWireFormatSize()\n";)
 
   // Response.getWireFormatSize
-  // produceResponseTopicArraySize + produceResponseTopicArraySize*sizeof(ProduceResponseTopic)
+  // produceResponseTopicArraySize + produceResponseTopicArraySize*sizeof(TopicNameBlock<ProduceResponsePartition>)
 
   int size = Response::getWireFormatSize(includePacketSize);
   size += sizeof(int);

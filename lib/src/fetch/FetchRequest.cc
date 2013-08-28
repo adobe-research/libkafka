@@ -47,16 +47,16 @@ namespace LibKafka {
     // Kafka Protocol: int minBytes
     this->minBytes = this->packet->readInt32();
 
-    // Kafka Protocol: FetchTopic[] (note FetchTopic is not a protocol-defined structure)
+    // Kafka Protocol: TopicNameBlock[] (note TopicNameBlock is not a protocol-defined structure)
     this->fetchTopicArraySize = this->packet->readInt32();
-    this->fetchTopicArray = new FetchTopic*[this->fetchTopicArraySize];
+    this->fetchTopicArray = new TopicNameBlock<FetchPartition>*[this->fetchTopicArraySize];
     for (int i=0; i<this->fetchTopicArraySize; i++) {
-      this->fetchTopicArray[i] = new FetchTopic(this->packet);
+      this->fetchTopicArray[i] = new TopicNameBlock<FetchPartition>(this->packet);
     }
     this->releaseArrays = true;
   }
 
-  FetchRequest::FetchRequest(int correlationId, std::string clientId, int replicaId, int maxWaitTime, int minBytes, int fetchTopicArraySize, FetchTopic** fetchTopicArray, bool releaseArrays) : Request(ApiConstants::PRODUCE_REQUEST_KEY, ApiConstants::API_VERSION, correlationId, clientId)
+  FetchRequest::FetchRequest(int correlationId, std::string clientId, int replicaId, int maxWaitTime, int minBytes, int fetchTopicArraySize, TopicNameBlock<FetchPartition>** fetchTopicArray, bool releaseArrays) : Request(ApiConstants::PRODUCE_REQUEST_KEY, ApiConstants::API_VERSION, correlationId, clientId)
   {
     D(cout.flush() << "--------------FetchRequest(params)\n";)
 
@@ -94,7 +94,7 @@ namespace LibKafka {
     // Kafka Protocol: int minBytes
     this->packet->writeInt32(this->minBytes);
 
-    // Kafka Protocol: FetchTopic[] (note FetchTopic is not a protocol-defined structure)
+    // Kafka Protocol: TopicNameBlock[] (note TopicNameBlock is not a protocol-defined structure)
     this->packet->writeInt32(this->fetchTopicArraySize);
     for (int i=0; i<this->fetchTopicArraySize; i++) {
       this->fetchTopicArray[i]->packet = this->packet;
@@ -110,7 +110,7 @@ namespace LibKafka {
     D(cout.flush() << "--------------FetchRequest::getWireFormatSize()\n";)
 
     // Request.getWireFormatSize
-    // replicaId + maxWaitTime + minBytes + produceTopicArraySize*sizeof(FetchTopic)
+    // replicaId + maxWaitTime + minBytes + produceTopicArraySize*sizeof(TopicNameBlock<FetchPartition>)
 
     int size = Request::getWireFormatSize(includePacketSize);
     size += sizeof(int) + sizeof(int) + sizeof(int);

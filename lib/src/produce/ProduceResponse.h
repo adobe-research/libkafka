@@ -30,7 +30,8 @@
 
 #include <string>
 #include "../Response.h"
-#include "ProduceResponseTopic.h"
+#include "../TopicNameBlock.h"
+#include "ProduceResponsePartition.h"
 
 namespace LibKafka {
 
@@ -39,10 +40,10 @@ class ProduceResponse : public Response
   public:
 
     int produceResponseTopicArraySize;
-    ProduceResponseTopic **produceResponseTopicArray;
+    TopicNameBlock<ProduceResponsePartition> **produceResponseTopicArray;
 
     ProduceResponse(unsigned char *buffer, bool releaseBuffer = false);
-    ProduceResponse(int correlationId, int produceResponseTopicArraySize, ProduceResponseTopic **produceResponseTopicArray, bool releaseArrays = false);
+    ProduceResponse(int correlationId, int produceResponseTopicArraySize, TopicNameBlock<ProduceResponsePartition> **produceResponseTopicArray, bool releaseArrays = false);
     ~ProduceResponse();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

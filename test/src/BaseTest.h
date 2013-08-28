@@ -7,13 +7,12 @@
 #include <metadata/MetadataRequest.h>
 #include <metadata/MetadataResponse.h>
 #include <MessageSet.h>
+#include <TopicNameBlock.h>
 #include <produce/ProduceTopic.h>
 #include <produce/ProduceMessageSet.h>
 #include <produce/ProduceRequest.h>
-#include <produce/ProduceResponseTopic.h>
 #include <produce/ProduceResponsePartition.h>
 #include <produce/ProduceResponse.h>
-#include <fetch/FetchTopic.h>
 #include <fetch/FetchPartition.h>
 #include <fetch/FetchRequest.h>
 #include <ApiConstants.h>
@@ -75,6 +74,11 @@ class BaseTest : public ::testing::Test {
     const static int valueLength = 11;
     static unsigned char *value;
     MessageSet *createMessageSet();
+    
+    // TopicNameBlock
+    const static int fetchPartitionArraySize = 1;
+    static FetchPartition **fetchPartitionArray;
+    TopicNameBlock<FetchPartition> *createTopicNameBlock(string topicName = string("test_topic"));
 
     // ProduceMessageSet
     const static int partition = 0;
@@ -96,15 +100,15 @@ class BaseTest : public ::testing::Test {
     // ProduceResponsePartition
     const static short int errorCode = 0;
     ProduceResponsePartition *createProduceResponsePartition();
-    
-    // ProduceResponseTopic
-    const static int produceResponsePartitionArraySize = 2;
-    static ProduceResponsePartition **produceResponsePartitionArray;
-    ProduceResponseTopic *createProduceResponseTopic();
 
+    // TopicNameBlock for ProduceResponse
+    const static int produceResponsePartitionArraySize = 1;
+    static ProduceResponsePartition** produceResponsePartitionArray;
+    TopicNameBlock<ProduceResponsePartition>* createProduceResponseTopicNameBlock();
+    
     // ProduceResponse
     const static int produceResponseTopicArraySize = 3;
-    static ProduceResponseTopic **produceResponseTopicArray;
+    static TopicNameBlock<ProduceResponsePartition> **produceResponseTopicArray;
     ProduceResponse *createProduceResponse();
 
     // FetchRequest
@@ -112,13 +116,8 @@ class BaseTest : public ::testing::Test {
     const static int maxWaitTime = 10;
     const static int minBytes = 0;
     const static int fetchTopicArraySize = 1;
-    static FetchTopic **fetchTopicArray;
+    static TopicNameBlock<FetchPartition> **fetchTopicArray;
     FetchRequest *createFetchRequest();
-
-    // FetchTopic
-    const static int fetchPartitionArraySize = 1;
-    static FetchPartition **fetchPartitionArray;
-    FetchTopic *createFetchTopic(string topicName = string("test_topic"));
 
     // FetchPartition
     const static long int fetchOffset = 0;
