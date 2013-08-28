@@ -47,7 +47,7 @@ namespace LibKafka {
 
       TopicNameBlock(Packet *packet) : WireFormatter(), PacketWriter(packet)
     {
-      D(cout.flush() << "--------------TopicNameBlock(buffer)\n";)
+      D(std::cout.flush() << "--------------TopicNameBlock(buffer)\n";)
 
 	// Kafka Protocol: kafka string topicName
 	this->topicName = this->packet->readString();
@@ -64,7 +64,7 @@ namespace LibKafka {
 
       TopicNameBlock(std::string topicName, int subBlockArraySize, SubBlockArrayClass **subBlockArray, bool releaseArrays = false) : WireFormatter(), PacketWriter()
     {
-      D(cout.flush() << "--------------TopicNameBlock(params)\n";)
+      D(std::cout.flush() << "--------------TopicNameBlock(params)\n";)
 
 	this->topicName = topicName;
       this->subBlockArraySize = subBlockArraySize;
@@ -85,7 +85,7 @@ namespace LibKafka {
 
       unsigned char* toWireFormat(bool updatePacketSize = true)
       {
-	D(cout.flush() << "--------------TopicNameBlock::toWireFormat()\n";)
+	D(std::cout.flush() << "--------------TopicNameBlock::toWireFormat()\n";)
 
 	  // Kafka Protocol: kafka string topicName
 	  this->packet->writeString(this->topicName);
@@ -103,7 +103,7 @@ namespace LibKafka {
 
       int getWireFormatSize(bool includePacketSize = false)
       {
-	D(cout.flush() << "--------------TopicNameBlock::getWireFormatSize()\n";)
+	D(std::cout.flush() << "--------------TopicNameBlock::getWireFormatSize()\n";)
 
 	  // Packet.size
 	  // topicName
@@ -126,7 +126,11 @@ namespace LibKafka {
   template<class SubBlockArrayClass>
   std::ostream& operator<< (std::ostream& os, const TopicNameBlock<SubBlockArrayClass>& tnb)
   {
-    os << tnb.topicName << ":" << tnb.subBlockArraySize;
+    os << "TopicNameBlock.topicName:" << tnb.topicName << "\n";
+    os << "TopicNameBlock.subBlockArraySize:" << tnb.subBlockArraySize << "\n";
+    for (int i=0; i<tnb.subBlockArraySize; i++) {
+      os << "TopicNameBlock.subBlockArray[" << i << "]:" << *(tnb.subBlockArray[i]);
+    }
     return os;
   }
   
