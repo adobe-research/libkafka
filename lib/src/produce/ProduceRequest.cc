@@ -44,16 +44,16 @@ namespace LibKafka {
     // Kafka Protocol: int timeout
     this->timeout = this->packet->readInt32();
 
-    // Kafka Protocol: ProduceTopic[] (note ProduceTopic is not a protocol-defined structure)
+    // Kafka Protocol: TopicNameBlock<ProduceMessageSet>[] (note TopicNameBlock is not a protocol-defined structure)
     this->produceTopicArraySize = this->packet->readInt32();
-    this->produceTopicArray = new ProduceTopic*[this->produceTopicArraySize];
+    this->produceTopicArray = new TopicNameBlock<ProduceMessageSet>*[this->produceTopicArraySize];
     for (int i=0; i<this->produceTopicArraySize; i++) {
-      this->produceTopicArray[i] = new ProduceTopic(this->packet);
+      this->produceTopicArray[i] = new TopicNameBlock<ProduceMessageSet>(this->packet);
     }
     this->releaseArrays = true;
   }
 
-  ProduceRequest::ProduceRequest(int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, ProduceTopic** produceTopicArray, bool releaseArrays) : Request(ApiConstants::PRODUCE_REQUEST_KEY, ApiConstants::API_VERSION, correlationId, clientId)
+  ProduceRequest::ProduceRequest(int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, TopicNameBlock<ProduceMessageSet>** produceTopicArray, bool releaseArrays) : Request(ApiConstants::PRODUCE_REQUEST_KEY, ApiConstants::API_VERSION, correlationId, clientId)
   {
     D(cout.flush() << "--------------ProduceRequest(params)\n";)
 
@@ -87,7 +87,7 @@ namespace LibKafka {
     // Kafka Protocol: int timeout
     this->packet->writeInt32(this->timeout);
 
-    // Kafka Protocol: ProduceTopic[] (note ProduceTopic is not a protocol-defined structure)
+    // Kafka Protocol: TopicNameBlock<ProduceMessageSet>[] (note TopicNameBlock is not a protocol-defined structure)
     this->packet->writeInt32(this->produceTopicArraySize);
     for (int i=0; i<this->produceTopicArraySize; i++) {
       this->produceTopicArray[i]->packet = this->packet;
@@ -103,7 +103,7 @@ namespace LibKafka {
     D(cout.flush() << "--------------ProduceRequest::getWireFormatSize()\n";)
 
     // Request.getWireFormatSize
-    // requiredAcks + timeout + produceTopicArraySize*sizeof(ProduceTopic)
+    // requiredAcks + timeout + produceTopicArraySize*sizeof(TopicNameBlock<ProduceMessageSet>)
 
     int size = Request::getWireFormatSize(includePacketSize);
     size += sizeof(short int) + sizeof(int);

@@ -147,27 +147,27 @@ ProduceMessageSet* BaseTest::createProduceMessageSet()
   return new ProduceMessageSet(partition, messageSetSize, messageSet, true);
 }
 
-// ProduceTopic
+// TopicNameBlock for ProduceRequest
 
 ProduceMessageSet** BaseTest::produceMessageSetArray;
 
-ProduceTopic* BaseTest::createProduceTopic()
+TopicNameBlock<ProduceMessageSet>* BaseTest::createProduceRequestTopicNameBlock()
 {
   produceMessageSetArray = new ProduceMessageSet*[produceMessageSetArraySize];
   for (int i=0; i<produceMessageSetArraySize; i++) {
     produceMessageSetArray[i] = createProduceMessageSet();
   }
-  return new ProduceTopic(TestConfig::PRODUCE_TOPIC_NAME, produceMessageSetArraySize, produceMessageSetArray, true);
+  return new TopicNameBlock<ProduceMessageSet>(TestConfig::PRODUCE_TOPIC_NAME, produceMessageSetArraySize, produceMessageSetArray, true);
 }
 
 // ProduceRequest
-ProduceTopic** BaseTest::produceTopicArray;
+TopicNameBlock<ProduceMessageSet>** BaseTest::produceTopicArray;
 
 ProduceRequest* BaseTest::createProduceRequest()
 {
-  produceTopicArray = new ProduceTopic*[produceTopicArraySize];
+  produceTopicArray = new TopicNameBlock<ProduceMessageSet>*[produceTopicArraySize];
   for (int i=0; i<produceTopicArraySize; i++) {
-    produceTopicArray[i] = createProduceTopic();
+    produceTopicArray[i] = createProduceRequestTopicNameBlock();
   }
   return new ProduceRequest(correlationId, clientId, requiredAcks, timeout, produceTopicArraySize, produceTopicArray, true);
 }

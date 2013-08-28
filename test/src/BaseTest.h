@@ -8,7 +8,6 @@
 #include <metadata/MetadataResponse.h>
 #include <MessageSet.h>
 #include <TopicNameBlock.h>
-#include <produce/ProduceTopic.h>
 #include <produce/ProduceMessageSet.h>
 #include <produce/ProduceRequest.h>
 #include <produce/ProduceResponsePartition.h>
@@ -85,16 +84,16 @@ class BaseTest : public ::testing::Test {
     static MessageSet *messageSet;
     ProduceMessageSet *createProduceMessageSet();
 
-    // ProduceTopic
+    // TopicNameBlock for ProduceRequest
     const static int produceMessageSetArraySize = 2;
     static ProduceMessageSet **produceMessageSetArray;
-    ProduceTopic *createProduceTopic();
+    TopicNameBlock<ProduceMessageSet> *createProduceRequestTopicNameBlock();
 
     // ProduceRequest
     const static int requiredAcks = 1;
     const static int timeout = 20;
     const static int produceTopicArraySize = 1;
-    static ProduceTopic **produceTopicArray;
+    static TopicNameBlock<ProduceMessageSet> **produceTopicArray;
     ProduceRequest *createProduceRequest();
 
     // ProduceResponsePartition

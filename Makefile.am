@@ -35,7 +35,6 @@ lib_libkafka_la_SOURCES = \
   lib/src/metadata/TopicMetadata.cc \
   lib/src/produce/ProduceRequest.cc \
   lib/src/produce/ProduceMessageSet.cc \
-  lib/src/produce/ProduceTopic.cc \
   lib/src/produce/ProduceResponse.cc \
   lib/src/produce/ProduceResponsePartition.cc \
   lib/src/fetch/FetchRequest.cc \
@@ -62,7 +61,6 @@ pkginclude_HEADERS = \
   lib/src/metadata/TopicMetadata.h \
   lib/src/produce/ProduceRequest.h \
   lib/src/produce/ProduceMessageSet.h \
-  lib/src/produce/ProduceTopic.h \
   lib/src/produce/ProduceResponse.h \
   lib/src/produce/ProduceResponsePartition.h \
   lib/src/fetch/FetchRequest.h \
@@ -97,7 +95,6 @@ test_libkafka_unit_tests_SOURCES = \
   test/src/TopicNameBlockTest.cc \
   test/src/ProduceRequestTest.cc \
   test/src/ProduceMessageSetTest.cc \
-  test/src/ProduceTopicTest.cc \
   test/src/ProduceResponseTest.cc \
   test/src/ProduceResponsePartitionTest.cc \
   test/src/FetchRequestTest.cc \

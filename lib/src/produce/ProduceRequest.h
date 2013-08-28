@@ -30,7 +30,8 @@
 
 #include <string>
 #include "../Request.h"
-#include "ProduceTopic.h"
+#include "../TopicNameBlock.h"
+#include "ProduceMessageSet.h"
 
 namespace LibKafka {
 
@@ -42,10 +43,10 @@ class ProduceRequest : public Request
     int timeout;
 
     int produceTopicArraySize;
-    ProduceTopic **produceTopicArray;
+    TopicNameBlock<ProduceMessageSet> **produceTopicArray;
 
     ProduceRequest(unsigned char *buffer, bool releaseBuffer = false);
-    ProduceRequest(int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, ProduceTopic **produceTopicArray, bool releaseArrays = false);
+    ProduceRequest(int correlationId, std::string clientId, short int requiredAcks, int timeout, int produceTopicArraySize, TopicNameBlock<ProduceMessageSet> **produceTopicArray, bool releaseArrays = false);
     ~ProduceRequest();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
