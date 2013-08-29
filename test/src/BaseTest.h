@@ -14,6 +14,8 @@
 #include <produce/ProduceResponse.h>
 #include <fetch/FetchPartition.h>
 #include <fetch/FetchRequest.h>
+#include <fetch/FetchResponse.h>
+#include <fetch/FetchResponsePartition.h>
 #include <ApiConstants.h>
 
 using namespace std;
@@ -122,4 +124,18 @@ class BaseTest : public ::testing::Test {
     const static long int fetchOffset = 0;
     const static int maxBytes = 4096;
     FetchPartition *createFetchPartition();
+    
+    // TopicNameBlock for FetchResponse
+    const static int fetchResponsePartitionArraySize = 1;
+    static FetchResponsePartition** fetchResponsePartitionArray;
+    TopicNameBlock<FetchResponsePartition>* createFetchResponseTopicNameBlock();
+    
+    // FetchResponse
+    const static int fetchResponseTopicArraySize = 3;
+    static TopicNameBlock<FetchResponsePartition> **fetchResponseTopicArray;
+    FetchResponse *createFetchResponse();
+    
+    // FetchResponsePartition
+    const static long int highwaterMarkOffset = 21;
+    FetchResponsePartition *createFetchResponsePartition();
 };

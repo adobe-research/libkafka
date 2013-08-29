@@ -28,18 +28,25 @@
 #include <string>
 #include <iostream>
 
-#include <ProduceMessageSet.h>
+#include "FetchResponsePartition.h"
+#include "../ApiConstants.h"
 
 using namespace std;
 
 namespace LibKafka {
 
-ProduceMessageSet::ProduceMessageSet(Packet *packet) : WireFormatter(), PacketWriter(packet)
+FetchResponsePartition::FetchResponsePartition(Packet *packet) : WireFormatter(), PacketWriter(packet)
 {
-  D(cout.flush() << "--------------ProduceMessageSet(buffer)\n";)
+  D(cout.flush() << "--------------FetchResponsePartition(buffer)\n";)
 
   // Kafka Protocol: int partition
   this->partition = this->packet->readInt32();
+
+  // Kafka Protocol: short int errorCode
+  this->errorCode = this->packet->readInt16();
+
+  // Kafka Protocol: long int highwaterMarkOffset
+  this->highwaterMarkOffset = this->packet->readInt64();
 
   // Kafka Protocol: int messageSetSize
   this->messageSetSize = this->packet->readInt32();
@@ -50,17 +57,19 @@ ProduceMessageSet::ProduceMessageSet(Packet *packet) : WireFormatter(), PacketWr
   this->releaseArrays = true;
 }
 
-ProduceMessageSet::ProduceMessageSet(int partition, int messageSetSize, MessageSet *messageSet, bool releaseArrays) : WireFormatter(), PacketWriter()
+FetchResponsePartition::FetchResponsePartition(int partition, short int errorCode, long int highwaterMarkOffset, int messageSetSize, MessageSet *messageSet, bool releaseArrays) : WireFormatter(), PacketWriter()
 {
-  D(cout.flush() << "--------------ProduceMessageSet(params)\n";)
+  D(cout.flush() << "--------------FetchResponsePartition(params)\n";)
 
   this->partition = partition;
+  this->errorCode = errorCode;
+  this->highwaterMarkOffset = highwaterMarkOffset;
   this->messageSetSize = messageSetSize;
   this->messageSet = messageSet;
   this->releaseArrays = releaseArrays;
 }
 
-ProduceMessageSet::~ProduceMessageSet()
+FetchResponsePartition::~FetchResponsePartition()
 {
   if (this->releaseArrays)
   {
@@ -68,13 +77,19 @@ ProduceMessageSet::~ProduceMessageSet()
   }
 }
 
-unsigned char* ProduceMessageSet::toWireFormat(bool updatePacketSize)
+unsigned char* FetchResponsePartition::toWireFormat(bool updatePacketSize)
 {
-  D(cout.flush() << "--------------ProduceMessageSet::toWireFormat()\n";)
+  D(cout.flush() << "--------------FetchResponsePartition::toWireFormat()\n";)
   
   // Kafka Protocol: int partition
   this->packet->writeInt32(this->partition);
 
+  // Kafka Protocol: short int errorCode
+  this->packet->writeInt16(this->errorCode);
+
+  // Kafka Protocol: long int highwaterMarkOffset
+  this->packet->writeInt64(this->highwaterMarkOffset);
+  
   // Kafka Protocol: int messageSetSize
   this->packet->writeInt32(this->messageSetSize);
 
@@ -86,22 +101,22 @@ unsigned char* ProduceMessageSet::toWireFormat(bool updatePacketSize)
   return this->packet->getBuffer();
 }
 
-int ProduceMessageSet::getWireFormatSize(bool includePacketSize)
+int FetchResponsePartition::getWireFormatSize(bool includePacketSize)
 {
-  D(cout.flush() << "--------------ProduceMessageSet::getWireFormatSize()\n";)
+  D(cout.flush() << "--------------FetchResponsePartition::getWireFormatSize()\n";)
   
   // Packet.size
-  // partition + messageSetSize + messageSet
+  // partition + errorCode + highwaterMarkOffset + messageSetSize + messageSet
 
   int size = 0;
   if (includePacketSize) size += sizeof(int);
-  size += sizeof(int) + sizeof(int) + this->messageSetSize;
+  size += sizeof(int) + sizeof(short int) + sizeof(long int) + sizeof(int) + this->messageSetSize;
   return size;
 }
 
-ostream& operator<< (ostream& os, const ProduceMessageSet& pm)
+ostream& operator<< (ostream& os, const FetchResponsePartition& frp)
 {
-  os << pm.partition << ":" << pm.messageSetSize << "\n";
+  os << frp.partition << ":" << frp.errorCode << ":" << frp.highwaterMarkOffset << ":" << frp.messageSetSize << ":" << ApiConstants::getErrorString(frp.errorCode) << "\n";
   return os;
 }
 

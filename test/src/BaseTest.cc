@@ -157,7 +157,7 @@ TopicNameBlock<ProduceMessageSet>* BaseTest::createProduceRequestTopicNameBlock(
   for (int i=0; i<produceMessageSetArraySize; i++) {
     produceMessageSetArray[i] = createProduceMessageSet();
   }
-  return new TopicNameBlock<ProduceMessageSet>(TestConfig::PRODUCE_TOPIC_NAME, produceMessageSetArraySize, produceMessageSetArray, true);
+  return new TopicNameBlock<ProduceMessageSet>(TestConfig::PRODUCE_REQUEST_TOPIC_NAME, produceMessageSetArraySize, produceMessageSetArray, true);
 }
 
 // ProduceRequest
@@ -189,7 +189,7 @@ TopicNameBlock<ProduceResponsePartition>* BaseTest::createProduceResponseTopicNa
   for (int i=0; i<produceResponsePartitionArraySize; i++) {
     produceResponsePartitionArray[i] = createProduceResponsePartition();
   }
-  return new TopicNameBlock<ProduceResponsePartition>(TestConfig::PRODUCE_TOPIC_NAME, produceResponsePartitionArraySize, produceResponsePartitionArray, true);
+  return new TopicNameBlock<ProduceResponsePartition>(TestConfig::PRODUCE_RESPONSE_TOPIC_NAME, produceResponsePartitionArraySize, produceResponsePartitionArray, true);
 }
 
 // ProduceResponse
@@ -220,4 +220,38 @@ FetchRequest* BaseTest::createFetchRequest()
 FetchPartition* BaseTest::createFetchPartition()
 {
   return new FetchPartition(partition, fetchOffset, minBytes);
+}
+
+// TopicNameBlock for FetchResponse
+
+FetchResponsePartition** BaseTest::fetchResponsePartitionArray;
+
+TopicNameBlock<FetchResponsePartition>* BaseTest::createFetchResponseTopicNameBlock()
+{
+  fetchResponsePartitionArray = new FetchResponsePartition*[fetchResponsePartitionArraySize];
+  for (int i=0; i<fetchResponsePartitionArraySize; i++) {
+    fetchResponsePartitionArray[i] = createFetchResponsePartition();
+  }
+  return new TopicNameBlock<FetchResponsePartition>(TestConfig::FETCH_RESPONSE_TOPIC_NAME, fetchResponsePartitionArraySize, fetchResponsePartitionArray, true);
+}
+
+// FetchResponsePartition
+
+FetchResponsePartition* BaseTest::createFetchResponsePartition()
+{
+  messageSet = createMessageSet();
+  int messageSetSize = messageSet->getWireFormatSize(false);
+  return new FetchResponsePartition(partition, errorCode, highwaterMarkOffset, messageSetSize, messageSet, true);
+}
+
+// FetchResponse
+TopicNameBlock<FetchResponsePartition>** BaseTest::fetchResponseTopicArray;
+
+FetchResponse* BaseTest::createFetchResponse()
+{
+  fetchResponseTopicArray = new TopicNameBlock<FetchResponsePartition>*[fetchResponseTopicArraySize];
+  for (int i=0; i<fetchResponseTopicArraySize; i++) {
+    fetchResponseTopicArray[i] = createFetchResponseTopicNameBlock();
+  }
+  return new FetchResponse(correlationId, fetchResponseTopicArraySize, fetchResponseTopicArray, true);
 }
