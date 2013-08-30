@@ -64,6 +64,10 @@ class Packet : public WireFormatter
     void beginCRC32();
     int endCRC32(); // returns *signed int* CRC32 calculation
 
+    void seek(int numBytes); // pass over numBytes bytes
+
+    void writeToFile(std::string filepath);
+
     int getSize(bool includeProtocolSizeFieldLength = true);
     void updatePacketSize();
     void resetForReading();

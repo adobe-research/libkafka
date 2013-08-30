@@ -30,6 +30,8 @@ namespace {
     int crc = p2->readInt32();
     EXPECT_EQ(crc, -1889021706); // calculated *signed int* CRC32 of 3 byte sequence [1,2,3] from above
 
+    p2->writeToFile("/tmp/packet.out");
+
     delete p1;
     delete p2;
   }

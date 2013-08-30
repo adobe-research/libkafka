@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <gtest/gtest.h>
 #include <Debug.h>
 #include <metadata/Broker.h>
@@ -6,6 +7,7 @@
 #include <metadata/PartitionMetadata.h>
 #include <metadata/MetadataRequest.h>
 #include <metadata/MetadataResponse.h>
+#include <Message.h>
 #include <MessageSet.h>
 #include <TopicNameBlock.h>
 #include <produce/ProduceMessageSet.h>
@@ -47,7 +49,7 @@ class BaseTest : public ::testing::Test {
     const static short int topicErrorCode = 6;
     const static int partitionMetadataArraySize = 3;
     static PartitionMetadata **partitionMetadataArray;
-    TopicMetadata *createTopicMetadata(string topicName = string("test_topic"));
+    TopicMetadata *createTopicMetadata(string topicName = string("test"));
 
     // MetadataResponse
     const static int correlationId = 212121;
@@ -65,6 +67,11 @@ class BaseTest : public ::testing::Test {
 
     // MessageSet
     const static long int offset = 21;
+    const static int numMessages = 3;
+    static vector<Message*> messages;
+    MessageSet *createMessageSet();
+
+    // Message
     const static int crc = 1001;
     const static signed char magicByte = -1;
     const static signed char attributes = 0; // last three bits must be zero to disable gzip compression
@@ -74,12 +81,12 @@ class BaseTest : public ::testing::Test {
     const static char *defaultValue; // "test_value", null terminated
     const static int valueLength = 11;
     static unsigned char *value;
-    MessageSet *createMessageSet();
+    Message *createMessage();
     
     // TopicNameBlock
     const static int fetchPartitionArraySize = 1;
     static FetchPartition **fetchPartitionArray;
-    TopicNameBlock<FetchPartition> *createTopicNameBlock(string topicName = string("test_topic"));
+    TopicNameBlock<FetchPartition> *createTopicNameBlock(string topicName = string("test"));
 
     // ProduceMessageSet
     const static int partition = 0;
@@ -113,8 +120,8 @@ class BaseTest : public ::testing::Test {
     ProduceResponse *createProduceResponse();
 
     // FetchRequest
-    const static int replicaId = 2;
-    const static int maxWaitTime = 10;
+    const static int replicaId = -1;
+    const static int maxWaitTime = 100;
     const static int minBytes = 0;
     const static int fetchTopicArraySize = 1;
     static TopicNameBlock<FetchPartition> **fetchTopicArray;

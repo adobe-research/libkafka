@@ -52,7 +52,7 @@ FetchResponsePartition::FetchResponsePartition(Packet *packet) : WireFormatter()
   this->messageSetSize = this->packet->readInt32();
 
   // Kafka Protocol: MessageSet messagesSet
-  this->messageSet = new MessageSet(this->packet);
+  this->messageSet = new MessageSet(this->messageSetSize, this->packet);
 
   this->releaseArrays = true;
 }
@@ -116,7 +116,11 @@ int FetchResponsePartition::getWireFormatSize(bool includePacketSize)
 
 ostream& operator<< (ostream& os, const FetchResponsePartition& frp)
 {
-  os << frp.partition << ":" << frp.errorCode << ":" << frp.highwaterMarkOffset << ":" << frp.messageSetSize << ":" << ApiConstants::getErrorString(frp.errorCode) << "\n";
+  os << "FetchResponsePartition:partition:" << frp.partition << "\n";
+  os << "FetchResponsePartition:errorCode:" << frp.errorCode << ":" << ApiConstants::getErrorString(frp.errorCode) <<"\n";
+  os << "FetchResponsePartition:highwaterMarkOffset:" << frp.highwaterMarkOffset << "\n";
+  os << "FetchResponsePartition:messageSetSize:" << frp.messageSetSize << "\n";
+  os << "FetchResponsePartition:MessageSet:\n" << *(frp.messageSet);
   return os;
 }
 

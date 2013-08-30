@@ -39,6 +39,8 @@
 #include "metadata/MetadataResponse.h"
 #include "produce/ProduceRequest.h"
 #include "produce/ProduceResponse.h"
+#include "fetch/FetchRequest.h"
+#include "fetch/FetchResponse.h"
 
 namespace LibKafka {
 
@@ -51,6 +53,7 @@ class Client
 
     MetadataResponse *sendMetadataRequest(MetadataRequest *request);
     ProduceResponse *sendProduceRequest(ProduceRequest *request);
+    FetchResponse *sendFetchRequest(FetchRequest *request);
 
   protected:
 
@@ -58,7 +61,7 @@ class Client
     std::string brokerHost;
     int brokerPort;
 
-    void prepareConnection();
+    bool prepareConnection();
     int sendRequest(Request *request);
     template <typename ResponseClass> ResponseClass *receiveResponse();
     template <typename RequestClass, typename ResponseClass> ResponseClass *apiCall(RequestClass *request);

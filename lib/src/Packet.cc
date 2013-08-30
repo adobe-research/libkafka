@@ -27,6 +27,7 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <arpa/inet.h>
 #include <zlib.h>
 
@@ -249,6 +250,28 @@ int Packet::endCRC32()
   memcpy(this->crcHead - sizeof(int), &netValueCRC, sizeof(int));
   D(cout.flush() << "Packet::endCRC32():hostValueCRC(" << signedCrc << "):netValueCRC(" << netValueCRC << ")\n";)
   return signedCrc;
+}
+
+void Packet::seek(int numBytes)
+{
+  this->head += numBytes;
+}
+
+void Packet::writeToFile(string filepath)
+{
+  ofstream file;
+  file.open(filepath.c_str(), ios::out | ios::app | ios::binary);
+  if (file.is_open())
+  {
+    file.write((const char*)(this->buffer), this->size);
+    file.close();
+    D(cout.flush() << "Packet::writeToFile():" << this->size << " bytes written to " << filepath << "\n";)
+  }
+  else
+  {
+    E("Packet::writeToFile():error:unable to open file:\n");
+    // errno output?
+  }
 }
 
 }; // namespace LibKafka

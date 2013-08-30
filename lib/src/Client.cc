@@ -66,12 +66,17 @@ ProduceResponse *Client::sendProduceRequest(ProduceRequest *request)
   return apiCall<ProduceRequest, ProduceResponse>(request);
 }
 
+FetchResponse *Client::sendFetchRequest(FetchRequest *request)
+{
+  return apiCall<FetchRequest, FetchResponse>(request);
+}
+
 template <typename RequestClass, typename ResponseClass>
 ResponseClass *Client::apiCall(RequestClass *request)
 {
   D(cout.flush() << "--------------Client::apiCall():" << typeid(RequestClass).name() << "\n";)
 
-  this->prepareConnection();
+  if (!this->prepareConnection()) { E("Client::apiCall():unable to create connection"); return NULL; }
 
   int status = this->sendRequest(request);
   if (status == Connection::WRITE_ERROR)
@@ -98,7 +103,8 @@ int Client::sendRequest(Request *request)
   D(cout.flush() << "--------------Client::sendRequest()\n";)
   D(cout.flush() << "Request:\n" << *request;)
     
-  this->prepareConnection();
+  if (!this->prepareConnection()) { E("Client::sendRequest():unable to create connection"); return Connection::OPEN_CONNECTION_ERROR; }
+
   unsigned char *buffer = request->toWireFormat();
   int numBytesSent = this->connection->write(request->size(), buffer);
   if (numBytesSent == Connection::WRITE_ERROR) { E("Client::sendRequest():write error:" << strerror(errno) << "\n"); return numBytesSent; }
@@ -111,7 +117,8 @@ ResponseClass *Client::receiveResponse()
 {
   D(cout.flush() << "--------------Client::receiveResponse()\n";)
   
-  this->prepareConnection();
+  if (!this->prepareConnection()) { E("Client::receiveResponse():unable to create connection"); return NULL; }
+
   int netValueSize = -1;
   int numBytesReceived = this->connection->read(sizeof(int), (unsigned char *)(&netValueSize));
   if (numBytesReceived == Connection::READ_ERROR) { E("Client::receiveResponse():read error on size:" << strerror(errno) << "\n"); return NULL; }
@@ -124,11 +131,12 @@ ResponseClass *Client::receiveResponse()
   return new ResponseClass(buffer, true); // true specfies delete buffer on ~Response()
 }
 
-void Client::prepareConnection()
+bool Client::prepareConnection()
 {
-  if (this->connection != NULL) return;
+  if (this->connection != NULL) return true;
   connection = new Connection(this->brokerHost, this->brokerPort);
-  connection->open();
+  if (connection->open() < 0) { E("Client::prepareConnection():connection->open() failed\n"); return false; }
+  return true;
 }
 
 }; // namespace LibKafka

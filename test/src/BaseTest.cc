@@ -104,14 +104,14 @@ MetadataRequest* BaseTest::createMetadataRequest(bool emptyTopicArray)
   return new MetadataRequest(correlationId, clientId, topicNameArraySize, topicNameArray, true);
 }
 
-// MessageSet
+// Message
 
 const char* BaseTest::defaultKey = "test_key";
 unsigned char* BaseTest::key;
 const char* BaseTest::defaultValue = "test_value";
 unsigned char* BaseTest::value;
 
-MessageSet* BaseTest::createMessageSet()
+Message* BaseTest::createMessage()
 {
   key = new unsigned char[keyLength];
   memcpy(key, defaultKey, keyLength);
@@ -121,7 +121,28 @@ MessageSet* BaseTest::createMessageSet()
   // crc + magicByte + attributes + key + value
   int messageSize = sizeof(int) + sizeof(signed char) + sizeof(signed char) + sizeof(int) + keyLength + sizeof(int) + valueLength;
 
-  return new MessageSet(offset, messageSize, crc, magicByte, attributes, keyLength, key, valueLength, value, true);
+  return new Message(crc, magicByte, attributes, keyLength, key, valueLength, value, offset, true);
+}
+
+// MessageSet
+
+vector<Message*> BaseTest::messages;
+
+MessageSet* BaseTest::createMessageSet()
+{
+  int messageSetSize = 0; 
+
+  messages.clear();
+
+  for (int i = 0 ; i < numMessages ; i++)
+  {
+    Message *message = createMessage();
+    messages.push_back(message);
+    // sizeof(offset) + sizeof(messageSize) + messageSize
+    messageSetSize += sizeof(long int) + sizeof(int) + message->getWireFormatSize(false);
+  }
+
+  return new MessageSet(messageSetSize, messages, true);
 }
 
 // TopicNameBlock
@@ -211,7 +232,7 @@ FetchRequest* BaseTest::createFetchRequest()
 {
   fetchTopicArray = new TopicNameBlock<FetchPartition>*[fetchTopicArraySize];
   for (int i=0; i<fetchTopicArraySize; i++) {
-    fetchTopicArray[i] = createTopicNameBlock();
+    fetchTopicArray[i] = createTopicNameBlock(TestConfig::FETCH_RESPONSE_TOPIC_NAME);
   }
   return new FetchRequest(correlationId, clientId, replicaId, maxWaitTime, minBytes, fetchTopicArraySize, fetchTopicArray, true);
 }
@@ -219,7 +240,7 @@ FetchRequest* BaseTest::createFetchRequest()
 // FetchPartition
 FetchPartition* BaseTest::createFetchPartition()
 {
-  return new FetchPartition(partition, fetchOffset, minBytes);
+  return new FetchPartition(partition, fetchOffset, maxBytes);
 }
 
 // TopicNameBlock for FetchResponse

@@ -56,7 +56,7 @@ namespace LibKafka {
     this->releaseArrays = true;
   }
 
-  FetchRequest::FetchRequest(int correlationId, std::string clientId, int replicaId, int maxWaitTime, int minBytes, int fetchTopicArraySize, TopicNameBlock<FetchPartition>** fetchTopicArray, bool releaseArrays) : Request(ApiConstants::PRODUCE_REQUEST_KEY, ApiConstants::API_VERSION, correlationId, clientId)
+  FetchRequest::FetchRequest(int correlationId, std::string clientId, int replicaId, int maxWaitTime, int minBytes, int fetchTopicArraySize, TopicNameBlock<FetchPartition>** fetchTopicArray, bool releaseArrays) : Request(ApiConstants::FETCH_REQUEST_KEY, ApiConstants::API_VERSION, correlationId, clientId)
   {
     D(cout.flush() << "--------------FetchRequest(params)\n";)
 

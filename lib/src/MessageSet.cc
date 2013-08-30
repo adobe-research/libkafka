@@ -34,58 +34,59 @@ using namespace std;
 
 namespace LibKafka {
 
-MessageSet::MessageSet(Packet *packet) : WireFormatter(), PacketWriter(packet)
+MessageSet::MessageSet(int messageSetSize, Packet *packet) : WireFormatter(), PacketWriter(packet)
 {
   D(cout.flush() << "--------------MessageSet(buffer)\n";)
 
-  // Kafka Protocol: long int offset
-  this->offset = this->packet->readInt64();
+  // Read an arbitrary number of Messages (and possibly MessageSets) from the packet, based on size values
 
-  // Kafka Protocol: int messageSize
-  this->messageSize = this->packet->readInt32();
+  this->messageSetSize = messageSetSize;
+  int bytesRead = 0;
 
-  // Kafka Protocol: int crc
-  this->crc = this->packet->readInt32();
-  
-  // Kafka Protocol: signed char magicByte
-  this->magicByte = this->packet->readInt8();
+  while (bytesRead < this->messageSetSize)
+  {
+    long int offset = this->packet->readInt64();
+    int messageSize = this->packet->readInt32();
+    Message *message = new Message(packet, offset);
+    int messageWireSize = message->getWireFormatSize(false);
+    if (messageSize != messageWireSize)
+    {
+      // TODO: Nested MessageSet within message body, currently dropping the nested content
+      E("MessageSet:nested MessageSet detected within message body:unimplemented\n");
+      packet->seek(messageSize-messageWireSize);
+    }
+    this->messages.push_back(message);
+    // increment bytesRead for offset and messageSize fields, then messageSize
+    bytesRead += sizeof(long int) + sizeof(int) + messageSize;
+  }
 
-  // Kafka Protocol: signed char attributes
-  this->attributes = this->packet->readInt8();
-  
-  // Kafka Protocol: bytes key
-  this->keyLength = this->packet->readInt32();
-  this->key = this->packet->readBytes(this->keyLength);
+  if (bytesRead != this->messageSetSize)
+  {
+    E("MessageSet:error: bytes read does not equal messageSetSize value\n");
+  }
 
-  // Kafka Protocol: bytes value
-  this->valueLength = this->packet->readInt32();
-  this->value = this->packet->readBytes(this->valueLength);
-
-  this->releaseArrays = false; // key and value point into the Packet buffer, not new memory
+  this->releaseArrays = true;
 }
 
-MessageSet::MessageSet(long int offset, int messageSize, int crc, unsigned char magicByte, unsigned char attributes, int keyLength, unsigned char* key, int valueLength, unsigned char* value, bool releaseArrays) : WireFormatter(), PacketWriter()
+MessageSet::MessageSet(int messageSetSize, vector<Message*> messages, bool releaseArrays) : WireFormatter(), PacketWriter()
 {
   D(cout.flush() << "--------------MessageSet(params)\n";)
 
-  this->offset = offset;
-  this->messageSize = messageSize;
-  this->crc = crc;
-  this->magicByte = magicByte;
-  this->attributes = attributes;
-  this->keyLength = keyLength;
-  this->key = key;
-  this->valueLength = valueLength;
-  this->value = value;
+  this->messageSetSize = messageSetSize;
+  this->messages = messages;
   this->releaseArrays = releaseArrays;
 }
 
 MessageSet::~MessageSet()
 {
+  D(cout.flush() << "--------------~MessageSet():releaseArrays:" << this->releaseArrays << "\n";)
+  
   if (this->releaseArrays)
   {
-    delete[] this->key;
-    delete[] this->value;
+    for(vector<Message*>::const_iterator message=this->messages.begin(); message!=this->messages.end(); message++) {
+      D(cout.flush() << "--------------~MessageSet():deleting message:" << *message << "\n";)
+      delete *message;
+    }
   }
 }
 
@@ -93,33 +94,18 @@ unsigned char* MessageSet::toWireFormat(bool updatePacketSize)
 {
   D(cout.flush() << "--------------MessageSet::toWireFormat()\n";)
   
-  // Kafka Protocol: long int offset
-  this->packet->writeInt64(this->offset);
+  for(vector<Message*>::const_iterator message=this->messages.begin(); message!=this->messages.end(); ++message)
+  {
+    // Kafka Protocol: long int offset
+    this->packet->writeInt64((*message)->offset);
 
-  // Kafka Protocol: int messageSize
-  this->packet->writeInt32(this->messageSize);
+    // Kafka Protocol: int messageSize
+    this->packet->writeInt32((*message)->getWireFormatSize(false));
 
-  // Kafka Protocol: int crc (see beginCRC32()/endCRC32() semantics in Packet.cc)
-  // crc defined in the protocol as CRC for remaining bytes in message
-  this->packet->beginCRC32();
+    (*message)->packet = this->packet;
+    (*message)->toWireFormat(false);
+  }
 
-  // Kafka Protocol: signed char magicByte
-  this->packet->writeInt8(this->magicByte);
-
-  // Kafka Protocol: signed char attributes
-  this->packet->writeInt8(this->attributes);
-
-  // Kafka Protocol: bytes key
-  this->packet->writeInt32(this->keyLength);
-  this->packet->writeBytes(this->key, this->keyLength);
-
-  // Kafka Protocol: bytes value
-  this->packet->writeInt32(this->valueLength);
-  this->packet->writeBytes(this->value, this->valueLength);
-
-  // calculate and update crc field (see beginCRC32()/endCRC32() semantics in Packet.cc)
-  this->crc = this->packet->endCRC32();
-  
   if (updatePacketSize) this->packet->updatePacketSize();
   return this->packet->getBuffer();
 }
@@ -129,21 +115,27 @@ int MessageSet::getWireFormatSize(bool includePacketSize)
   D(cout.flush() << "--------------MessageSet::getWireFormatSize()\n";)
   
   // Packet.size
-  // offset + messageSize + crc + magicByte + attributes
-  // sizeof(keyLength) + keyLength
-  // sizeof(valueLength) + valueLength
+  // (offset + messageSize + Message)[]
 
   int size = 0;
   if (includePacketSize) size += sizeof(int);
-  size += sizeof(long int) + sizeof(int) + sizeof(int) + sizeof(signed char) + sizeof(signed char);
-  size += sizeof(int) + this->keyLength;
-  size += sizeof(int) + this->valueLength;
+
+  for(vector<Message*>::const_iterator message=this->messages.begin(); message!=this->messages.end(); ++message)
+  {
+    size += sizeof(long int) + sizeof(int);
+    size += (*message)->getWireFormatSize(false);
+  }
+
   return size;
 }
 
 ostream& operator<< (ostream& os, const MessageSet& m)
 {
-  os << m.offset << ":" << m.messageSize << ":" << m.crc << ":" << m.magicByte << ":" << m.attributes << ":" << m.keyLength << ":" << m.valueLength;
+  os << "MessageSet.numMessages:" << m.messages.size() << "\n";
+  for(vector<Message*>::const_iterator message=m.messages.begin(); message!=m.messages.end(); ++message)
+  {
+    os << *(*message);
+  }
   return os;
 }
 

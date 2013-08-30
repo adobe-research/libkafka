@@ -90,7 +90,9 @@
 	    </source>
 	  </sources>
 	  <compilerStartOptions>
-	    <!--<compilerStartOption>${compiler.debug} -g -x c++ -std=c++11</compilerStartOption>-->
+	    <!--
+	    <compilerStartOption>${compiler.debug} -g -x c++ -std=c++11</compilerStartOption>
+	    -->
 	    <compilerStartOption>${compiler.debug} -fPIC -O2 -g -ffast-math -funit-at-a-time -x c++ -std=c++11</compilerStartOption>
 	  </compilerStartOptions>
 	  <linkerStartOptions>

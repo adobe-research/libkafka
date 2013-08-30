@@ -45,7 +45,7 @@ ProduceMessageSet::ProduceMessageSet(Packet *packet) : WireFormatter(), PacketWr
   this->messageSetSize = this->packet->readInt32();
 
   // Kafka Protocol: MessageSet messagesSet
-  this->messageSet = new MessageSet(this->packet);
+  this->messageSet = new MessageSet(this->messageSetSize, this->packet);
 
   this->releaseArrays = true;
 }

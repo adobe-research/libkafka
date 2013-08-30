@@ -25,30 +25,35 @@
 //                                                              //
 //////////////////////////////////////////////////////////////////
 
-#ifndef MESSAGESET_H
-#define MESSAGESET_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
 #include <string>
-#include <vector>
 
 #include "Debug.h"
 #include "Packet.h"
 #include "WireFormatter.h"
 #include "PacketWriter.h"
-#include "Message.h"
 
 namespace LibKafka {
 
-class MessageSet: public WireFormatter, public PacketWriter
+class Message: public WireFormatter, public PacketWriter
 {
   public:
 
-    int messageSetSize;
-    std::vector<Message*> messages;
+    int crc;
+    unsigned char magicByte;
+    unsigned char attributes;
+    int keyLength;
+    unsigned char* key;
+    int valueLength;
+    unsigned char* value;
 
-    MessageSet(int messageSetSize, Packet *packet);
-    MessageSet(int messageSetSize, std::vector<Message*> messages, bool releaseArrays = false);
-    ~MessageSet();
+    long int offset;
+
+    Message(Packet *packet, long int offset = -1);
+    Message(int crc, unsigned char magicByte, unsigned char attributes, int keyLength, unsigned char* key, int valueLength, unsigned char* value, long int offset = -1, bool releaseArrays = false);
+    ~Message();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);
@@ -58,10 +63,10 @@ class MessageSet: public WireFormatter, public PacketWriter
     bool releaseArrays;
 };
 
-std::ostream& operator<< (std::ostream& os, const MessageSet& t);
-inline bool operator==(const MessageSet& lhs, const MessageSet& rhs) { return ((lhs.messageSetSize==rhs.messageSetSize)&&(lhs.messages.size()==rhs.messages.size())); }
-inline bool operator!=(const MessageSet& lhs, const MessageSet& rhs) { return !operator==(lhs,rhs); }
+std::ostream& operator<< (std::ostream& os, const Message& t);
+inline bool operator==(const Message& lhs, const Message& rhs) { return ((lhs.crc==rhs.crc)&&(lhs.magicByte==rhs.magicByte)&&(lhs.attributes==rhs.attributes)&&(lhs.keyLength==rhs.keyLength)&&(lhs.valueLength==rhs.valueLength)); }
+inline bool operator!=(const Message& lhs, const Message& rhs) { return !operator==(lhs,rhs); }
 
 }; // namespace LibKafka
 
-#endif /* MESSAGESET_H */
+#endif /* MESSAGE_H */

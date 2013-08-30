@@ -27,6 +27,7 @@ lib_libkafka_la_SOURCES = \
   lib/src/Request.cc \
   lib/src/RequestOrResponse.cc \
   lib/src/Response.cc \
+  lib/src/Message.cc \
   lib/src/MessageSet.cc \
   lib/src/metadata/Broker.cc \
   lib/src/metadata/MetadataRequest.cc \
@@ -52,6 +53,7 @@ pkginclude_HEADERS = \
   lib/src/Request.h \
   lib/src/RequestOrResponse.h \
   lib/src/Response.h \
+  lib/src/Message.h \
   lib/src/MessageSet.h \
   lib/src/TopicNameBlock.h \
   lib/src/Util.h \
@@ -93,6 +95,8 @@ test_libkafka_unit_tests_SOURCES = \
   test/src/PartitionMetadataTest.cc \
   test/src/TopicMetadataTest.cc \
   test/src/PacketTest.cc \
+  test/src/MessageTest.cc \
+  test/src/MessageSetTest.cc \
   test/src/RequestOrResponseTest.cc \
   test/src/RequestTest.cc \
   test/src/ResponseTest.cc \
