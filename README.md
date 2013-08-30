@@ -34,6 +34,12 @@ Debugging
 Valgrind
 * Valgrind currently provides a clean memory leak report for the unit test suite. Future commits will maintain this.
 
+Examples
+========
+
+* Take a look at ClientTest.cc in test/src. There are current examples for Metadata, Produce, and Fetch.
+* Take a look at the unit tests in test/src to see examples for any individual class.
+
 TODO
 ====
 * fix RPM creation for maven build
@@ -41,6 +47,8 @@ TODO
 
 Known issues
 =============
+* There is an open bug with FetchResponse. (push ETA 8/30/2013).
 * Nested MessageSet blocks are not yet handled. This is a wonky part of the protocol.
 * The extern C wrrapper for C++ calls is not yet implemented.
-* OffSetRequest is still buggy (push ETA 9/4/2013)
+* OffSetRequest is still buggy (push ETA 9/4/2013).
+* RPM generation in the maven build is broken.
