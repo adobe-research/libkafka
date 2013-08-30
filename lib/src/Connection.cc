@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <errno.h>

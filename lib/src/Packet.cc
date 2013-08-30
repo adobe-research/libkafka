@@ -26,6 +26,7 @@
 //////////////////////////////////////////////////////////////////
 
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <arpa/inet.h>
