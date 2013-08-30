@@ -31,7 +31,16 @@ And to clean all autoconf generated files:
 Debugging
 * uncomment -DDEBUG in the top level pom.xml, rebuild for full protocol debugging output.
 
+Valgrind
+* Valgrind currently provides a clean memory leak report for the unit test suite. Future commits will maintain this.
+
 TODO
 ====
 * add RPM creation to maven build
 * load testing for Produce and Fetch
+
+Known issues
+=============
+* Nested MessageSet blocks are not yet handled. This is a wonky part of the protocol.
+* The extern C wrrapper for C++ calls is not yet implemented.
+* OffSetRequest is still buggy (push ETA 9/4/2013)
