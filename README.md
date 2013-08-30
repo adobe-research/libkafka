@@ -7,7 +7,7 @@ Dependencies
 ============
 
 * zlib for CRC calculation (yum install zlib / port install zlib)
-* Google Test for unit tests (yum install gtest / port install google-test)
+* Google Test for unit tests (yum install gtest gtest-devel / port install google-test)
 * (optional) Doxygen for C/C++ API documentation (yum install doxygen / port install doxygen)
 
 Installation
