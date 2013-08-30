@@ -1,7 +1,7 @@
 libkafka
 ========
 
-A C++ client libray for Apache Kafka. Also includes C API.
+A C++ client libray for Apache Kafka. Also includes C API. With a full unit test suite.
 
 Dependencies
 ============
@@ -27,3 +27,11 @@ Autoconf
 
 And to clean all autoconf generated files:
 * make maintainer-clean
+
+Debugging
+* uncomment -DDEBUG in the top level pom.xml, rebuild for full protocol debugging output.
+
+TODO
+====
+* add RPM creation to maven build
+* load testing for Produce and Fetch
