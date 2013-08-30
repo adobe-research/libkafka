@@ -37,10 +37,10 @@
   <packaging>pom</packaging>
 
   <properties>
-    <compiler.debug>-DDEBUG</compiler.debug>
     <!--
-    <compiler.debug></compiler.debug>
+    <compiler.debug>-DDEBUG</compiler.debug>
     -->
+    <compiler.debug></compiler.debug>
   </properties>
 
   <developers>

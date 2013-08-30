@@ -100,7 +100,55 @@
 	  </linkerStartOptions>
 	</configuration>
       </plugin>
+
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>rpm-maven-plugin</artifactId>
+	<version>2.1-alpha-3</version>
+	<executions>
+	  <execution>
+	    <id>generate-rpm</id>
+	    <goals>
+	      <goal>rpm</goal>
+	    </goals>
+	  </execution>
+	</executions>
+	<configuration>
+	  <copyright>2013, Adobe Systems, Inc.</copyright>
+	  <distribution>libkafka</distribution>
+	  <group>Adobe Research</group>
+	  <packager>Adobe</packager>
+	  <prefix>/usr/local</prefix>
+	  <defineStatements>
+	    <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+	  </defineStatements>
+	  <mappings>
+	    <mapping>
+	      <directory>/usr/local/lib</directory>
+	      <filemode>750</filemode>
+	      <!--
+	      <username>dumper</username>
+	      <groupname>dumpgroup</groupname>
+	      -->
+	      <dependency>
+		<includes>
+		  <include>zlib:zlib</include>
+		  <include>gtest:gtest</include>
+		</includes>
+	      </dependency>
+	    </mapping>
+	  </mappings>
+	  <preinstallScriptlet>
+	    <script>echo "installing now"</script>
+	  </preinstallScriptlet>
+	  <postinstallScriptlet>
+	    <script>echo "installation complete"</script>
+	  </postinstallScriptlet>
+	</configuration>
+      </plugin>
+
     </plugins>
   </build>
 
 </project>
+<plugin>

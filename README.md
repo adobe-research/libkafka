@@ -36,7 +36,7 @@ Valgrind
 
 TODO
 ====
-* add RPM creation to maven build
+* fix RPM creation for maven build
 * load testing for Produce and Fetch
 
 Known issues
