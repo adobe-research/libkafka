@@ -41,6 +41,8 @@ class Message: public WireFormatter, public PacketWriter
 {
   public:
 
+    const static unsigned char COMPRESSION_MASK = 0x7;
+
     int crc;
     unsigned char magicByte;
     unsigned char attributes;

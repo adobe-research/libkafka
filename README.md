@@ -44,6 +44,7 @@ TODO
 ====
 * fix RPM creation for maven build
 * load testing for Produce and Fetch
+* add gzip compression support for MessageSets
 
 Known issues
 =============

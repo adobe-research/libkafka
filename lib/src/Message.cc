@@ -49,6 +49,9 @@ Message::Message(Packet *packet, long int offset) : WireFormatter(), PacketWrite
 
   // Kafka Protocol: signed char attributes
   this->attributes = this->packet->readInt8();
+
+  bool compression = ((this->attributes & COMPRESSION_MASK) != 0);
+  if (compression) { D(cout.flush() << "Message():compression enabled (unimplemented):" << (this->attributes & COMPRESSION_MASK) << "\n";) }
   
   // Kafka Protocol: bytes key
   this->keyLength = this->packet->readInt32();

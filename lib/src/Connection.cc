@@ -122,11 +122,21 @@ int Connection::read(int numBytes, unsigned char* buffer)
 {
   D(cout.flush() << "--------------Connection::read(" << numBytes << ")\n";)
 
-    int flags = 0;
-  int numBytesReceived = (int)::recv(this->socketFd, buffer, (size_t)numBytes, flags);
-  if (numBytesReceived == READ_ERROR) { E("Connection::read():error:" << strerror(errno) << "\n"); }
-  D(cout.flush() << "--------------Connection::read(" << numBytes << "):read " << numBytesReceived << "bytes\n";)
-    return numBytesReceived;
+  int flags = 0;
+  int numBytesReceived = 0;
+  unsigned char *p = buffer;
+
+  while (numBytesReceived < numBytes)
+  {
+    int rcvd = (int)::recv(this->socketFd, p, (size_t)(numBytes-numBytesReceived), flags);
+    if (rcvd == READ_ERROR) { E("Connection::read():error:" << strerror(errno) << "\n"); break; }
+    p += rcvd;
+    numBytesReceived += rcvd;
+    D(cout.flush() << "--------------Connection::read(" << numBytes << "):read " << rcvd << " bytes\n";)
+  }
+  
+  D(cout.flush() << "--------------Connection::read(" << numBytes << "):" << numBytesReceived << " bytes received\n";)
+  return numBytesReceived;
 }
 
 int Connection::write(int numBytes, unsigned char* buffer)
