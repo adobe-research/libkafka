@@ -48,8 +48,11 @@ TODO
 
 Known issues
 =============
-* There is an open bug with FetchResponse. (push ETA 8/30/2013).
 * Nested MessageSet blocks are not yet handled. This is a wonky part of the protocol.
 * The extern C wrrapper for C++ calls is not yet implemented.
 * OffSetRequest is still buggy (push ETA 9/4/2013).
 * RPM generation in the maven build is broken.
+
+Fixed Issues
+============
+* Read chunking issue with FetchResponse/MessageSet. (fixed 8/30/2013).
