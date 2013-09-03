@@ -23,15 +23,37 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <ApiConstants.h>
+#ifndef OFFSETPARTITION_H
+#define OFFSETPARTITION_H
 
-class TestConfig
+#include <string>
+#include "../Debug.h"
+#include "../Packet.h"
+#include "../WireFormatter.h"
+#include "../PacketWriter.h"
+
+namespace LibKafka {
+
+class OffsetPartition : public WireFormatter, public PacketWriter
 {
   public:
 
-    const static std::string PRODUCE_REQUEST_TOPIC_NAME;
-    const static std::string PRODUCE_RESPONSE_TOPIC_NAME;
-    const static std::string FETCH_RESPONSE_TOPIC_NAME;
-    const static std::string OFFSET_REQUEST_TOPIC_NAME;
+    int partition;
+    long int time;
+    int maxNumberOfOffsets;
+
+    OffsetPartition(Packet *packet);
+    OffsetPartition(int partition, long int time, int maxNumberOfOffsets);
+    ~OffsetPartition();
+
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = false);
 };
+
+std::ostream& operator<< (std::ostream& os, const OffsetPartition& fp);
+inline bool operator==(const OffsetPartition& lhs, const OffsetPartition& rhs) { return ((lhs.partition==rhs.partition)&&(lhs.time==rhs.time)&&(lhs.maxNumberOfOffsets==rhs.maxNumberOfOffsets)); }
+inline bool operator!=(const OffsetPartition& lhs, const OffsetPartition& rhs) { return !operator==(lhs,rhs); }
+
+}; // namespace LibKafka
+
+#endif /* OFFSETPARTITION_H */

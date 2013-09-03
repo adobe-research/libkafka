@@ -301,3 +301,35 @@ FetchResponse* BaseTest::createFetchResponse()
   }
   return new FetchResponse(correlationId, fetchResponseTopicArraySize, fetchResponseTopicArray, true);
 }
+
+// OffsetRequest
+TopicNameBlock<OffsetPartition>** BaseTest::offsetTopicArray;
+
+OffsetRequest* BaseTest::createOffsetRequest()
+{
+  offsetTopicArray = new TopicNameBlock<OffsetPartition>*[offsetTopicArraySize];
+  for (int i=0; i<offsetTopicArraySize; i++) {
+    offsetTopicArray[i] = createOffsetRequestTopicNameBlock(TestConfig::OFFSET_REQUEST_TOPIC_NAME);
+  }
+  return new OffsetRequest(correlationId, clientId, replicaId, offsetTopicArraySize, offsetTopicArray, true);
+}
+
+// TopicNameBlock for OffsetRequest
+
+OffsetPartition** BaseTest::offsetPartitionArray;
+
+TopicNameBlock<OffsetPartition>* BaseTest::createOffsetRequestTopicNameBlock(string topic_name)
+{
+  offsetPartitionArray = new OffsetPartition*[offsetPartitionArraySize];
+  for (int i=0; i<offsetPartitionArraySize; i++) {
+    offsetPartitionArray[i] = createOffsetPartition();
+  }
+  return new TopicNameBlock<OffsetPartition>(topic_name, offsetPartitionArraySize, offsetPartitionArray, true);
+}
+
+// OffsetPartition
+OffsetPartition* BaseTest::createOffsetPartition()
+{
+  return new OffsetPartition(partition, time, maxNumberOfOffsets);
+}
+

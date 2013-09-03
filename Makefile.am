@@ -41,7 +41,9 @@ lib_libkafka_la_SOURCES = \
   lib/src/fetch/FetchRequest.cc \
   lib/src/fetch/FetchPartition.cc \
   lib/src/fetch/FetchResponse.cc \
-  lib/src/fetch/FetchResponsePartition.cc
+  lib/src/fetch/FetchResponsePartition.cc \
+  lib/src/offset/OffsetRequest.cc \
+  lib/src/offset/OffsetPartition.cc
 
 pkginclude_HEADERS = \
   lib/src/ApiConstants.h \
@@ -70,7 +72,9 @@ pkginclude_HEADERS = \
   lib/src/fetch/FetchRequest.h \
   lib/src/fetch/FetchPartition.h \
   lib/src/fetch/FetchResponse.h \
-  lib/src/fetch/FetchResponsePartition.h
+  lib/src/fetch/FetchResponsePartition.h \
+  lib/src/offset/OffsetRequest.h \
+  lib/src/offset/OffsetPartition.h
 
 # Bulid rules for samples and tests. Automake's naming for some of
 # these variables isn't terribly obvious, so this is a brief
@@ -109,6 +113,8 @@ test_libkafka_unit_tests_SOURCES = \
   test/src/FetchPartitionTest.cc \
   test/src/FetchResponseTest.cc \
   test/src/FetchResponsePartitionTest.cc \
+  test/src/OffsetRequestTest.cc \
+  test/src/OffsetPartitionTest.cc \
   test/src/TestConfig.cc
 test_libkafka_unit_tests_CPPFLAGS = -I"test/src" -I"lib/src" $(GTEST_CPPFLAGS)
 test_libkafka_unit_tests_LDFLAGS = $(GTEST_LDFLAGS) $(GTEST_LIBS) -lz

@@ -24,14 +24,39 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <ApiConstants.h>
+#include <gtest/gtest.h>
+#include "BaseTest.h"
 
-class TestConfig
-{
-  public:
+namespace {
 
-    const static std::string PRODUCE_REQUEST_TOPIC_NAME;
-    const static std::string PRODUCE_RESPONSE_TOPIC_NAME;
-    const static std::string FETCH_RESPONSE_TOPIC_NAME;
-    const static std::string OFFSET_REQUEST_TOPIC_NAME;
-};
+  class OffsetRequestTest : public BaseTest {
+    protected:
+
+      OffsetRequestTest() { }
+      virtual ~OffsetRequestTest() { }
+      virtual void SetUp() { } 
+      virtual void TearDown() { }
+  };
+
+  TEST_F(OffsetRequestTest, Constructor) {
+    
+    OffsetRequest *or1 = createOffsetRequest();
+    EXPECT_NE(or1, (void*)0);
+    unsigned char * message = or1->toWireFormat();
+    int size = or1->getWireFormatSize(true);
+    EXPECT_EQ(or1->size(), size);
+
+    OffsetRequest *or2 = new OffsetRequest(message);
+
+    EXPECT_NE(or2, (void*)0);
+    EXPECT_EQ(or2->size(), or1->size());
+    EXPECT_EQ(or2->replicaId, or1->replicaId);
+    for (int i=0; i<or2->offsetTopicArraySize; i++) {
+      EXPECT_EQ(*(or2->offsetTopicArray[i]), *(or1->offsetTopicArray[i]));
+    }
+
+    delete or1;
+    delete or2;
+  }
+
+}  // namespace

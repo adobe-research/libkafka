@@ -23,15 +23,39 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <ApiConstants.h>
+#ifndef OFFSETREQUEST_H
+#define OFFSETREQUEST_H
 
-class TestConfig
+#include <string>
+#include "../Request.h"
+#include "../TopicNameBlock.h"
+#include "OffsetPartition.h"
+
+namespace LibKafka {
+
+class OffsetRequest : public Request
 {
   public:
 
-    const static std::string PRODUCE_REQUEST_TOPIC_NAME;
-    const static std::string PRODUCE_RESPONSE_TOPIC_NAME;
-    const static std::string FETCH_RESPONSE_TOPIC_NAME;
-    const static std::string OFFSET_REQUEST_TOPIC_NAME;
+    int replicaId;
+
+    int offsetTopicArraySize;
+    TopicNameBlock<OffsetPartition> **offsetTopicArray;
+
+    OffsetRequest(unsigned char *buffer, bool releaseBuffer = false);
+    OffsetRequest(int correlationId, std::string clientId, int replicaId, int offsetTopicArraySize, TopicNameBlock<OffsetPartition> **offsetTopicArray, bool releaseArrays = false);
+    ~OffsetRequest();
+
+    unsigned char* toWireFormat(bool updatePacketSize = true);
+    int getWireFormatSize(bool includePacketSize = true);
+
+  private:
+
+    bool releaseArrays;
 };
+
+std::ostream& operator<< (std::ostream& os, const OffsetRequest& ofr);
+
+}; // namespace LibKafka
+
+#endif

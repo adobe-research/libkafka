@@ -130,10 +130,7 @@ int MessageSet::getWireFormatSize(bool includePacketSize)
 ostream& operator<< (ostream& os, const MessageSet& m)
 {
   os << "MessageSet.numMessages:" << m.messages.size() << "\n";
-  for(vector<Message*>::const_iterator message=m.messages.begin(); message!=m.messages.end(); ++message)
-  {
-    os << *(*message);
-  }
+  D(for(vector<Message*>::const_iterator message=m.messages.begin(); message!=m.messages.end(); ++message) os << *(*message);)
   return os;
 }
 
