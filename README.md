@@ -15,11 +15,11 @@ Installation
 
 Supports both autoconf and maven builds:
 
-Maven
+Maven (clang)
 * mvn clean install (builds shared library, command line apps)
 * mvn test (runs protocol unit tests)
 
-Autoconf
+Autoconf (g++)
 * ./autogen.sh
 * ./configure --enable-gtest (requires --enable-gtest due to Google Test m4 macro bug)
 * make install (builds and installs shared library)
@@ -56,3 +56,8 @@ Known issues
 Fixed Issues
 ============
 * Read chunking issue with FetchResponse/MessageSet. (fixed 8/30/2013).
+
+License
+============
+Licensed under the Apache Software License 2.0. See LICENSE file.
+
