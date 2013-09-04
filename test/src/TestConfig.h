@@ -34,4 +34,5 @@ class TestConfig
     const static std::string PRODUCE_RESPONSE_TOPIC_NAME;
     const static std::string FETCH_RESPONSE_TOPIC_NAME;
     const static std::string OFFSET_REQUEST_TOPIC_NAME;
+    const static std::string OFFSET_RESPONSE_TOPIC_NAME;
 };

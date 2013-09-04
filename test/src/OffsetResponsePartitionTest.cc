@@ -29,37 +29,37 @@
 
 namespace {
 
-  class FetchResponsePartitionTest : public BaseTest {
+  class OffsetResponsePartitionTest : public BaseTest {
     protected:
 
-      FetchResponsePartitionTest() { }
-      virtual ~FetchResponsePartitionTest() { }
+      OffsetResponsePartitionTest() { }
+      virtual ~OffsetResponsePartitionTest() { }
       virtual void SetUp() { } 
       virtual void TearDown() { }
   };
 
-  TEST_F(FetchResponsePartitionTest, Constructor) {
+  TEST_F(OffsetResponsePartitionTest, Constructor) {
 
-    FetchResponsePartition *frp1 = createFetchResponsePartition();
-    EXPECT_NE(frp1, (void*)0);
-    frp1->packet = new Packet();
-    unsigned char * message = frp1->toWireFormat();
-    int size = frp1->getWireFormatSize(true);
-    EXPECT_EQ(frp1->packet->getSize(), size);
+    OffsetResponsePartition *orp1 = createOffsetResponsePartition();
+    EXPECT_NE(orp1, (void*)0);
+    orp1->packet = new Packet();
+    unsigned char * message = orp1->toWireFormat();
+    int size = orp1->getWireFormatSize(true);
+    EXPECT_EQ(orp1->packet->getSize(), size);
 
-    frp1->packet->resetForReading();
-    FetchResponsePartition *frp2 = new FetchResponsePartition(frp1->packet);
+    orp1->packet->resetForReading();
+    OffsetResponsePartition *orp2 = new OffsetResponsePartition(orp1->packet);
 
-    EXPECT_NE(frp2, (void*)0);
-    EXPECT_EQ(frp2->packet->getSize(), frp1->packet->getSize());
-    EXPECT_EQ(frp2->partition, frp1->partition);
-    EXPECT_EQ(frp2->errorCode, frp1->errorCode);
-    EXPECT_EQ(frp2->highwaterMarkOffset, frp1->highwaterMarkOffset);
-    EXPECT_EQ(frp2->messageSetSize, frp1->messageSetSize);
+    EXPECT_NE(orp2, (void*)0);
+    EXPECT_EQ(orp2->packet->getSize(), orp1->packet->getSize());
+    EXPECT_EQ(orp2->partition, orp1->partition);
+    EXPECT_EQ(orp2->errorCode, orp1->errorCode);
+    EXPECT_EQ(orp2->offsetArraySize, orp1->offsetArraySize);
+    // TODO: need to compare contents
 
-    delete frp1->packet;
-    delete frp1;
-    delete frp2;
+    delete orp1->packet;
+    delete orp1;
+    delete orp2;
   }
 
 }  // namespace

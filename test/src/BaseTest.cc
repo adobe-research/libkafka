@@ -333,3 +333,39 @@ OffsetPartition* BaseTest::createOffsetPartition()
   return new OffsetPartition(partition, time, maxNumberOfOffsets);
 }
 
+// TopicNameBlock for OffsetResponse
+
+OffsetResponsePartition** BaseTest::offsetResponsePartitionArray;
+
+TopicNameBlock<OffsetResponsePartition>* BaseTest::createOffsetResponseTopicNameBlock()
+{
+  offsetResponsePartitionArray = new OffsetResponsePartition*[offsetResponsePartitionArraySize];
+  for (int i=0; i<offsetResponsePartitionArraySize; i++) {
+    offsetResponsePartitionArray[i] = createOffsetResponsePartition();
+  }
+  return new TopicNameBlock<OffsetResponsePartition>(TestConfig::OFFSET_RESPONSE_TOPIC_NAME, offsetResponsePartitionArraySize, offsetResponsePartitionArray, true);
+}
+
+// OffsetResponsePartition
+long int * BaseTest::offsetArray;
+
+OffsetResponsePartition* BaseTest::createOffsetResponsePartition()
+{
+  offsetArray = new long int[offsetArraySize];
+  for (int i=0; i<offsetArraySize; i++) {
+    offsetArray[i] = -1L;
+  }
+  return new OffsetResponsePartition(partition, errorCode, offsetArraySize, offsetArray, true);
+}
+
+// OffsetResponse
+TopicNameBlock<OffsetResponsePartition>** BaseTest::offsetResponseTopicArray;
+
+OffsetResponse* BaseTest::createOffsetResponse()
+{
+  offsetResponseTopicArray = new TopicNameBlock<OffsetResponsePartition>*[offsetResponseTopicArraySize];
+  for (int i=0; i<offsetResponseTopicArraySize; i++) {
+    offsetResponseTopicArray[i] = createOffsetResponseTopicNameBlock();
+  }
+  return new OffsetResponse(correlationId, offsetResponseTopicArraySize, offsetResponseTopicArray, true);
+}

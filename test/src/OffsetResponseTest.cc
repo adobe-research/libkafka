@@ -23,22 +23,39 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef UTIL_H
-#define UTIL_H
-
 #include <string>
+#include <gtest/gtest.h>
+#include "BaseTest.h"
 
-namespace LibKafka {
+namespace {
 
-  std::string intToString(int i);
-  std::string intArrayToString(int* i, int size);
-  std::string longIntArrayToString(long int* i, int size);
+  class OffsetResponseTest : public BaseTest {
+    protected:
 
-}; // namespace LibKafka
+      OffsetResponseTest() { }
+      virtual ~OffsetResponseTest() { }
+      virtual void SetUp() { } 
+      virtual void TearDown() { }
+  };
 
-#ifndef ntohll
-#define ntohll(x) ( ( (uint64_t)(ntohl( (uint32_t)((x << 32) >> 32) )) << 32) | ntohl( ((uint32_t)(x >> 32)) ) )                                        
-#define htonll(x) ntohll(x)
-#endif
+  TEST_F(OffsetResponseTest, Constructor) {
+    
+    OffsetResponse *or1 = createOffsetResponse();
+    EXPECT_NE(or1, (void*)0);
+    unsigned char * message = or1->toWireFormat();
+    int size = or1->getWireFormatSize(true);
+    EXPECT_EQ(or1->size(), size);
 
-#endif /* UTIL_H */
+    OffsetResponse *or2 = new OffsetResponse(message); 
+    EXPECT_NE(or2, (void*)0);
+    EXPECT_EQ(or2->size(), or1->size());
+    EXPECT_EQ(or2->offsetResponseTopicArraySize, or1->offsetResponseTopicArraySize);
+    for (int i=0; i<or2->offsetResponseTopicArraySize; i++) {
+      EXPECT_EQ(*(or2->offsetResponseTopicArray[i]), *(or1->offsetResponseTopicArray[i]));
+    }
+
+    delete or1;
+    delete or2;
+  }
+
+}  // namespace

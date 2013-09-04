@@ -1,7 +1,16 @@
 libkafka
 ========
 
-A C++ client library for Apache Kafka. Also includes C API. With a full unit test suite.
+A C++ client library for Apache Kafka v0.8+. Also includes C API. With a full unit test suite.
+
+Supports the following Kafka API request/response calls:
+
+* Metadata
+* Produce
+* Fetch
+* Offset
+
+Not compatible with Kafka versions prior to 0.8 due to wire protocol changes.
 
 Dependencies
 ============

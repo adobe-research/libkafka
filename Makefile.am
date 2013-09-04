@@ -13,7 +13,7 @@ EXTRA_DIST += $(m4data_DATA)
 
 # We define the global AM_CPPFLAGS as everything we compile includes from these
 # directories.
-AM_CPPFLAGS = -I$(srcdir) -Ilib/src/metadata -Ilib/src/produce -Ilib/src/fetch
+AM_CPPFLAGS = -I$(srcdir) -Ilib/src/metadata -Ilib/src/produce -Ilib/src/fetch -Ilib/src/offset
 
 # Build rules for libraries.
 lib_LTLIBRARIES = lib/libkafka.la
@@ -43,7 +43,9 @@ lib_libkafka_la_SOURCES = \
   lib/src/fetch/FetchResponse.cc \
   lib/src/fetch/FetchResponsePartition.cc \
   lib/src/offset/OffsetRequest.cc \
-  lib/src/offset/OffsetPartition.cc
+  lib/src/offset/OffsetPartition.cc \
+  lib/src/offset/OffsetResponse.cc \
+  lib/src/offset/OffsetResponsePartition.cc
 
 pkginclude_HEADERS = \
   lib/src/ApiConstants.h \
@@ -74,7 +76,9 @@ pkginclude_HEADERS = \
   lib/src/fetch/FetchResponse.h \
   lib/src/fetch/FetchResponsePartition.h \
   lib/src/offset/OffsetRequest.h \
-  lib/src/offset/OffsetPartition.h
+  lib/src/offset/OffsetPartition.h \
+  lib/src/offset/OffsetResponse.h \
+  lib/src/offset/OffsetResponsePartition.h
 
 # Bulid rules for samples and tests. Automake's naming for some of
 # these variables isn't terribly obvious, so this is a brief
@@ -115,6 +119,8 @@ test_libkafka_unit_tests_SOURCES = \
   test/src/FetchResponsePartitionTest.cc \
   test/src/OffsetRequestTest.cc \
   test/src/OffsetPartitionTest.cc \
+  test/src/OffsetResponseTest.cc \
+  test/src/OffsetResponsePartitionTest.cc \
   test/src/TestConfig.cc
 test_libkafka_unit_tests_CPPFLAGS = -I"test/src" -I"lib/src" $(GTEST_CPPFLAGS)
 test_libkafka_unit_tests_LDFLAGS = $(GTEST_LDFLAGS) $(GTEST_LIBS) -lz

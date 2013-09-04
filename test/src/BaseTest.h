@@ -43,8 +43,10 @@
 #include <fetch/FetchRequest.h>
 #include <fetch/FetchResponse.h>
 #include <fetch/FetchResponsePartition.h>
-#include <offset/OffsetPartition.h>
 #include <offset/OffsetRequest.h>
+#include <offset/OffsetPartition.h>
+#include <offset/OffsetResponse.h>
+#include <offset/OffsetResponsePartition.h>
 #include <ApiConstants.h>
 
 using namespace std;
@@ -187,4 +189,19 @@ class BaseTest : public ::testing::Test {
     const static long int time = 12345;
     const static int maxNumberOfOffsets = 16;
     OffsetPartition *createOffsetPartition();
+    
+    // TopicNameBlock for OffsetResponse
+    const static int offsetResponsePartitionArraySize = 1;
+    static OffsetResponsePartition** offsetResponsePartitionArray;
+    TopicNameBlock<OffsetResponsePartition>* createOffsetResponseTopicNameBlock();
+    
+    // OffsetResponse
+    const static int offsetResponseTopicArraySize = 3;
+    static TopicNameBlock<OffsetResponsePartition> **offsetResponseTopicArray;
+    OffsetResponse *createOffsetResponse();
+    
+    // OffsetResponsePartition
+    const static int offsetArraySize = 3;
+    static long int *offsetArray;
+    OffsetResponsePartition *createOffsetResponsePartition();
 };
