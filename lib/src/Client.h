@@ -39,6 +39,8 @@
 #include "produce/ProduceResponse.h"
 #include "fetch/FetchRequest.h"
 #include "fetch/FetchResponse.h"
+#include "offset/OffsetRequest.h"
+#include "offset/OffsetResponse.h"
 
 namespace LibKafka {
 
@@ -52,6 +54,7 @@ class Client
     MetadataResponse *sendMetadataRequest(MetadataRequest *request);
     ProduceResponse *sendProduceRequest(ProduceRequest *request);
     FetchResponse *sendFetchRequest(FetchRequest *request);
+    OffsetResponse *sendOffsetRequest(OffsetRequest *request);
 
   protected:
 

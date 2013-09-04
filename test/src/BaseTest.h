@@ -186,7 +186,8 @@ class BaseTest : public ::testing::Test {
     TopicNameBlock<OffsetPartition> *createOffsetRequestTopicNameBlock(std::string topic_name);
 
     // OffsetPartition
-    const static long int time = 12345;
+    //const static long int time = -2; // earliest available
+    const static long int time = -1; // latest available
     const static int maxNumberOfOffsets = 16;
     OffsetPartition *createOffsetPartition();
     

@@ -70,6 +70,11 @@ FetchResponse *Client::sendFetchRequest(FetchRequest *request)
   return apiCall<FetchRequest, FetchResponse>(request);
 }
 
+OffsetResponse *Client::sendOffsetRequest(OffsetRequest *request)
+{
+  return apiCall<OffsetRequest, OffsetResponse>(request);
+}
+
 template <typename RequestClass, typename ResponseClass>
 ResponseClass *Client::apiCall(RequestClass *request)
 {

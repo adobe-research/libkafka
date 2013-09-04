@@ -67,15 +67,24 @@ namespace {
     if (fr1 != NULL) { cout << "ClientTest:FetchRequest:\n" << *fr1; }
     if (fr2 != NULL) { cout << "ClientTest:FetchResponse:\n" << *fr2; }
 
-    fr2->packet->writeToFile("/tmp/fetchresponse.out");
+    //fr2->packet->writeToFile("/tmp/fetchresponse.out");
+    
+    OffsetRequest *or1 = createOffsetRequest();
+    EXPECT_NE(or1, (void*)0);
+    OffsetResponse *or2 = c->sendOffsetRequest(or1);
+    EXPECT_NE(or2, (void*)0);
+    if (or1 != NULL) { cout << "ClientTest:OffsetRequest:\n" << *or1; }
+    if (or2 != NULL) { cout << "ClientTest:OffsetResponse:\n" << *or2; }
 
     delete c;
-    delete mr1;
-    delete mr2;
-    delete pr1;
-    delete pr2;
-    delete fr1;
-    delete fr2;
+    if (mr1 != NULL) delete mr1;
+    if (mr2 != NULL) delete mr2;
+    if (pr1 != NULL) delete pr1;
+    if (pr2 != NULL) delete pr2;
+    if (fr1 != NULL) delete fr1;
+    if (fr2 != NULL) delete fr2;
+    if (or1 != NULL) delete or1;
+    if (or2 != NULL) delete or2;
   }
 
 }  // namespace
