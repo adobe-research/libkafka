@@ -55,6 +55,10 @@ namespace {
     EXPECT_EQ(orp2->partition, orp1->partition);
     EXPECT_EQ(orp2->errorCode, orp1->errorCode);
     EXPECT_EQ(orp2->offsetArraySize, orp1->offsetArraySize);
+    for (int i=0; i<orp2->offsetArraySize; i++) {
+      EXPECT_EQ(orp2->offsetArray[i], orp1->offsetArray[i]);
+    }
+
     // TODO: need to compare contents
 
     delete orp1->packet;
