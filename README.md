@@ -51,6 +51,7 @@ Examples
 
 TODO
 ====
+* Advanced client with error handling, metadata/broker/leader updates, and offset management
 * fix RPM creation for maven build
 * load testing for Produce and Fetch
 * add gzip compression support for MessageSets
@@ -69,4 +70,3 @@ Fixed Issues
 License
 ============
 Licensed under the Apache Software License 2.0. See LICENSE file.
-
