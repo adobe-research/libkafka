@@ -95,7 +95,6 @@ TESTS += test/libkafka_unit_tests
 check_PROGRAMS += test/libkafka_unit_tests
 test_libkafka_unit_tests_SOURCES = \
   test/src/BaseTest.cc \
-  test/src/ClientTest.cc \
   test/src/ConnectionTest.cc \
   test/src/BrokerTest.cc \
   test/src/MetadataRequestTest.cc \
