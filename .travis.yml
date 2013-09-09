@@ -5,10 +5,10 @@ compiler:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq cmake libgtest-dev zlib1g-dev
+  - sudo mv config/gtest-config /usr/bin
   - cd $(mktemp -d)
   - cmake /usr/src/gtest
   - make
-  - sudo mv gtest-config /usr/bin
   - sudo mv libgtest.a /usr/lib/
   - sudo mv libgtest_main.a /usr/lib
   - cd $TRAVIS_BUILD_DIR
