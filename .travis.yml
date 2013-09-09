@@ -3,4 +3,4 @@ compiler:
   - gcc
   - clang
 # Change this to your needs
-script: ./autogen && ./configure --enable-gtest && make
+script: ./autogen.sh && ./configure --enable-gtest && make
