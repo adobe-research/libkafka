@@ -8,6 +8,7 @@ before_install:
   - cd $(mktemp -d)
   - cmake /usr/src/gtest
   - make
+  - sudo mv gtest-config /usr/bin
   - sudo mv libgtest.a /usr/lib/
   - sudo mv libgtest_main.a /usr/lib
   - cd $TRAVIS_BUILD_DIR
