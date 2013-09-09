@@ -2,7 +2,7 @@
 
 # These variables are automatically filled in by the configure script.
 name="gtest"
-version="1.6.0"
+version="1.5.0"
 
 show_usage()
 {
@@ -194,15 +194,15 @@ done
 # These have defaults filled in by the configure script but can also be
 # overridden by environment variables or command line parameters.
 prefix="${GTEST_PREFIX:-/usr}"
-exec_prefix="${GTEST_EXEC_PREFIX:-${prefix}}"
-libdir="${GTEST_LIBDIR:-${exec_prefix}/lib}"
-includedir="${GTEST_INCLUDEDIR:-${prefix}/include}"
+exec_prefix="${GTEST_EXEC_PREFIX:-/usr}"
+libdir="${GTEST_LIBDIR:-/usr/lib64}"
+includedir="${GTEST_INCLUDEDIR:-/usr/include}"
 
 # We try and detect if our binary is not located at its installed location. If
 # it's not, we provide variables pointing to the source and build tree rather
 # than to the install tree. This allows building against a just-built gtest
 # rather than an installed gtest.
-bindir="${exec_prefix}/bin"
+bindir="/usr/bin"
 this_relative_bindir=`dirname $0`
 this_bindir=`cd ${this_relative_bindir}; pwd -P`
 if test "${this_bindir}" = "${this_bindir%${bindir}}"; then
@@ -214,7 +214,7 @@ if test "${this_bindir}" = "${this_bindir%${bindir}}"; then
   # TODO(chandlerc@google.com): This is a dangerous dependency on libtool, we
   # should work to remove it, and/or remove libtool altogether, replacing it
   # with direct references to the library and a link path.
-  gtest_libs="${build_dir}/lib/libgtest.la -D_THREAD_SAFE  "
+  gtest_libs="${build_dir}/lib/libgtest.la -pthread "
   gtest_ldflags=""
 
   # We provide hooks to include from either the source or build dir, where the
@@ -222,15 +222,15 @@ if test "${this_bindir}" = "${this_bindir%${bindir}}"; then
   # build rules for generated headers and have them automatically be preferred
   # over provided versions.
   gtest_cppflags="-I${build_dir}/include -I${src_dir}/include"
-  gtest_cxxflags="-D_THREAD_SAFE "
+  gtest_cxxflags="-pthread"
 else
   # We're using an installed gtest, although it may be staged under some
   # prefix. Assume (as our own libraries do) that we can resolve the prefix,
   # and are present in the dynamic link paths.
   gtest_ldflags="-L${libdir}"
-  gtest_libs="-l${name} -D_THREAD_SAFE  "
+  gtest_libs="-l${name} -pthread "
   gtest_cppflags="-I${includedir}"
-  gtest_cxxflags="-D_THREAD_SAFE "
+  gtest_cxxflags="-pthread"
 fi
 
 # Do an installation query if requested.
