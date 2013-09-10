@@ -28,8 +28,14 @@
 
 using namespace std;
 
+const string TestConfig::CONNECTION_HTTP_HOST = "www.google.com";
+
+const string TestConfig::CLIENT_BROKER_HOST = "wrigley.corp.adobe.com";
+
 const string TestConfig::PRODUCE_REQUEST_TOPIC_NAME = "test_topic";
 const string TestConfig::PRODUCE_RESPONSE_TOPIC_NAME = "test_topic";
+
 const string TestConfig::FETCH_RESPONSE_TOPIC_NAME = "test_topic";
+
 const string TestConfig::OFFSET_REQUEST_TOPIC_NAME = "test_topic";
 const string TestConfig::OFFSET_RESPONSE_TOPIC_NAME = "test_topic";

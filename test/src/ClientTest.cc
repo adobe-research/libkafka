@@ -26,6 +26,7 @@
 #include <string>
 #include <gtest/gtest.h>
 #include "BaseTest.h"
+#include "TestConfig.h"
 #include <Client.h>
 
 using namespace std;
@@ -43,7 +44,7 @@ namespace {
 
   TEST_F(ClientTest, Constructor) {
 
-    Client *c = new Client("wrigley.corp.adobe.com", 9092);
+    Client *c = new Client(TestConfig::CLIENT_BROKER_HOST, TestConfig::CLIENT_BROKER_PORT);
     EXPECT_NE(c, (void*)0);
 
     MetadataRequest *mr1 = createMetadataRequest(true);

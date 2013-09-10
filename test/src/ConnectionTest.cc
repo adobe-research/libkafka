@@ -26,6 +26,7 @@
 #include <string>
 #include <gtest/gtest.h>
 #include "BaseTest.h"
+#include "TestConfig.h"
 #include <Connection.h>
 
 namespace {
@@ -41,7 +42,7 @@ namespace {
 
   TEST_F(ConnectionTest, Constructor) {
 
-    Connection *c = new Connection("www.google.com", 80);
+    Connection *c = new Connection(TestConfig::CONNECTION_HTTP_HOST, TestConfig::CONNECTION_HTTP_PORT);
     EXPECT_NE(c, (void*)0);
     int status = c->open();
     EXPECT_NE(status, Connection::OPEN_CONNECTION_ERROR);
