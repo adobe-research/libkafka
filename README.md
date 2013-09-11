@@ -12,6 +12,10 @@ Supports the following Kafka API request/response calls:
 
 Not compatible with Kafka versions prior to 0.8 due to wire protocol changes.
 
+Version
+=======
+Current release version: 0.1.0
+
 Dependencies
 ============
 
@@ -24,24 +28,24 @@ Installation
 
 Supports both autoconf and maven builds:
 
+Autoconf (g++)
+* ./autogen.sh
+* ./configure --enable-gtest (requires --enable-gtest due to Google Test m4 macro bug)
+* make && make install (builds and installs shared library)
+* make check (runs protocol unit tests)
+* DISTCHECK_CONFIGURE_FLAGS=--enable-gtest make distcheck (produces release packages, tar.gz and tar.bz2)
+* make maintainer-clean (clean all autoconf generated files)
+
 Maven (clang)
 * mvn clean install (builds shared library, command line apps)
 * mvn test (runs protocol unit tests)
 
-Autoconf (g++)
-* ./autogen.sh
-* ./configure --enable-gtest (requires --enable-gtest due to Google Test m4 macro bug)
-* make install (builds and installs shared library)
-* make check (runs protocol unit tests)
-
-And to clean all autoconf generated files:
-* make maintainer-clean
-
 Debugging
-* uncomment -DDEBUG in the top level pom.xml, rebuild for full protocol debugging output.
+* Make with -DDEBUG or uncomment -DDEBUG in the top level pom.xml, and rebuild for full protocol debugging output.
 
 Valgrind
 * Valgrind currently provides a clean memory leak report for the unit test suite. Future commits will maintain this.
+* ./valgrind.sh runs the valgrind tests with suppressions for Mac OS X.
 
 Examples
 ========
