@@ -1,0 +1,13 @@
+libkafka 0.2.0
+==============
+* Travis CI integration added. Fixed --as-needed linker error on Ubuntu.
+* autotools/autoconf fixed. Support for make, make check, make distcheck.
+
+libkafka 0.1.0 (9.5.2013)
+==============
+* initial commit
+* client API support for metadata, produce, fetch, and offset requests
+* unit test suite
+* maven (clang) and autotools (g++) builds
+* Fixed errors with OffSetRequest
+* Fixed read chunking issue with FetchResponse/MessageSet

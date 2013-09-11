@@ -1,4 +1,4 @@
-libkafka <span width="100%"/></span><a href="https://travis-ci.org/adobe-research/libkafka.png"></a><img style="float:right" src="https://travis-ci.org/adobe-research/libkafka.png"/></a>
+libkafka <span width="100%"/></span><a href="https://travis-ci.org/adobe-research/libkafka"></a><img style="float:right" src="https://travis-ci.org/adobe-research/libkafka.png"/></a>
 ========
 
 A C++ client library for Apache Kafka v0.8+. Also includes C API. With a full unit test suite.
@@ -64,9 +64,7 @@ Known issues
 
 Fixed Issues
 ============
-* Travis CI integration completed. Fixed --as-needed linker error on Ubuntu. (9.9.2013)
-* OffSetRequest is still buggy (9.3.2013).
-* Read chunking issue with FetchResponse/MessageSet. (8.30.2013).
+* See [![CHANGELOG](CHANGELOG)](CHANGELOG)
 
 License
 ============
