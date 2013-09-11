@@ -5,7 +5,7 @@
 AC_INIT([C++ Client for Apache Kafka v0.8+],
         [0.1.0],
         [dt@dt.org],
-        [kafka])
+        [libkafka])
 
 # Provide various options to initialize the Autoconf and configure processes.
 AC_PREREQ([2.59])

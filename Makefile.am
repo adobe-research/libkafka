@@ -13,7 +13,7 @@ EXTRA_DIST += $(m4data_DATA)
 
 # We define the global AM_CPPFLAGS as everything we compile includes from these
 # directories.
-AM_CPPFLAGS = -I$(srcdir) -Ilib/src/metadata -Ilib/src/produce -Ilib/src/fetch -Ilib/src/offset
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/metadata -I$(top_srcdir)/produce -I$(top_srcdir)/fetch -I$(top_srcdir)/offset
 
 # Build rules for libraries.
 lib_LTLIBRARIES = lib/libkafka.la
@@ -120,8 +120,10 @@ test_libkafka_unit_tests_SOURCES = \
   test/src/OffsetPartitionTest.cc \
   test/src/OffsetResponseTest.cc \
   test/src/OffsetResponsePartitionTest.cc \
-  test/src/TestConfig.cc
-test_libkafka_unit_tests_CPPFLAGS = -I"test/src" -I"lib/src" $(GTEST_CPPFLAGS)
+  test/src/TestConfig.cc \
+  test/src/TestConfig.h \
+  test/src/BaseTest.h
+test_libkafka_unit_tests_CPPFLAGS = $(GTEST_CPPFLAGS) -I$(srcdir)/lib/src
 test_libkafka_unit_tests_LDFLAGS = $(GTEST_LDFLAGS)
 test_libkafka_unit_tests_LDADD = lib/libkafka.la $(GTEST_LIBS) -lz
 

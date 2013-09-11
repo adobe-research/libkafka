@@ -12,4 +12,4 @@ before_install:
   - sudo mv libgtest.a /usr/lib/
   - sudo mv libgtest_main.a /usr/lib
   - cd $TRAVIS_BUILD_DIR
-script: ./autogen.sh && ./configure --enable-gtest && make check
+script: ./autogen.sh && ./configure --enable-gtest && make && make check && DISTCHECK_CONFIGURE_FLAGS=--enable-gtest make distcheck

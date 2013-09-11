@@ -47,7 +47,7 @@
 #include <offset/OffsetPartition.h>
 #include <offset/OffsetResponse.h>
 #include <offset/OffsetResponsePartition.h>
-#include <ApiConstants.h>
+#include "ApiConstants.h"
 
 using namespace std;
 using namespace LibKafka;
