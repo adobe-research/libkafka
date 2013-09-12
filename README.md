@@ -72,4 +72,4 @@ Fixed Issues
 
 License
 ============
-Licensed under the Apache Software License 2.0. See LICENSE file.
+Licensed under the Apache Software License 2.0. See [![LICENSE](LICENSE)](LICENSE) file.
