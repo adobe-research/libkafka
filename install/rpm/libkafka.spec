@@ -17,10 +17,9 @@ Source0: %{name}-%{version}.tar.bz2
 URL: http://github.com/adobe-research/libkafka
 Vendor: Adobe Systems, Inc.
 Packager: David Tompkins <tompkins_at_adobe_dot_com>
-BuildArch: i686
 BuildRoot: ./.rpm
-Requires: libgtest, zlibc, zlib1g
-BuildRequires: libgtest-dev, zlibc, zlib1g, zlib1g-dev, libtool
+Requires: gtest, zlib
+BuildRequires: gtest-dev, zlib-devel, libtool
 AutoReqProv: no
 
 %description
@@ -52,8 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 /usr/lib/libkafka.la
 /usr/lib/libkafka.a
-/usr/lib/libkafka.dylib
-/usr/lib/libkafka.0.dylib
+/usr/lib/libkafka.so
+/usr/lib/libkafka.so.0
+/usr/lib/libkafka.so.0.0.1
 %doc AUTHORS
 %doc COPYING
 %doc README.md
@@ -90,4 +90,3 @@ rm -rf $RPM_BUILD_ROOT
 /usr/include/libkafka/offset/OffsetPartition.h
 /usr/include/libkafka/offset/OffsetResponse.h
 /usr/include/libkafka/offset/OffsetResponsePartition.h
-/usr/share/aclocal/gtest.m4

@@ -8,11 +8,6 @@ EXTRA_DIST = \
   CHANGELOG \
   LICENSE
 
-# Distribute and install M4 macro
-m4datadir = $(datadir)/aclocal
-m4data_DATA = m4/gtest.m4
-EXTRA_DIST += $(m4data_DATA)
-
 # We define the global AM_CPPFLAGS as everything we compile includes from these
 # directories.
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/metadata -I$(top_srcdir)/produce -I$(top_srcdir)/fetch -I$(top_srcdir)/offset
@@ -199,3 +194,6 @@ rpm: dist
 
 rpm-clean: distclean maintainer-clean
 	- rm -rf .rpm
+	- rm -rf libkafka-*gz
+	- rm -rf libkafka-*bz2
+	- rm -rf libkafka-*zip
