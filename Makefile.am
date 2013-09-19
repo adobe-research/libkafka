@@ -4,7 +4,9 @@ ACLOCAL_AMFLAGS = -I m4
 
 # Nonstandard package files for distribution
 EXTRA_DIST = \
-  README.md
+  README.md \
+  CHANGELOG \
+  LICENSE
 
 # Distribute and install M4 macro
 m4datadir = $(datadir)/aclocal
@@ -47,6 +49,11 @@ lib_libkafka_la_SOURCES = \
   lib/src/offset/OffsetResponse.cc \
   lib/src/offset/OffsetResponsePartition.cc
 
+LIBKAFKA_LIBRARY_VERSION = 0:1:0
+lib_libkafka_la_LDFLAGS = -version-info $(LIBKAFKA_LIBRARY_VERSION)
+
+lib_libkafka_ladir = $(includedir)/libkafka
+
 pkginclude_HEADERS = \
   lib/src/ApiConstants.h \
   lib/src/Client.h \
@@ -61,20 +68,32 @@ pkginclude_HEADERS = \
   lib/src/MessageSet.h \
   lib/src/TopicNameBlock.h \
   lib/src/Util.h \
-  lib/src/WireFormatter.h \
+  lib/src/WireFormatter.h
+
+metadataincludedir = $(includedir)/libkafka/metadata
+dist_metadatainclude_HEADERS = \
   lib/src/metadata/MetadataRequest.h \
   lib/src/metadata/MetadataResponse.h \
   lib/src/metadata/Broker.h \
   lib/src/metadata/PartitionMetadata.h \
-  lib/src/metadata/TopicMetadata.h \
+  lib/src/metadata/TopicMetadata.h
+
+produceincludedir = $(includedir)/libkafka/produce
+dist_produceinclude_HEADERS = \
   lib/src/produce/ProduceRequest.h \
   lib/src/produce/ProduceMessageSet.h \
   lib/src/produce/ProduceResponse.h \
-  lib/src/produce/ProduceResponsePartition.h \
+  lib/src/produce/ProduceResponsePartition.h
+
+fetchincludedir = $(includedir)/libkafka/fetch
+dist_fetchinclude_HEADERS = \
   lib/src/fetch/FetchRequest.h \
   lib/src/fetch/FetchPartition.h \
   lib/src/fetch/FetchResponse.h \
-  lib/src/fetch/FetchResponsePartition.h \
+  lib/src/fetch/FetchResponsePartition.h
+
+offsetincludedir = $(includedir)/libkafka/offset
+dist_offsetinclude_HEADERS = \
   lib/src/offset/OffsetRequest.h \
   lib/src/offset/OffsetPartition.h \
   lib/src/offset/OffsetResponse.h \
@@ -135,6 +154,7 @@ MAINTAINERCLEANFILES = \
   config/compile \
   config/config.guess \
   config/config.h.in \
+  config/config.h.in~ \
   config/config.sub \
   config/depcomp \
   config/install-sh \
@@ -148,3 +168,34 @@ MAINTAINERCLEANFILES = \
   m4/ltversion.m4 \
   m4/lt~obsolete.m4 \
   m4/ltoptions.m4
+
+APP_NAME=libkafka
+
+# Create a deb package
+pkg-deb: dist
+	- rm -r $(TMP_DIR)
+	mkdir -p $(TMP_DIR)
+	cp pkg/$(APP_NAME)-$(VERSION).tar.bz2 $(TMP_DIR)/
+	tar --directory $(TMP_DIR)/ -xjf $(TMP_DIR)/$(APP_NAME)-$(VERSION).tar.bz2
+	cd $(TMP_DIR)/$(APP_NAME)-$(VERSION)/; echo | dh_make --single --copyright gpl -e myemailaddress -f ../$(APP_NAME)-$(VERSION).tar.bz2
+	cp install/deb/changelog install/deb/control install/deb/copyright $(TMP_DIR)/$(APP_NAME)-$(VERSION)/debian/
+	cd $(TMP_DIR)/$(APP_NAME)-$(VERSION)/; rm debian/README.Debian debian/*.ex debian/*.EX; ./configure; dpkg-buildpackage -rfakeroot; mv ../*.deb $(PWD)/pkg/
+	rm -r $(TMP_DIR);
+
+# Create an RPM package
+rpm: dist
+	mkdir -p .rpm/RPMS/i686
+	mkdir -p .rpm/SRPMS
+	mkdir -p .rpm/BUILD
+	mkdir -p .rpm/SOURCES
+	mkdir -p .rpm/tmp
+	- rm -r .rpm/BUILD/$(APP_NAME)-root
+	- rm -r .rpm/RPMS/$(APP_NAME)-*
+	- rm -r .rpm/SRPMS/$(APP_NAME)-*
+	- rm -r .rpm/SOURCES/$(APP_NAME)-*
+	cp $(APP_NAME)-$(VERSION).tar.bz2 .rpm/SOURCES/
+	rpmbuild -vv --nodeps -bb install/rpm/libkafka.spec
+#rpmbuild --quiet --nodeps -bb install/rpm/libkafka.spec
+
+rpm-clean: distclean maintainer-clean
+	- rm -rf .rpm
