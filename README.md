@@ -1,4 +1,4 @@
-libkafka <span width="100%"/></span><a href="https://travis-ci.org/adobe-research/libkafka"></a><img style="float:right" src="https://travis-ci.org/adobe-research/libkafka.png"/></a>
+libkafka <span width="100%"/></span><a href="https://travis-ci.org/adobe-research/libkafka"><img style="float:right" src="https://travis-ci.org/adobe-research/libkafka.png"/></a>
 ========
 
 A C++ client library for Apache Kafka v0.8+. Also includes C API. With a full unit test suite.
