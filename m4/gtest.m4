@@ -15,7 +15,7 @@ AC_ARG_ENABLE([gtest],
                   [Enable tests using the Google C++ Testing Framework.
                   (Default is enabled.)])],
   [],
-  [enable_gtest=])
+  [enable_gtest=yes])
 AC_ARG_VAR([GTEST_CONFIG],
            [The exact path of Google Test's 'gtest-config' script.])
 AC_ARG_VAR([GTEST_CPPFLAGS],
