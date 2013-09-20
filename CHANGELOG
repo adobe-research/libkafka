@@ -1,9 +1,10 @@
-libkafka 0.2.0
+libkafka 0.2.0 (9.20.2013)
 ==============
 * Travis CI integration added. Fixed --as-needed linker error on Ubuntu.
 * autotools/autoconf fixed. Support for make, make check, make distcheck.
 * RPM generation fixed. "make rpm" produces an RPM that successfully installs (tested on CentOS 6)
 * Fixed bug with gtest.m4 for autotools. No longer requires --enable-gtest for ./configure
+* Added official release mechanics, including dist and rpm packages for github.
 
 libkafka 0.1.0 (9.5.2013)
 ==============
