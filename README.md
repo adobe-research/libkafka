@@ -14,7 +14,7 @@ Not compatible with Kafka versions prior to 0.8 due to wire protocol changes.
 
 Version
 =======
-Current release version: 0.1.0
+Current release version: 0.2.0
 
 Dependencies
 ============
@@ -30,13 +30,13 @@ Supports both autoconf and maven builds:
 
 Autoconf (g++)
 * ./autogen.sh
-* ./configure --enable-gtest (requires --enable-gtest due to Google Test m4 macro bug)
-* make && make install (builds and installs shared library)
+* ./configure 
+* make (builds shared library)
 * make check (runs protocol unit tests)
-* make rpm (generates an RPM, tested on CentOs 6.x, genearted into ./rpm/RPMS/$(arch))
-* DISTCHECK_CONFIGURE_FLAGS=--enable-gtest make distcheck (produces release packages, tar.gz and tar.bz2)
+* make rpm (packages an RPM, tested on CentOs 6.x, genearted into ./rpm/RPMS/$(arch))
+* make distcheck (produces release packages, tar.gz and tar.bz2)
 * make maintainer-clean (clean all autoconf generated files)
-* make rpm-clean (clean all artifacts of rpm, dist, and autotools maintainer)
+* make rpm-clean (clean all artifacts of rpm, dist, and autotools)
 
 Maven (clang)
 * mvn clean install (builds shared library, command line apps)

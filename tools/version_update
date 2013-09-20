@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ $# != 2 ]; then
+  echo "usage: version_update old_version_string new_version_string"
+  echo "-- expects versions strings of the form x.y.z, where x,y,z are integers"
+  exit 1
+fi
+
+files="app/pom.xml configure.ac install/rpm/libkafka.spec lib/libkafka.doxygen lib/pom.xml pom.xml test/pom.xml"
+for file in ${files}; do
+  echo ${file}
+  sed -e "s/${1}/${2}/g" ${file} > ${file}.bak && /bin/mv -f ${file}.bak ${file}
+done
+
+# Also need to rev Makefile.am with : instead of . separators
+old_version=`echo ${1} | sed -e 's/\([0-9]\)\.\([0-9]\)\.\([0-9]\)/\1:\2:\3/g'`
+new_version=`echo ${2} | sed -e 's/\([0-9]\)\.\([0-9]\)\.\([0-9]\)/\1:\2:\3/g'`
+files="Makefile.am"
+for file in ${files}; do
+  echo ${file}
+  sed -e "s/${old_version}/${new_version}/g" ${file} > ${file}.bak && /bin/mv -f ${file}.bak ${file}
+done

@@ -44,7 +44,7 @@ lib_libkafka_la_SOURCES = \
   lib/src/offset/OffsetResponse.cc \
   lib/src/offset/OffsetResponsePartition.cc
 
-LIBKAFKA_LIBRARY_VERSION = 0:1:0
+LIBKAFKA_LIBRARY_VERSION = 0:2:0
 lib_libkafka_la_LDFLAGS = -version-info $(LIBKAFKA_LIBRARY_VERSION)
 
 lib_libkafka_ladir = $(includedir)/libkafka
