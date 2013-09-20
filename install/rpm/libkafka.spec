@@ -1,10 +1,11 @@
 ###
 ### RPM spec file for libkafka
 ###
+%define RPM_DIR rpm
 %define _noarch_libdir /usr/lib
 %define rel_ver 0.1.0
-%define _topdir %(echo $PWD)/.rpm
-%define _tmppath %(echo $PWD)/.rpm
+%define _topdir %(echo $PWD)/%{RPM_DIR}
+%define _tmppath %(echo $PWD)/%{RPM_DIR}
 
 Summary: A C++ client library for Apache Kafka v0.8+. Also includes C API.
 Name: libkafka
@@ -17,7 +18,7 @@ Source0: %{name}-%{version}.tar.bz2
 URL: http://github.com/adobe-research/libkafka
 Vendor: Adobe Systems, Inc.
 Packager: David Tompkins <tompkins_at_adobe_dot_com>
-BuildRoot: ./.rpm
+BuildRoot: %{RPM_DIR}
 Requires: gtest, zlib
 BuildRequires: gtest-dev, zlib-devel, libtool
 AutoReqProv: no
@@ -49,16 +50,22 @@ rm -rf %{buildroot}
 rm -rf $RPM_BUILD_ROOT
 
 %files
-/usr/lib/libkafka.la
-/usr/lib/libkafka.a
-/usr/lib/libkafka.so
-/usr/lib/libkafka.so.0
-/usr/lib/libkafka.so.0.0.1
 %doc AUTHORS
 %doc COPYING
 %doc README.md
 %doc CHANGELOG
 %doc LICENSE
+/usr/lib/libkafka.la
+/usr/lib/libkafka.a
+%ifos Linux
+/usr/lib/libkafka.so
+/usr/lib/libkafka.so.0
+/usr/lib/libkafka.so.0.0.1
+%endif
+%ifos darwin
+/usr/lib/libkafka.0.dylib
+/usr/lib/libkafka.dylib
+%endif
 /usr/include/libkafka/ApiConstants.h
 /usr/include/libkafka/Client.h
 /usr/include/libkafka/Connection.h

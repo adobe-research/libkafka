@@ -178,22 +178,23 @@ pkg-deb: dist
 	rm -r $(TMP_DIR);
 
 # Create an RPM package
+RPM_DIR=rpm
 rpm: dist
-	mkdir -p .rpm/RPMS/i686
-	mkdir -p .rpm/SRPMS
-	mkdir -p .rpm/BUILD
-	mkdir -p .rpm/SOURCES
-	mkdir -p .rpm/tmp
-	- rm -r .rpm/BUILD/$(APP_NAME)-root
-	- rm -r .rpm/RPMS/$(APP_NAME)-*
-	- rm -r .rpm/SRPMS/$(APP_NAME)-*
-	- rm -r .rpm/SOURCES/$(APP_NAME)-*
-	cp $(APP_NAME)-$(VERSION).tar.bz2 .rpm/SOURCES/
+	mkdir -p $(RPM_DIR)/RPMS/i686
+	mkdir -p $(RPM_DIR)/SRPMS
+	mkdir -p $(RPM_DIR)/BUILD
+	mkdir -p $(RPM_DIR)/SOURCES
+	mkdir -p $(RPM_DIR)/tmp
+	- rm -r $(RPM_DIR)/BUILD/$(APP_NAME)-root
+	- rm -r $(RPM_DIR)/RPMS/$(APP_NAME)-*
+	- rm -r $(RPM_DIR)/SRPMS/$(APP_NAME)-*
+	- rm -r $(RPM_DIR)/SOURCES/$(APP_NAME)-*
+	cp $(APP_NAME)-$(VERSION).tar.bz2 $(RPM_DIR)/SOURCES/
 	rpmbuild -vv --nodeps -bb install/rpm/libkafka.spec
 #rpmbuild --quiet --nodeps -bb install/rpm/libkafka.spec
 
 rpm-clean: distclean maintainer-clean
-	- rm -rf .rpm
+	- rm -rf $(RPM_DIR) 
 	- rm -rf libkafka-*gz
 	- rm -rf libkafka-*bz2
 	- rm -rf libkafka-*zip

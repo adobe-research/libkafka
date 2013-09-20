@@ -19,9 +19,9 @@ Current release version: 0.1.0
 Dependencies
 ============
 
-* zlib for CRC calculation (yum install zlib / port install zlib)
-* Google Test for unit tests (yum install gtest gtest-devel / port install google-test)
-* (optional) Doxygen for C/C++ API documentation (yum install doxygen / port install doxygen)
+* zlib for CRC calculation
+* Google Test for unit tests
+* (optional) Doxygen for C/C++ API documentation
 
 Installation
 ============
@@ -33,8 +33,10 @@ Autoconf (g++)
 * ./configure --enable-gtest (requires --enable-gtest due to Google Test m4 macro bug)
 * make && make install (builds and installs shared library)
 * make check (runs protocol unit tests)
+* make rpm (generates an RPM, tested on CentOs 6.x, genearted into ./rpm/RPMS/$(arch))
 * DISTCHECK_CONFIGURE_FLAGS=--enable-gtest make distcheck (produces release packages, tar.gz and tar.bz2)
 * make maintainer-clean (clean all autoconf generated files)
+* make rpm-clean (clean all artifacts of rpm, dist, and autotools maintainer)
 
 Maven (clang)
 * mvn clean install (builds shared library, command line apps)
@@ -56,7 +58,6 @@ Examples
 TODO
 ====
 * Advanced client with error handling, metadata/broker/leader updates, and offset management
-* fix RPM creation for maven build
 * load testing for Produce and Fetch
 * add gzip compression support for MessageSets
 
@@ -64,7 +65,6 @@ Known issues
 =============
 * Nested MessageSet blocks are not yet handled. This is a wonky part of the protocol.
 * The extern C wrrapper for C++ calls is not yet implemented.
-* RPM generation in the maven build is broken.
 
 Fixed Issues
 ============
