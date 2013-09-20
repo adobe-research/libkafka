@@ -58,13 +58,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/libkafka.la
 /usr/lib/libkafka.a
 %ifos Linux
-/usr/lib/libkafka.so
-/usr/lib/libkafka.so.0
-/usr/lib/libkafka.so.0.0.1
+/usr/lib/libkafka.so*
 %endif
 %ifos darwin
-/usr/lib/libkafka.0.dylib
-/usr/lib/libkafka.dylib
+/usr/lib/libkafka*dylib
 %endif
 /usr/include/libkafka/ApiConstants.h
 /usr/include/libkafka/Client.h
