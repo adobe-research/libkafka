@@ -180,7 +180,7 @@ pkg-deb: dist
 # Create an RPM package
 RPM_DIR=rpm
 rpm: dist
-	mkdir -p $(RPM_DIR)/RPMS/i686
+	mkdir -p $(RPM_DIR)/RPMS
 	mkdir -p $(RPM_DIR)/SRPMS
 	mkdir -p $(RPM_DIR)/BUILD
 	mkdir -p $(RPM_DIR)/SOURCES

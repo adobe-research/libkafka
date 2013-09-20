@@ -32,7 +32,7 @@ Autoconf (g++)
 * ./autogen.sh
 * ./configure 
 * make (builds shared library)
-* make check (runs protocol unit tests)
+* make check (runs protocol unit tests, expects a kafka broker at host:port and with topics as specified in TestConfig.cc)
 * make rpm (packages an RPM, tested on CentOs 6.x, genearted into ./rpm/RPMS/$(arch))
 * make distcheck (produces release packages, tar.gz and tar.bz2)
 * make maintainer-clean (clean all autoconf generated files)
