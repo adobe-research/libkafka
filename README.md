@@ -14,7 +14,8 @@ Not compatible with Kafka versions prior to 0.8 due to wire protocol changes.
 
 Version
 =======
-Current release version: 0.2.0
+Current release version: 0.2.0 (see <a href="https://github.com/adobe-research/libkafka/releases">RELEASES</a>)
+
 
 Dependencies
 ============
