@@ -34,10 +34,11 @@
 #include "../MessageSet.h"
 #include "../WireFormatter.h"
 #include "../PacketWriter.h"
+#include "../ErrorHandler.h"
 
 namespace LibKafka {
 
-class FetchResponsePartition : public WireFormatter, public PacketWriter
+class FetchResponsePartition : public WireFormatter, public PacketWriter, public ErrorHandler
 {
   public:
 
@@ -53,6 +54,8 @@ class FetchResponsePartition : public WireFormatter, public PacketWriter
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);
+
+    bool hasErrorCode();
 
   private:
 

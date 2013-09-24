@@ -34,7 +34,7 @@ using namespace std;
 
 namespace LibKafka {
 
-  PartitionMetadata::PartitionMetadata(Packet *packet) : WireFormatter(), PacketWriter(packet)
+  PartitionMetadata::PartitionMetadata(Packet *packet) : WireFormatter(), PacketWriter(packet), ErrorHandler()
   {
     D(cout.flush() << "--------------PartitionMetadata(buffer)\n";)
 
@@ -64,7 +64,7 @@ namespace LibKafka {
     this->releaseArrays = true;
   }
 
-  PartitionMetadata::PartitionMetadata(short int partitionErrorCode, int partitionId, int leader, int replicaArraySize, int *replicaArray, int isrArraySize, int *isrArray, bool releaseArrays) : WireFormatter(), PacketWriter()
+  PartitionMetadata::PartitionMetadata(short int partitionErrorCode, int partitionId, int leader, int replicaArraySize, int *replicaArray, int isrArraySize, int *isrArray, bool releaseArrays) : WireFormatter(), PacketWriter(), ErrorHandler()
   {
     D(cout.flush() << "--------------PartitionMetadata(params)\n";)
 
@@ -131,6 +131,11 @@ namespace LibKafka {
     size += sizeof(int) + (replicaArraySize * sizeof(int));
     size += sizeof(int) + (isrArraySize * sizeof(int));
     return size;
+  }
+
+  bool PartitionMetadata::hasErrorCode()
+  {
+    return (this->partitionErrorCode != ApiConstants::ERRORCODE_NO_ERROR);
   }
 
   ostream& operator<< (ostream& os, const PartitionMetadata& pm)

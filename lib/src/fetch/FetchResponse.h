@@ -49,6 +49,8 @@ class FetchResponse : public Response
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
 
+    bool hasErrorCode();
+
   private:
 
     bool releaseArrays;

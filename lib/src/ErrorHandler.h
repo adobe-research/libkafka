@@ -23,31 +23,20 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef RESPONSE_H
-#define RESPONSE_H
+#ifndef ERROR_HANDLER_H
+#define ERROR_HANDLER_H
 
-#include <string>
-#include "RequestOrResponse.h"
+#include "Debug.h"
 
 namespace LibKafka {
 
-class Response : public RequestOrResponse
+class ErrorHandler
 {
   public:
 
-    int correlationId;
-
-    Response(unsigned char *buffer, bool releaseBuffer = false);
-    Response(int correlationId);
-
-    unsigned char* toWireFormat(bool updatePacketSize = true);
-    int getWireFormatSize(bool includePacketSize = true);
-
-    virtual bool hasErrorCode() { return false; }
+    virtual bool hasErrorCode() = 0;
 };
-
-std::ostream& operator<< (std::ostream& os, const Response& r);
 
 }; // namespace LibKafka
 
-#endif
+#endif /* ERROR_HANDLER_H */

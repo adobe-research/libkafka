@@ -98,6 +98,15 @@ int FetchResponse::getWireFormatSize(bool includePacketSize)
   return size;
 }
 
+bool FetchResponse::hasErrorCode()
+{
+  bool error = false;
+  for (int i=0; i<fetchResponseTopicArraySize; i++) {
+    error |= fetchResponseTopicArray[i]->hasErrorCode();
+  }
+  return error;
+}
+
 ostream& operator<< (ostream& os, const FetchResponse& pr)
 {
   os << (const Response&)pr;

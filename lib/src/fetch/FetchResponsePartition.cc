@@ -33,7 +33,7 @@ using namespace std;
 
 namespace LibKafka {
 
-FetchResponsePartition::FetchResponsePartition(Packet *packet) : WireFormatter(), PacketWriter(packet)
+FetchResponsePartition::FetchResponsePartition(Packet *packet) : WireFormatter(), PacketWriter(packet), ErrorHandler()
 {
   D(cout.flush() << "--------------FetchResponsePartition(buffer)\n";)
 
@@ -55,7 +55,7 @@ FetchResponsePartition::FetchResponsePartition(Packet *packet) : WireFormatter()
   this->releaseArrays = true;
 }
 
-FetchResponsePartition::FetchResponsePartition(int partition, short int errorCode, long int highwaterMarkOffset, int messageSetSize, MessageSet *messageSet, bool releaseArrays) : WireFormatter(), PacketWriter()
+FetchResponsePartition::FetchResponsePartition(int partition, short int errorCode, long int highwaterMarkOffset, int messageSetSize, MessageSet *messageSet, bool releaseArrays) : WireFormatter(), PacketWriter(), ErrorHandler()
 {
   D(cout.flush() << "--------------FetchResponsePartition(params)\n";)
 
@@ -110,6 +110,11 @@ int FetchResponsePartition::getWireFormatSize(bool includePacketSize)
   if (includePacketSize) size += sizeof(int);
   size += sizeof(int) + sizeof(short int) + sizeof(long int) + sizeof(int) + this->messageSetSize;
   return size;
+}
+
+bool FetchResponsePartition::hasErrorCode()
+{
+  return (this->errorCode != ApiConstants::ERRORCODE_NO_ERROR);
 }
 
 ostream& operator<< (ostream& os, const FetchResponsePartition& frp)

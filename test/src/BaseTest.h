@@ -116,11 +116,6 @@ class BaseTest : public ::testing::Test {
     static unsigned char *value;
     Message *createMessage();
     
-    // TopicNameBlock
-    const static int fetchPartitionArraySize = 1;
-    static FetchPartition **fetchPartitionArray;
-    TopicNameBlock<FetchPartition> *createTopicNameBlock(string topicName = string("test"));
-
     // ProduceMessageSet
     const static int partition = 0;
     static MessageSet *messageSet;
@@ -152,19 +147,24 @@ class BaseTest : public ::testing::Test {
     static TopicNameBlock<ProduceResponsePartition> **produceResponseTopicArray;
     ProduceResponse *createProduceResponse();
 
+    // FetchPartition
+    const static long int fetchOffset = 100;
+    const static int maxBytes = 4096;
+    FetchPartition *createFetchPartition(long offset = fetchOffset);
+    
+    // TopicNameBlock
+    const static int fetchPartitionArraySize = 1;
+    static FetchPartition **fetchPartitionArray;
+    TopicNameBlock<FetchPartition> *createTopicNameBlock(string topicName = string("test"), long offset = fetchOffset);
+    
     // FetchRequest
     const static int replicaId = -1;
     const static int maxWaitTime = 100;
     const static int minBytes = 0;
     const static int fetchTopicArraySize = 1;
     static TopicNameBlock<FetchPartition> **fetchTopicArray;
-    FetchRequest *createFetchRequest();
+    FetchRequest *createFetchRequest(long offset = fetchOffset);
 
-    // FetchPartition
-    const static long int fetchOffset = 0;
-    const static int maxBytes = 4096;
-    FetchPartition *createFetchPartition();
-    
     // TopicNameBlock for FetchResponse
     const static int fetchResponsePartitionArraySize = 1;
     static FetchResponsePartition** fetchResponsePartitionArray;

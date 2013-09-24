@@ -34,12 +34,12 @@ using namespace std;
 
 namespace LibKafka {
 
-  TopicMetadata::TopicMetadata(Packet *packet) : WireFormatter(), PacketWriter(packet)
+  TopicMetadata::TopicMetadata(Packet *packet) : WireFormatter(), PacketWriter(packet), ErrorHandler()
   {
     D(cout.flush() << "--------------TopicMetadata(buffer)\n";)
 
-      // Kafka Protocol: short int topicErrorCode
-      this->topicErrorCode = this->packet->readInt16();
+    // Kafka Protocol: short int topicErrorCode
+    this->topicErrorCode = this->packet->readInt16();
 
     // Kafka Protocol: kafka string topicName
     this->topicName = this->packet->readString();
@@ -54,11 +54,11 @@ namespace LibKafka {
     this->releaseArrays = true;
   }
 
-  TopicMetadata::TopicMetadata(short int topicErrorCode, string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray, bool releaseArrays) : WireFormatter(), PacketWriter()
+  TopicMetadata::TopicMetadata(short int topicErrorCode, string topicName, int partitionMetadataArraySize, PartitionMetadata **partitionMetadataArray, bool releaseArrays) : WireFormatter(), PacketWriter(), ErrorHandler()
   {
     D(cout.flush() << "--------------TopicMetadata(params)\n";)
 
-      this->topicErrorCode = topicErrorCode;
+    this->topicErrorCode = topicErrorCode;
     this->topicName = topicName;
     this->partitionMetadataArraySize = partitionMetadataArraySize;
     this->partitionMetadataArray = partitionMetadataArray;
@@ -80,8 +80,8 @@ namespace LibKafka {
   {
     D(cout.flush() << "--------------TopicMetadata::toWireFormat()\n";)
 
-      // Kafka Protocol: short int topicErrorCode
-      this->packet->writeInt16(this->topicErrorCode);
+    // Kafka Protocol: short int topicErrorCode
+    this->packet->writeInt16(this->topicErrorCode);
 
     // Kafka Protocol: kafka string topicName
     this->packet->writeString(this->topicName);
@@ -101,17 +101,26 @@ namespace LibKafka {
   {
     D(cout.flush() << "--------------TopicMetadata::getWireFormatSize()\n";)
 
-      // Packet.size
-      // topicErrorCode + topicName + partitionMetadataArraySize
-      // partitionMetadataArraySize*PartitionMetadata
+    // Packet.size
+    // topicErrorCode + topicName + partitionMetadataArraySize
+    // partitionMetadataArraySize*PartitionMetadata
 
-      int size = 0;
+    int size = 0;
     if (includePacketSize) size += sizeof(int);
     size += sizeof(short int) + sizeof(short int) + this->topicName.length() + sizeof(int);
     for (int i=0; i<partitionMetadataArraySize; i++) {
       size += partitionMetadataArray[i]->getWireFormatSize(false);
     }
     return size;
+  }
+
+  bool TopicMetadata::hasErrorCode()
+  {
+    bool error = (this->topicErrorCode != ApiConstants::ERRORCODE_NO_ERROR);
+    for (int i=0; i<partitionMetadataArraySize; i++) {
+      error |= partitionMetadataArray[i]->hasErrorCode();
+    }
+    return error;
   }
 
   ostream& operator<< (ostream& os, const TopicMetadata& tm)

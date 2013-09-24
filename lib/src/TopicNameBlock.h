@@ -31,11 +31,12 @@
 #include "Packet.h"
 #include "WireFormatter.h"
 #include "PacketWriter.h"
+#include "ErrorHandler.h"
 
 namespace LibKafka {
 
   template<class SubBlockArrayClass>
-  class TopicNameBlock : public WireFormatter, public PacketWriter
+  class TopicNameBlock : public WireFormatter, public PacketWriter, public ErrorHandler
   {
     public:
 
@@ -44,7 +45,7 @@ namespace LibKafka {
       SubBlockArrayClass **subBlockArray;
 
       TopicNameBlock(Packet *packet) : WireFormatter(), PacketWriter(packet)
-    {
+      {
       D(std::cout.flush() << "--------------TopicNameBlock(buffer)\n";)
 
 	// Kafka Protocol: kafka string topicName
@@ -64,7 +65,7 @@ namespace LibKafka {
     {
       D(std::cout.flush() << "--------------TopicNameBlock(params)\n";)
 
-	this->topicName = topicName;
+      this->topicName = topicName;
       this->subBlockArraySize = subBlockArraySize;
       this->subBlockArray = subBlockArray;
       this->releaseArrays = releaseArrays;
@@ -114,6 +115,13 @@ namespace LibKafka {
 	  size += subBlockArray[i]->getWireFormatSize(false);
 	}
 	return size;
+      }
+
+      bool hasErrorCode()
+      {
+	bool error = false;
+	for (int i=0; i<subBlockArraySize; i++) error |= subBlockArray[i]->hasErrorCode();
+	return error;
       }
 
       void setCompression(int codec)

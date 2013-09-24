@@ -98,6 +98,15 @@ int OffsetResponse::getWireFormatSize(bool includePacketSize)
   return size;
 }
 
+bool OffsetResponse::hasErrorCode()
+{
+  bool error = false;
+  for (int i=0; i<offsetResponseTopicArraySize; i++) {
+    error |= offsetResponseTopicArray[i]->hasErrorCode();
+  }
+  return error;
+}
+
 ostream& operator<< (ostream& os, const OffsetResponse& pr)
 {
   os << (const Response&)pr;

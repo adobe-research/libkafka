@@ -178,11 +178,11 @@ MessageSet* BaseTest::createMessageSet()
 // TopicNameBlock
 FetchPartition** BaseTest::fetchPartitionArray;
 
-TopicNameBlock<FetchPartition>* BaseTest::createTopicNameBlock(string topicName)
+TopicNameBlock<FetchPartition>* BaseTest::createTopicNameBlock(string topicName, long offset)
 {
   fetchPartitionArray = new FetchPartition*[fetchPartitionArraySize];
   for (int i=0; i<fetchPartitionArraySize; i++) {
-    fetchPartitionArray[i] = createFetchPartition();
+    fetchPartitionArray[i] = createFetchPartition(offset);
   }
   return new TopicNameBlock<FetchPartition>(topicName, fetchPartitionArraySize, fetchPartitionArray, true);
 }
@@ -258,19 +258,19 @@ ProduceResponse* BaseTest::createProduceResponse()
 // FetchRequest
 TopicNameBlock<FetchPartition>** BaseTest::fetchTopicArray;
 
-FetchRequest* BaseTest::createFetchRequest()
+FetchRequest* BaseTest::createFetchRequest(long offset)
 {
   fetchTopicArray = new TopicNameBlock<FetchPartition>*[fetchTopicArraySize];
   for (int i=0; i<fetchTopicArraySize; i++) {
-    fetchTopicArray[i] = createTopicNameBlock(TestConfig::FETCH_RESPONSE_TOPIC_NAME);
+    fetchTopicArray[i] = createTopicNameBlock(TestConfig::FETCH_RESPONSE_TOPIC_NAME, offset);
   }
   return new FetchRequest(correlationId, clientId, replicaId, maxWaitTime, minBytes, fetchTopicArraySize, fetchTopicArray, true);
 }
 
 // FetchPartition
-FetchPartition* BaseTest::createFetchPartition()
+FetchPartition* BaseTest::createFetchPartition(long offset)
 {
-  return new FetchPartition(partition, fetchOffset, maxBytes);
+  return new FetchPartition(partition, offset, maxBytes);
 }
 
 // TopicNameBlock for FetchResponse

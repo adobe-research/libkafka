@@ -98,6 +98,15 @@ int ProduceResponse::getWireFormatSize(bool includePacketSize)
   return size;
 }
 
+bool ProduceResponse::hasErrorCode()
+{
+  bool error = false;
+  for (int i=0; i<produceResponseTopicArraySize; i++) {
+    error |= produceResponseTopicArray[i]->hasErrorCode();
+  }
+  return error;
+}
+
 ostream& operator<< (ostream& os, const ProduceResponse& pr)
 {
   os << (const Response&)pr;

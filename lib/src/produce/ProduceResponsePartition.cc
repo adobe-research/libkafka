@@ -33,7 +33,7 @@ using namespace std;
 
 namespace LibKafka {
 
-ProduceResponsePartition::ProduceResponsePartition(Packet *packet) : WireFormatter(), PacketWriter(packet)
+ProduceResponsePartition::ProduceResponsePartition(Packet *packet) : WireFormatter(), PacketWriter(packet), ErrorHandler()
 {
   D(cout.flush() << "--------------ProduceResponsePartition(buffer)\n";)
 
@@ -47,7 +47,7 @@ ProduceResponsePartition::ProduceResponsePartition(Packet *packet) : WireFormatt
   this->offset = this->packet->readInt64();
 }
 
-ProduceResponsePartition::ProduceResponsePartition(int partition, short int errorCode, long int offset) : WireFormatter(), PacketWriter()
+ProduceResponsePartition::ProduceResponsePartition(int partition, short int errorCode, long int offset) : WireFormatter(), PacketWriter(), ErrorHandler()
 {
   D(cout.flush() << "--------------ProduceResponsePartition(params)\n";)
 
@@ -88,6 +88,11 @@ int ProduceResponsePartition::getWireFormatSize(bool includePacketSize)
   if (includePacketSize) size += sizeof(int);
   size += sizeof(int) + sizeof(short int) + sizeof(long int);
   return size;
+}
+
+bool ProduceResponsePartition::hasErrorCode()
+{
+  return (this->errorCode != ApiConstants::ERRORCODE_NO_ERROR);
 }
 
 ostream& operator<< (ostream& os, const ProduceResponsePartition& pm)

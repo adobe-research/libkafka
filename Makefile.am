@@ -9,8 +9,8 @@ EXTRA_DIST = \
   LICENSE
 
 # We define the global AM_CPPFLAGS as everything we compile includes from these
-# directories.
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/metadata -I$(top_srcdir)/produce -I$(top_srcdir)/fetch -I$(top_srcdir)/offset
+# directories. Adding /opt/local/include for Macs using MacPorts.
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/metadata -I$(top_srcdir)/produce -I$(top_srcdir)/fetch -I$(top_srcdir)/offset -I/opt/local/include
 
 # Build rules for libraries.
 lib_LTLIBRARIES = lib/libkafka.la
@@ -63,7 +63,8 @@ pkginclude_HEADERS = \
   lib/src/MessageSet.h \
   lib/src/TopicNameBlock.h \
   lib/src/Util.h \
-  lib/src/WireFormatter.h
+  lib/src/WireFormatter.h \
+  lib/src/ErrorHandler.h
 
 metadataincludedir = $(includedir)/libkafka/metadata
 dist_metadatainclude_HEADERS = \

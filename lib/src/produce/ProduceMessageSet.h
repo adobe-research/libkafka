@@ -34,10 +34,11 @@
 #include "../MessageSet.h"
 #include "../WireFormatter.h"
 #include "../PacketWriter.h"
+#include "../ErrorHandler.h"
 
 namespace LibKafka {
 
-class ProduceMessageSet : public WireFormatter, public PacketWriter
+class ProduceMessageSet : public WireFormatter, public PacketWriter, public ErrorHandler
 {
   public:
 
@@ -53,6 +54,8 @@ class ProduceMessageSet : public WireFormatter, public PacketWriter
     int getWireFormatSize(bool includePacketSize = false);
 
     void setCompression(int codec);
+
+    bool hasErrorCode() { return false; } // no error code in this protocol structure
 
   private:
 

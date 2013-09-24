@@ -77,6 +77,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/include/libkafka/TopicNameBlock.h
 /usr/include/libkafka/Util.h
 /usr/include/libkafka/WireFormatter.h
+/usr/include/libkafka/ErrorHandler.h
 /usr/include/libkafka/metadata/MetadataRequest.h
 /usr/include/libkafka/metadata/MetadataResponse.h
 /usr/include/libkafka/metadata/Broker.h

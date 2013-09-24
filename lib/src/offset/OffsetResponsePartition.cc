@@ -34,7 +34,7 @@ using namespace std;
 
 namespace LibKafka {
 
-OffsetResponsePartition::OffsetResponsePartition(Packet *packet) : WireFormatter(), PacketWriter(packet)
+OffsetResponsePartition::OffsetResponsePartition(Packet *packet) : WireFormatter(), PacketWriter(packet), ErrorHandler()
 {
   D(cout.flush() << "--------------OffsetResponsePartition(buffer)\n";)
 
@@ -54,7 +54,7 @@ OffsetResponsePartition::OffsetResponsePartition(Packet *packet) : WireFormatter
   this->releaseArrays = true;
 }
 
-OffsetResponsePartition::OffsetResponsePartition(int partition, short int errorCode, int offsetArraySize, long int *offsetArray, bool releaseArrays) : WireFormatter(), PacketWriter()
+OffsetResponsePartition::OffsetResponsePartition(int partition, short int errorCode, int offsetArraySize, long int *offsetArray, bool releaseArrays) : WireFormatter(), PacketWriter(), ErrorHandler()
 {
   D(cout.flush() << "--------------OffsetResponsePartition(params)\n";)
 
@@ -104,6 +104,11 @@ int OffsetResponsePartition::getWireFormatSize(bool includePacketSize)
   if (includePacketSize) size += sizeof(int);
   size += sizeof(int) + sizeof(short int) + sizeof(int) + (this->offsetArraySize * sizeof(long int));
   return size;
+}
+
+bool OffsetResponsePartition::hasErrorCode()
+{
+  return (this->errorCode != ApiConstants::ERRORCODE_NO_ERROR);
 }
 
 ostream& operator<< (ostream& os, const OffsetResponsePartition& frp)

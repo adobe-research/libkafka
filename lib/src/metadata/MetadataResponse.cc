@@ -124,6 +124,15 @@ int MetadataResponse::getWireFormatSize(bool includePacketSize)
   return size;
 }
 
+bool MetadataResponse::hasErrorCode()
+{
+  bool error = false;
+  for (int i=0; i<topicMetadataArraySize; i++) {
+    error |= topicMetadataArray[i]->hasErrorCode();
+  }
+  return error;
+}
+
 ostream& operator<< (ostream& os, const MetadataResponse& mr)
 {
   os << (const Response&)mr;
