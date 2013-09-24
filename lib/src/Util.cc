@@ -25,6 +25,7 @@
 
 #include <string>
 #include <sstream>
+#include <limits>
 #include "Util.h"
 
 using namespace std;
