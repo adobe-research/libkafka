@@ -58,7 +58,7 @@ class Packet : public WireFormatter
     void writeInt16(short int value);
     void writeInt32(int value);
     void updateInt32(int value, unsigned char *bufferPointer);
-    void writeInt64(int long value);
+    void writeInt64(long int value);
     void writeString(std::string value);
 
     // see usage assumptions in Packet.cc
