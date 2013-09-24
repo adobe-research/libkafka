@@ -102,7 +102,7 @@
 	    <compilerStartOption>${compiler.debug} -fPIC -O2 -g -ffast-math -funit-at-a-time -x c++ -std=c++11</compilerStartOption>
 	  </compilerStartOptions>
 	  <linkerStartOptions>
-	    <linkerStartOption>-prebind -dynamiclib -lstdc++ -lz -L /opt/local/lib -lgtest</linkerStartOption> 
+	    <linkerStartOption>-prebind -dynamiclib -lstdc++ -lz -lsnappy -L /opt/local/lib -lgtest</linkerStartOption> 
 	  </linkerStartOptions>
 	</configuration>
       </plugin>

@@ -48,6 +48,7 @@ class Message: public WireFormatter, public PacketWriter
     unsigned char* key;
     int valueLength;
     unsigned char* value;
+    int compressedValueLength;
 
     long int offset;
 
@@ -57,6 +58,9 @@ class Message: public WireFormatter, public PacketWriter
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);
+
+    void setCompression(int codec);
+    bool hasCompression();
 
   private:
 

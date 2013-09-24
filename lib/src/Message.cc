@@ -27,6 +27,8 @@
 #include <iostream>
 
 #include "Message.h"
+#include "Util.h"
+#include "ApiConstants.h"
 
 using namespace std;
 
@@ -48,9 +50,6 @@ Message::Message(Packet *packet, long int offset) : WireFormatter(), PacketWrite
   // Kafka Protocol: signed char attributes
   this->attributes = this->packet->readInt8();
 
-  bool compression = ((this->attributes & COMPRESSION_MASK) != 0);
-  if (compression) { D(cout.flush() << "Message():compression enabled (unimplemented):" << (this->attributes & COMPRESSION_MASK) << "\n";) }
-  
   // Kafka Protocol: bytes key
   this->keyLength = this->packet->readInt32();
   this->key = this->packet->readBytes(this->keyLength);
@@ -58,6 +57,7 @@ Message::Message(Packet *packet, long int offset) : WireFormatter(), PacketWrite
   // Kafka Protocol: bytes value
   this->valueLength = this->packet->readInt32();
   this->value = this->packet->readBytes(this->valueLength);
+  this->compressedValueLength = 0;
 
   this->releaseArrays = false; // key and value point into the Packet buffer, not new memory
 }
@@ -73,6 +73,7 @@ Message::Message(int crc, unsigned char magicByte, unsigned char attributes, int
   this->key = key;
   this->valueLength = valueLength;
   this->value = value;
+  this->compressedValueLength = 0;
   this->offset = offset;
   this->releaseArrays = releaseArrays;
 }
@@ -103,13 +104,35 @@ unsigned char* Message::toWireFormat(bool updatePacketSize)
   // Kafka Protocol: signed char attributes
   this->packet->writeInt8(this->attributes);
 
-  // Kafka Protocol: bytes key
-  this->packet->writeInt32(this->keyLength);
+  // Kafka Protocol: bytes key (length written by writeBytes())
   this->packet->writeBytes(this->key, this->keyLength);
 
-  // Kafka Protocol: bytes value
-  this->packet->writeInt32(this->valueLength);
-  this->packet->writeBytes(this->value, this->valueLength);
+  if ((this->attributes & COMPRESSION_MASK) == ApiConstants::MESSAGE_COMPRESSION_NONE)
+  {
+    D(cout.flush() << "--------------Message::toWireFormat():COMPRESSION:NONE\n";)
+
+    // Kafka Protocol: bytes value (length written by writeBytes())
+    this->packet->writeBytes(this->value, this->valueLength);
+  }
+  else if ((this->attributes & COMPRESSION_MASK) == ApiConstants::MESSAGE_COMPRESSION_GZIP)
+  {
+    D(cout.flush() << "--------------Message::toWireFormat():COMPRESSION:GZIP\n";)
+
+    // Kafka Protocol: bytes value (length written by writeBytes())
+    this->compressedValueLength = this->packet->writeCompressedBytes(this->value, this->valueLength, Packet::COMPRESSION_GZIP);
+  }
+  else if ((this->attributes & COMPRESSION_MASK) == ApiConstants::MESSAGE_COMPRESSION_SNAPPY)
+  {
+    D(cout.flush() << "--------------Message::toWireFormat():COMPRESSION:SNAPPY\n";)
+
+    // Kafka Protocol: bytes value (length written by writeBytes())
+    this->compressedValueLength = this->packet->writeCompressedBytes(this->value, this->valueLength, Packet::COMPRESSION_SNAPPY);
+  }
+  else
+  {
+    E("Message::toWireFormat():error:unknown compression codec value specified in attribute field:" << (this->attributes & COMPRESSION_MASK) << "\n");
+    return NULL;
+  }
 
   // calculate and update crc field (see beginCRC32()/endCRC32() semantics in Packet.cc)
   this->crc = this->packet->endCRC32();
@@ -125,14 +148,33 @@ int Message::getWireFormatSize(bool includePacketSize)
   // Packet.size
   // crc + magicByte + attributes
   // sizeof(keyLength) + keyLength
-  // sizeof(valueLength) + valueLength
+  // sizeof(valueLength) + valueLength (allow for increased size due to compression)
 
   int size = 0;
   if (includePacketSize) size += sizeof(int);
   size += sizeof(int) + sizeof(signed char) + sizeof(signed char);
   size += sizeof(int) + this->keyLength;
   size += sizeof(int) + this->valueLength;
+  if (this->compressedValueLength > 0) size += (this->compressedValueLength - this->valueLength);
   return size;
+}
+
+void Message::setCompression(int codec)
+{
+  if ((codec != ApiConstants::MESSAGE_COMPRESSION_NONE) && (codec != ApiConstants::MESSAGE_COMPRESSION_GZIP) && (codec != ApiConstants::MESSAGE_COMPRESSION_SNAPPY))
+  {
+    E("Message::setCompression():error:invalid codec:" << codec << "\n");
+    return;
+  }
+  
+  D(cout.flush() << "--------------Message::setCompression():codec set to " << codec << "\n";)
+
+  this->attributes  = COMPRESSION_MASK & codec;
+}
+
+bool Message::hasCompression()
+{
+  return (this->attributes & COMPRESSION_MASK);
 }
 
 ostream& operator<< (ostream& os, const Message& m)
@@ -140,9 +182,10 @@ ostream& operator<< (ostream& os, const Message& m)
   os << "Message.offset(from MessageSet):" << m.offset << "\n";
   os << "Message.crc:" << m.crc << "\n";
   os << "Message.magicByte:" << m.magicByte << "\n";
-  os << "Message.attributes:" << m.attributes << "\n";
+  os << "Message.attributes:" << charToBinaryString(m.attributes) << "\n";
   os << "Message.keyLength:" << m.keyLength << "\n";
   os << "Message.valueLength:" << m.valueLength << "\n";
+  os << "Message.compressedValueLength:" << m.compressedValueLength << "\n";
   return os;
 }
 

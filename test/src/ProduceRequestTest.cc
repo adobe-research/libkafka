@@ -32,6 +32,9 @@ namespace {
   class ProduceRequestTest : public BaseTest {
     protected:
 
+      ProduceRequest *pr1, *pr2, *pr3;
+      unsigned char *message;
+
       ProduceRequestTest() { }
       virtual ~ProduceRequestTest() { }
       virtual void SetUp() { } 
@@ -39,15 +42,23 @@ namespace {
   };
 
   TEST_F(ProduceRequestTest, Constructor) {
-    
-    ProduceRequest *pr1 = createProduceRequest();
+    pr1 = createProduceRequest();
     EXPECT_NE(pr1, (void*)0);
-    unsigned char * message = pr1->toWireFormat();
+    delete pr1;
+  }
+  
+  TEST_F(ProduceRequestTest, ToWireFormat) {
+    pr1 = createProduceRequest();
+    message = pr1->toWireFormat();
     int size = pr1->getWireFormatSize(true);
     EXPECT_EQ(pr1->size(), size);
-
-    ProduceRequest *pr2 = new ProduceRequest(message);
-
+    delete pr1;
+  }
+  
+  TEST_F(ProduceRequestTest, Deserialization) {
+    pr1 = createProduceRequest();
+    message = pr1->toWireFormat();
+    pr2 = new ProduceRequest(message);
     EXPECT_NE(pr2, (void*)0);
     EXPECT_EQ(pr2->size(), pr1->size());
     EXPECT_EQ(pr2->requiredAcks, pr1->requiredAcks);
@@ -55,9 +66,28 @@ namespace {
     for (int i=0; i<pr2->produceTopicArraySize; i++) {
       EXPECT_EQ(*(pr2->produceTopicArray[i]), *(pr1->produceTopicArray[i]));
     }
-
     delete pr1;
     delete pr2;
+  }
+  
+  TEST_F(ProduceRequestTest, CompressionGZIP) {
+    pr3 = createProduceRequest();
+    EXPECT_NE(pr3, (void*)0);
+    pr3->setCompression(ApiConstants::MESSAGE_COMPRESSION_GZIP);
+    message = pr3->toWireFormat();
+    int size = pr3->getWireFormatSize(true);
+    EXPECT_EQ(pr3->size(), size);
+    delete pr3;
+  }
+  
+  TEST_F(ProduceRequestTest, CompressionSnappy) {
+    pr3 = createProduceRequest();
+    EXPECT_NE(pr3, (void*)0);
+    pr3->setCompression(ApiConstants::MESSAGE_COMPRESSION_SNAPPY);
+    message = pr3->toWireFormat();
+    int size = pr3->getWireFormatSize(true);
+    EXPECT_EQ(pr3->size(), size);
+    delete pr3;
   }
 
 }  // namespace

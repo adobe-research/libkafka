@@ -60,9 +60,29 @@ namespace {
     EXPECT_EQ(m2->keyLength, m1->keyLength);
     EXPECT_EQ(m2->valueLength, m1->valueLength);
 
+    Message *m3 = createMessage();
+    EXPECT_NE(m3, (void*)0);
+    m3->packet = new Packet();
+    m3->attributes = Message::COMPRESSION_MASK & ApiConstants::MESSAGE_COMPRESSION_GZIP;
+    message = m3->toWireFormat();
+    size = m3->getWireFormatSize(true);
+    EXPECT_EQ(m3->packet->getSize(), size);
+
+    Message *m4 = createMessage();
+    EXPECT_NE(m4, (void*)0);
+    m4->packet = new Packet();
+    m4->attributes = Message::COMPRESSION_MASK & ApiConstants::MESSAGE_COMPRESSION_SNAPPY;
+    message = m4->toWireFormat();
+    size = m4->getWireFormatSize(true);
+    EXPECT_EQ(m4->packet->getSize(), size);
+
     delete m1->packet;
     delete m1;
     delete m2;
+    delete m3->packet;
+    delete m3;
+    delete m4->packet;
+    delete m4;
   }
 
 }  // namespace

@@ -45,6 +45,7 @@ ProduceMessageSet::ProduceMessageSet(Packet *packet) : WireFormatter(), PacketWr
   // Kafka Protocol: MessageSet messagesSet
   this->messageSet = new MessageSet(this->messageSetSize, this->packet);
 
+  this->hasCompression = false;
   this->releaseArrays = true;
 }
 
@@ -55,6 +56,7 @@ ProduceMessageSet::ProduceMessageSet(int partition, int messageSetSize, MessageS
   this->partition = partition;
   this->messageSetSize = messageSetSize;
   this->messageSet = messageSet;
+  this->hasCompression = false;
   this->releaseArrays = releaseArrays;
 }
 
@@ -73,12 +75,20 @@ unsigned char* ProduceMessageSet::toWireFormat(bool updatePacketSize)
   // Kafka Protocol: int partition
   this->packet->writeInt32(this->partition);
 
-  // Kafka Protocol: int messageSetSize
+  // Kafka Protocol: int messageSetSize (allow for MessageSet size chanages due to compression)
+  unsigned char *messageSetSizeField;
+  if (this->hasCompression) messageSetSizeField = this->packet->getHead();
   this->packet->writeInt32(this->messageSetSize);
 
   // Kafka Protocol: MessageSet messageSet
   this->messageSet->packet = this->packet;
   this->messageSet->toWireFormat(false);
+
+  if (this->hasCompression)
+  {
+    D(cout.flush() << "--------------ProduceMessageSet::toWireFormat():updating messageSetSize field for compression\n";)
+    this->packet->updateInt32(this->messageSet->getWireFormatSize(false), messageSetSizeField);
+  }
 
   if (updatePacketSize) this->packet->updatePacketSize();
   return this->packet->getBuffer();
@@ -93,13 +103,22 @@ int ProduceMessageSet::getWireFormatSize(bool includePacketSize)
 
   int size = 0;
   if (includePacketSize) size += sizeof(int);
-  size += sizeof(int) + sizeof(int) + this->messageSetSize;
+  size += sizeof(int) + sizeof(int) + this->messageSet->getWireFormatSize(false);
   return size;
+}
+
+void ProduceMessageSet::setCompression(int codec)
+{
+  this->messageSet->setCompression(codec);
+  if (codec & Message::COMPRESSION_MASK) this->hasCompression = true;
 }
 
 ostream& operator<< (ostream& os, const ProduceMessageSet& pm)
 {
-  os << pm.partition << ":" << pm.messageSetSize << "\n";
+  os << "ProduceMessageSet.partition:" << pm.partition << "\n";
+  os << "ProduceMessageSet.messageSetSize:" << pm.messageSetSize << "\n";
+  os << "ProduceMessageSet.messageSet:\n";
+  os << *(pm.messageSet);
   return os;
 }
 

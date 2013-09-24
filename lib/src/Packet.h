@@ -38,11 +38,14 @@ class Packet : public WireFormatter
 
     static const int DEFAULT_BUFFER_SIZE = 1024;
 
+    enum CompressionType { COMPRESSION_GZIP, COMPRESSION_SNAPPY };
+
     Packet(int bufferSize = DEFAULT_BUFFER_SIZE);
     Packet(unsigned char *buffer, bool releaseBuffer = false);
     ~Packet();
 
     unsigned char *getBuffer() { return this->buffer; }
+    unsigned char *getHead() { return this->head; }
 
     signed char readInt8();
     short int readInt16();
@@ -54,9 +57,13 @@ class Packet : public WireFormatter
     void writeInt8(signed char value);
     void writeInt16(short int value);
     void writeInt32(int value);
+    void updateInt32(int value, unsigned char *bufferPointer);
     void writeInt64(int long value);
     void writeString(std::string value);
+
+    // see usage assumptions in Packet.cc
     void writeBytes(unsigned char* bytes, int numBytes);
+    int writeCompressedBytes(unsigned char* bytes, int numBytes, CompressionType codec);
 
     // see CRC32 usage assumptions in Packet.cc
     void beginCRC32();

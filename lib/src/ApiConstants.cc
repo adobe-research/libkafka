@@ -56,6 +56,10 @@ const int ApiConstants::ERRORCODE_MESSAGE_SIZE_TOO_LARGE;
 const int ApiConstants::ERRORCODE_STALE_CONTROLLER_EPOCH_CODE;
 const int ApiConstants::ERRORCODE_OFFSET_METADATA_TOO_LARGE_CODE;
 
+const signed char ApiConstants::MESSAGE_COMPRESSION_NONE;
+const signed char ApiConstants::MESSAGE_COMPRESSION_GZIP;
+const signed char ApiConstants::MESSAGE_COMPRESSION_SNAPPY;
+
 const char* ApiConstants::ERRORSTRING_INVALID_ERROR_CODE = "invalid error code";
 const char* ApiConstants::ERRORSTRING_UNKNOWN = "unexpected server error";
 const char* ApiConstants::ERRORSTRING_NO_ERROR = "no error";

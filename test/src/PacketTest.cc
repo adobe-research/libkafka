@@ -55,10 +55,22 @@ namespace {
     int crc = p2->readInt32();
     EXPECT_EQ(crc, -1889021706); // calculated *signed int* CRC32 of 3 byte sequence [1,2,3] from above
 
-    p2->writeToFile("/tmp/packet.out");
+    Packet *p3 = new Packet();
+    EXPECT_NE(p3, (void*)0);
+    int size = p3->writeCompressedBytes((unsigned char *)bytes, numBytes, Packet::COMPRESSION_GZIP);
+    EXPECT_NE(size, -1);
+
+    Packet *p4 = new Packet();
+    EXPECT_NE(p4, (void*)0);
+    size = p4->writeCompressedBytes((unsigned char*)bytes, numBytes, Packet::COMPRESSION_SNAPPY);
+    EXPECT_NE(size, -1);
+
+    //p2->writeToFile("/tmp/packet.out");
 
     delete p1;
     delete p2;
+    delete p3;
+    delete p4;
   }
 
 }  // namespace

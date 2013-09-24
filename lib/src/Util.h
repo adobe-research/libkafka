@@ -31,6 +31,7 @@
 namespace LibKafka {
 
   std::string intToString(int i);
+  std::string charToBinaryString(unsigned char x);
   std::string intArrayToString(int* i, int size);
   std::string longIntArrayToString(long int* i, int size);
 
@@ -39,6 +40,10 @@ namespace LibKafka {
 #ifndef ntohll
 #define ntohll(x) ( ( (uint64_t)(ntohl( (uint32_t)((x << 32) >> 32) )) << 32) | ntohl( ((uint32_t)(x >> 32)) ) )                                        
 #define htonll(x) ntohll(x)
+#endif
+
+#ifndef MAX
+#define MAX(x, y) ( ((x) > (y)) ? (x) : (y) )
 #endif
 
 #endif /* UTIL_H */

@@ -38,6 +38,16 @@ string intToString(int i)
   return ss.str();
 }
 
+string charToBinaryString(unsigned char x)
+{
+  ostringstream ss;
+  for(int i = numeric_limits<unsigned char>::digits; i >=0; i--)
+  {
+    ss << ((x & (1 << i)) >> i);
+  }
+  return ss.str();
+}
+
 string intArrayToString(int* array, int size)
 {
   ostringstream ss;

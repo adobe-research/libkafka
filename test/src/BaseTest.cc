@@ -41,6 +41,11 @@ int main(int argc, char **argv)
   return RUN_ALL_TESTS();
 }
 
+// Packet
+
+const char* BaseTest::bytes = "Test Compression String. This is a just a test.";
+const int BaseTest::numBytes = strlen("Test Compression String. This is a just a test.");
+
 // Broker
 
 Broker* BaseTest::createBroker(string host)

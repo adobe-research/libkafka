@@ -36,56 +36,74 @@ namespace {
   class ClientTest : public BaseTest {
     protected:
 
+      Client *c;
+
       ClientTest() { }
       virtual ~ClientTest() { }
-      virtual void SetUp() { } 
-      virtual void TearDown() { }
+      virtual void SetUp() { c = new Client(TestConfig::CLIENT_BROKER_HOST, TestConfig::CLIENT_BROKER_PORT); } 
+      virtual void TearDown() { delete c; }
   };
 
   TEST_F(ClientTest, Constructor) {
-
-    Client *c = new Client(TestConfig::CLIENT_BROKER_HOST, TestConfig::CLIENT_BROKER_PORT);
     EXPECT_NE(c, (void*)0);
-
+  }
+  
+  TEST_F(ClientTest, MetadataRequest) {
     MetadataRequest *mr1 = createMetadataRequest(true);
     EXPECT_NE(mr1, (void*)0);
     MetadataResponse *mr2 = c->sendMetadataRequest(mr1);
     EXPECT_NE(mr2, (void*)0);
-    if (mr1 != NULL) { cout << "ClientTest:MetadataRequest:\n" << *mr1; }
-    if (mr2 != NULL) { cout << "ClientTest:MetadataResponse:\n" << *mr2; }
+    if (mr1 != NULL) { cout << "ClientTest:MetadataRequest:\n" << *mr1; delete mr1; }
+    if (mr2 != NULL) { cout << "ClientTest:MetadataResponse:\n" << *mr2; delete mr2; }
+  }
     
+  TEST_F(ClientTest, ProduceRequest) {
     ProduceRequest *pr1 = createProduceRequest();
     EXPECT_NE(pr1, (void*)0);
     ProduceResponse *pr2 = c->sendProduceRequest(pr1);
     EXPECT_NE(pr2, (void*)0);
-    if (pr1 != NULL) { cout << "ClientTest:ProduceRequest:\n" << *pr1; }
-    if (pr2 != NULL) { cout << "ClientTest:ProduceResponse:\n" << *pr2; }
+    if (pr1 != NULL) { cout << "ClientTest:ProduceRequest:\n" << *pr1; delete pr1; }
+    if (pr2 != NULL) { cout << "ClientTest:ProduceResponse:\n" << *pr2; delete pr2; }
+  }
     
+  TEST_F(ClientTest, ProduceRequestWithGZIP) {
+    ProduceRequest *pr1 = createProduceRequest();
+    pr1->setCompression(ApiConstants::MESSAGE_COMPRESSION_GZIP);
+    cout << *pr1;
+    EXPECT_NE(pr1, (void*)0);
+    ProduceResponse *pr2 = c->sendProduceRequest(pr1);
+    EXPECT_NE(pr2, (void*)0);
+    if (pr1 != NULL) { cout << "ClientTest:ProduceRequest:Compression:GZIP\n" << *pr1; delete pr1; }
+    if (pr2 != NULL) { cout << "ClientTest:ProduceResponse:Compression:GZIP\n" << *pr2; delete pr2; }
+  }
+    
+  TEST_F(ClientTest, ProduceRequestWithSnappy) {
+    ProduceRequest *pr1 = createProduceRequest();
+    pr1->setCompression(ApiConstants::MESSAGE_COMPRESSION_SNAPPY);
+    EXPECT_NE(pr1, (void*)0);
+    ProduceResponse *pr2 = c->sendProduceRequest(pr1);
+    EXPECT_NE(pr2, (void*)0);
+    if (pr1 != NULL) { cout << "ClientTest:ProduceRequest:Compression:Snappy\n" << *pr1; delete pr1; }
+    if (pr2 != NULL) { cout << "ClientTest:ProduceResponse:Compression:Snappy\n" << *pr2; delete pr2; }
+  }
+    
+  TEST_F(ClientTest, FetchRequest) {
     FetchRequest *fr1 = createFetchRequest();
     EXPECT_NE(fr1, (void*)0);
     FetchResponse *fr2 = c->sendFetchRequest(fr1);
     EXPECT_NE(fr2, (void*)0);
-    if (fr1 != NULL) { cout << "ClientTest:FetchRequest:\n" << *fr1; }
-    if (fr2 != NULL) { cout << "ClientTest:FetchResponse:\n" << *fr2; }
-
     //fr2->packet->writeToFile("/tmp/fetchresponse.out");
-    
+    if (fr1 != NULL) { cout << "ClientTest:FetchRequest:\n" << *fr1; delete fr1; }
+    if (fr2 != NULL) { cout << "ClientTest:FetchResponse:\n" << *fr2; delete fr2; }
+  }
+
+  TEST_F(ClientTest, OffsetRequest) {
     OffsetRequest *or1 = createOffsetRequest();
     EXPECT_NE(or1, (void*)0);
     OffsetResponse *or2 = c->sendOffsetRequest(or1);
     EXPECT_NE(or2, (void*)0);
-    if (or1 != NULL) { cout << "ClientTest:OffsetRequest:\n" << *or1; }
-    if (or2 != NULL) { cout << "ClientTest:OffsetResponse:\n" << *or2; }
-
-    delete c;
-    if (mr1 != NULL) delete mr1;
-    if (mr2 != NULL) delete mr2;
-    if (pr1 != NULL) delete pr1;
-    if (pr2 != NULL) delete pr2;
-    if (fr1 != NULL) delete fr1;
-    if (fr2 != NULL) delete fr2;
-    if (or1 != NULL) delete or1;
-    if (or2 != NULL) delete or2;
+    if (or1 != NULL) { cout << "ClientTest:OffsetRequest:\n" << *or1; delete or1; }
+    if (or2 != NULL) { cout << "ClientTest:OffsetResponse:\n" << *or2; delete or2; }
   }
 
 }  // namespace

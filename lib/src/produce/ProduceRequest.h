@@ -31,6 +31,7 @@
 #include <string>
 #include "../Request.h"
 #include "../TopicNameBlock.h"
+#include "../ApiConstants.h"
 #include "ProduceMessageSet.h"
 
 namespace LibKafka {
@@ -51,6 +52,8 @@ class ProduceRequest : public Request
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);
+    
+    void setCompression(int codec); // either MESSAGE_COMPRESSION_NONE, MESSAGE_COMPRESSION_GZIP, or MESSAGE_COMPRESSION_SNAPPY
 
   private:
 

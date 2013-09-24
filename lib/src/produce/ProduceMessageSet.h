@@ -52,8 +52,11 @@ class ProduceMessageSet : public WireFormatter, public PacketWriter
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = false);
 
+    void setCompression(int codec);
+
   private:
 
+    bool hasCompression;
     bool releaseArrays;
 };
 

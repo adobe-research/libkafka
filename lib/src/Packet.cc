@@ -29,6 +29,7 @@
 #include <fstream>
 #include <arpa/inet.h>
 #include <zlib.h>
+#include <snappy.h>
 
 #include "Packet.h"
 #include "Util.h"
@@ -177,6 +178,14 @@ void Packet::writeInt32(int hostValue)
   D(cout.flush() << "Packet::writeInt32():hostValue(" << hostValue << "):netValue(" << netValue << ")\n";)
 }
 
+void Packet::updateInt32(int hostValue, unsigned char *bufferPointer)
+{
+  // Assumption: for retroactive updates to previously wtitten fields within the Packet, using value from getHead() prior to initial write
+  int netValue = htonl(hostValue);
+  memcpy(bufferPointer, &netValue, sizeof(int));
+  D(cout.flush() << "Packet::updateInt32():hostValue(" << hostValue << "):netValue(" << netValue << ")\n";)
+}
+
 void Packet::writeInt64(long int hostValue)
 {
   long int netValue = htonll(hostValue);
@@ -196,12 +205,91 @@ void Packet::writeString(string value)
   D(cout.flush() << "Packet::writeString():" << length << ":" << value.c_str() << "\n";)
 }
 
+// The writeBytes() function makes the following assumption:
+// 1 - the length of the byte array will be written as an int32 prior to the byte array, as per the spec.
+// 2 - other protocol array types must explicitly write their length as an int32 prior to writing their array payload
 void Packet::writeBytes(unsigned char* bytes, int numBytes)
 {
+  this->writeInt32(numBytes);
   memcpy(head, bytes, numBytes);
   head += numBytes;
   this->size += numBytes;
   D(cout.flush() << "Packet::writeBytes():" << numBytes << "\n";)
+}
+
+int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, CompressionType codec)
+{
+  if (codec == COMPRESSION_GZIP)
+  {
+    unsigned long compressionBufferSize = MAX((int)((float)numBytes * 1.01) + 12, 512);
+    D(cout.flush() << "Packet::writeCompressedBytes():GZIP:compressionBufferSize:" << compressionBufferSize << "\n";)
+    unsigned char* compressionBuffer = new unsigned char[compressionBufferSize];
+
+    z_stream zInfo = {0};
+    zInfo.zalloc = Z_NULL;
+    zInfo.zfree = Z_NULL;
+    zInfo.opaque = Z_NULL;
+    zInfo.total_out = 0;
+    zInfo.next_in = bytes;
+    zInfo.avail_in = numBytes;
+
+    int status = deflateInit2(&zInfo, Z_DEFAULT_COMPRESSION, Z_DEFLATED, (15+16), 8, Z_DEFAULT_STRATEGY);
+    if (status == Z_OK)
+    // need loop, see http://www.clintharris.net/2009/how-to-gzip-data-in-memory-using-objective-c/
+    {
+      zInfo.next_out = compressionBuffer;
+      zInfo.avail_out = compressionBufferSize;
+      status = deflate(&zInfo, Z_FINISH);
+      if (status == Z_STREAM_END) {
+        compressionBufferSize = zInfo.total_out; // compressed size
+        this->writeBytes(compressionBuffer, (long)compressionBufferSize);
+        D(cout.flush() << "Packet::writeCompressedBytes():GZIP:numbytes:" << numBytes << ":compressedBytes:" << compressionBufferSize << "\n";)
+        delete[] compressionBuffer;
+        deflateEnd(&zInfo);
+        return compressionBufferSize;
+      }
+
+      E("Packet::writeCompressedBytes():error:GZIP error, status = " << status << "\n");
+      delete[] compressionBuffer;
+      deflateEnd(&zInfo);
+      return -1;
+    }
+
+    E("Packet::writeCompressedBytes():error:GZIP compression failure " << status << "\n");
+    delete[] compressionBuffer;
+    deflateEnd(&zInfo);
+    return -1;
+
+    /*
+    unsigned long compressionBufferSize = compressBound(numBytes);
+    unsigned char* compressionBuffer = new unsigned char[compressionBufferSize];
+    int status = compress(compressionBuffer, &compressionBufferSize, bytes, numBytes);
+    if (status == Z_OK)
+    {
+      this->writeBytes(compressionBuffer, (long)compressionBufferSize);
+      D(cout.flush() << "Packet::writeCompressedBytes():GZIP:numbytes:" << numBytes << ":compressedBytes:" << compressionBufferSize << "\n";)
+      delete[] compressionBuffer;
+      return compressionBufferSize;
+    }
+
+    E("Packet::writeCompressedBytes():error:compress() returned " << status << "\n");
+    delete[] compressionBuffer;
+    return -1;
+    */
+  }
+
+  if (codec == COMPRESSION_SNAPPY)
+  {
+    unsigned long compressionBufferSize = snappy::MaxCompressedLength(numBytes);
+    unsigned char* compressionBuffer = new unsigned char[compressionBufferSize];
+    snappy::RawCompress((const char *)bytes, numBytes, (char *)compressionBuffer, &compressionBufferSize);
+    this->writeBytes(compressionBuffer, (long)compressionBufferSize);
+    D(cout.flush() << "Packet::writeCompressedBytes():SNAPPY:numbytes:" << numBytes << ":compressedBytes:" << compressionBufferSize << "\n";)
+    delete[] compressionBuffer;
+    return compressionBufferSize;
+  }
+
+  return -1; // invalid compression type
 }
 
 void Packet::resetForReading()
@@ -245,9 +333,7 @@ int Packet::endCRC32()
   D(cout.flush() << "Packet::endCRC32():unsigned crc:" << crc << "\n";)
   int signedCrc = (int)crc;
   D(cout.flush() << "Packet::endCRC32():signed crc:" << signedCrc << "\n";)
-  int netValueCRC = htonl(signedCrc);
-  memcpy(this->crcHead - sizeof(int), &netValueCRC, sizeof(int));
-  D(cout.flush() << "Packet::endCRC32():hostValueCRC(" << signedCrc << "):netValueCRC(" << netValueCRC << ")\n";)
+  this->updateInt32(signedCrc, this->crcHead - sizeof(int));
   return signedCrc;
 }
 

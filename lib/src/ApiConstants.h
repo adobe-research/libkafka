@@ -45,6 +45,11 @@ namespace LibKafka {
       const static int OFFSET_COMMIT_REQUEST_KEY = 6;
       const static int OFFSET_FETCH_REQUEST_KEY = 7;
 
+      // Message compression attribute values
+      const static signed char MESSAGE_COMPRESSION_NONE = 0x00;
+      const static signed char MESSAGE_COMPRESSION_GZIP = 0x01;
+      const static signed char MESSAGE_COMPRESSION_SNAPPY = 0x02;
+
       // API error codes
       const static int ERRORCODE_UNKNOWN = -1;
       const static int ERRORCODE_NO_ERROR = 0;

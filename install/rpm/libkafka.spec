@@ -19,8 +19,8 @@ URL: http://github.com/adobe-research/libkafka
 Vendor: Adobe Systems, Inc.
 Packager: David Tompkins <tompkins_at_adobe_dot_com>
 BuildRoot: %{RPM_DIR}
-Requires: gtest, zlib
-BuildRequires: gtest-dev, zlib-devel, libtool
+Requires: gtest, zlib, snappy
+BuildRequires: gtest-dev, zlib-devel, snappy-devel, libtool
 AutoReqProv: no
 
 %description

@@ -112,6 +112,19 @@ namespace LibKafka {
     return size;
   }
 
+  void ProduceRequest::setCompression(int codec)
+  {
+    if ((codec != ApiConstants::MESSAGE_COMPRESSION_NONE) && (codec != ApiConstants::MESSAGE_COMPRESSION_GZIP) && (codec != ApiConstants::MESSAGE_COMPRESSION_SNAPPY))
+    {
+      E("ProduceRequest::setCompression():error:invalid codec:" << codec << "\n");
+      return;
+    }
+    
+    D(cout.flush() << "--------------ProduceRequest:setCompression():" << codec << "\n";)
+    
+    for (int i=0; i<this->produceTopicArraySize; i++) produceTopicArray[i]->setCompression(codec);
+  }
+
   ostream& operator<< (ostream& os, const ProduceRequest& pr)
   {
     os << (const Request&)pr;

@@ -60,6 +60,10 @@ class BaseTest : public ::testing::Test {
     virtual void SetUp();
     virtual void TearDown();
 
+    // Packet
+    const static char *bytes;
+    const static int numBytes;
+
     // Broker
     const static int nodeId = 2;
     const static int port = 8000;

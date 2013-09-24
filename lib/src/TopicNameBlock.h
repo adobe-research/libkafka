@@ -116,6 +116,11 @@ namespace LibKafka {
 	return size;
       }
 
+      void setCompression(int codec)
+      {
+	for (int i=0; i<subBlockArraySize; i++) subBlockArray[i]->setCompression(codec);
+      }
+
     private:
 
       bool releaseArrays;
