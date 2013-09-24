@@ -6,7 +6,7 @@ A C++ client library for Apache Kafka v0.8+. Also includes C API. With a full un
 Supports the following Kafka API request/response calls:
 
 * Metadata
-* Produce
+* Produce (with support for MessageSet compression with GZIP and Snappy)
 * Fetch
 * Offset
 
@@ -20,7 +20,8 @@ Current release version: 0.2.0 (see <a href="https://github.com/adobe-research/l
 Dependencies
 ============
 
-* zlib for CRC calculation
+* zlib for CRC calculation, GZIP compression
+* Snappy for Snappy compression
 * Google Test for unit tests
 * (optional) Doxygen for C/C++ API documentation
 
@@ -60,7 +61,6 @@ TODO
 ====
 * Advanced client with error handling, metadata/broker/leader updates, and offset management
 * load testing for Produce and Fetch
-* add gzip compression support for MessageSets
 
 Known issues
 =============

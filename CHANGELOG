@@ -1,3 +1,7 @@
+libkafka 0.3.0
+==============
+* Added GZIP and Snappy compression support for MessageSets.
+
 libkafka 0.2.0 (9.20.2013)
 ==============
 * Travis CI integration added. Fixed --as-needed linker error on Ubuntu.
