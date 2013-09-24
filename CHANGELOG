@@ -1,6 +1,8 @@
 libkafka 0.3.0
 ==============
 * Added GZIP and Snappy compression support for MessageSets.
+* Added error handling functions, simplified detection of error conditions in Response objects.
+* Updated unit tests, with adaptive Fetch tests based on available offsets in test topics.
 
 libkafka 0.2.0 (9.20.2013)
 ==============

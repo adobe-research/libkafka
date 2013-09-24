@@ -1,0 +1,10 @@
+Website: https://github.com/adobe-research/libkafka
+Maintainer: David Tompkins <tompkins_at_adobe_dot_com>
+Name: libkafka
+Package: libkafka
+Section: database
+Version: 0.2.0
+Architecture: any
+Description: libkafka: a C++ client library for Apache Kafka v0.8+. Also includes C API.
+Build-Depends: debhelper, autotools-dev, gtest-dev, zlib-devel, snappy-devel, libtool
+Depends: gtest, zlib, snappy

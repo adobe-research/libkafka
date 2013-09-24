@@ -168,15 +168,17 @@ MAINTAINERCLEANFILES = \
 APP_NAME=libkafka
 
 # Create a deb package
-pkg-deb: dist
-	- rm -r $(TMP_DIR)
-	mkdir -p $(TMP_DIR)
-	cp pkg/$(APP_NAME)-$(VERSION).tar.bz2 $(TMP_DIR)/
-	tar --directory $(TMP_DIR)/ -xjf $(TMP_DIR)/$(APP_NAME)-$(VERSION).tar.bz2
-	cd $(TMP_DIR)/$(APP_NAME)-$(VERSION)/; echo | dh_make --single --copyright gpl -e myemailaddress -f ../$(APP_NAME)-$(VERSION).tar.bz2
-	cp install/deb/changelog install/deb/control install/deb/copyright $(TMP_DIR)/$(APP_NAME)-$(VERSION)/debian/
-	cd $(TMP_DIR)/$(APP_NAME)-$(VERSION)/; rm debian/README.Debian debian/*.ex debian/*.EX; ./configure; dpkg-buildpackage -rfakeroot; mv ../*.deb $(PWD)/pkg/
-	rm -r $(TMP_DIR);
+DEB_DIR=deb
+deb: dist
+	- rm -r $(DEB_DIR)
+	mkdir -p $(DEB_DIR)
+	cp $(APP_NAME)-$(VERSION).tar.bz2 $(DEB_DIR)/
+	tar --directory $(DEB_DIR)/ -xjf $(DEB_DIR)/$(APP_NAME)-$(VERSION).tar.bz2
+#cd $(DEB_DIR)/$(APP_NAME)-$(VERSION)/; ./configure --prefix=$(PWD) && make
+#echo | dh_make --single --copyright apache2 -e tompkins@adobe.com -f ../$(APP_NAME)-$(VERSION).tar.bz2
+#cp CHANGELOG install/deb/control install/deb/copyright $(DEB_DIR)/$(APP_NAME)-$(VERSION)/debian/
+#cd $(DEB_DIR)/$(APP_NAME)-$(VERSION)/; rm debian/README.Debian debian/*.ex debian/*.EX; ./configure; dpkg-buildpackage -rfakeroot; mv ../*.deb $(PWD)
+#rm -r $(DEB_DIR);
 
 # Create an RPM package
 RPM_DIR=rpm
@@ -192,10 +194,10 @@ rpm: dist
 	- rm -r $(RPM_DIR)/SOURCES/$(APP_NAME)-*
 	cp $(APP_NAME)-$(VERSION).tar.bz2 $(RPM_DIR)/SOURCES/
 	rpmbuild -vv --nodeps -bb install/rpm/libkafka.spec
-#rpmbuild --quiet --nodeps -bb install/rpm/libkafka.spec
 
 rpm-clean: distclean maintainer-clean
 	- rm -rf $(RPM_DIR) 
+	- rm -rf $(DEB_DIR) 
 	- rm -rf libkafka-*gz
 	- rm -rf libkafka-*bz2
 	- rm -rf libkafka-*zip
