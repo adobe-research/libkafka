@@ -6,9 +6,11 @@ A C++ client library for Apache Kafka v0.8+. Also includes C API. With a full un
 Supports the following Kafka API request/response calls:
 
 * Metadata
-* Produce (with support for MessageSet compression with GZIP and Snappy)
+* Produce
 * Fetch
 * Offset
+
+Includes support for MessageSet compression using GZIP or Snappy compression.
 
 Not compatible with Kafka versions prior to 0.8 due to wire protocol changes.
 
