@@ -221,10 +221,7 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
 {
   if (codec == COMPRESSION_GZIP)
   {
-    unsigned long compressionBufferSize = MAX((int)((float)numBytes * 1.01) + 12, 512);
-    D(cout.flush() << "Packet::writeCompressedBytes():GZIP:compressionBufferSize:" << compressionBufferSize << "\n";)
-    unsigned char* compressionBuffer = new unsigned char[compressionBufferSize];
-
+    // z_stream initialization as per zlib.h comments
     z_stream zInfo = {0};
     zInfo.zalloc = Z_NULL;
     zInfo.zfree = Z_NULL;
@@ -233,49 +230,41 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
     zInfo.next_in = bytes;
     zInfo.avail_in = numBytes;
 
+    // use deflateInit2() to generate GZIP headers around compressed content
     int status = deflateInit2(&zInfo, Z_DEFAULT_COMPRESSION, Z_DEFLATED, (15+16), 8, Z_DEFAULT_STRATEGY);
-    if (status == Z_OK)
-    // need loop, see http://www.clintharris.net/2009/how-to-gzip-data-in-memory-using-objective-c/
+    if (status != Z_OK)
     {
-      zInfo.next_out = compressionBuffer;
-      zInfo.avail_out = compressionBufferSize;
-      status = deflate(&zInfo, Z_FINISH);
-      if (status == Z_STREAM_END) {
-        compressionBufferSize = zInfo.total_out; // compressed size
-        this->writeBytes(compressionBuffer, (long)compressionBufferSize);
-        D(cout.flush() << "Packet::writeCompressedBytes():GZIP:numbytes:" << numBytes << ":compressedBytes:" << compressionBufferSize << "\n";)
-        delete[] compressionBuffer;
-        deflateEnd(&zInfo);
-        return compressionBufferSize;
-      }
+      E("Packet::writeCompressedBytes():error:GZIP deflateInit2() failure:errno: " << status << "\n");
+      return -1;
+    }
+   
+    // compression buffer size allocation as per zlib.h sizing comments
+    unsigned long compressionBufferSize = MAX((int)((float)numBytes * 1.01) + 12, 512);
+    D(cout.flush() << "Packet::writeCompressedBytes():GZIP:compressionBufferSize:" << compressionBufferSize << "\n";)
+    unsigned char* compressionBuffer = new unsigned char[compressionBufferSize];
 
-      E("Packet::writeCompressedBytes():error:GZIP error, status = " << status << "\n");
+    // deflate may return partial results
+    while (status == Z_OK)
+    {
+      zInfo.next_out = compressionBuffer + zInfo.total_out;
+      zInfo.avail_out = compressionBufferSize - zInfo.total_out;
+      status = deflate(&zInfo, Z_FINISH);
+    }
+
+    if (status != Z_STREAM_END)
+    {
+      E("Packet::writeCompressedBytes():error:GZIP compression error, status = " << status << "\n");
       delete[] compressionBuffer;
       deflateEnd(&zInfo);
       return -1;
     }
 
-    E("Packet::writeCompressedBytes():error:GZIP compression failure " << status << "\n");
+    compressionBufferSize = zInfo.total_out; // compressed size
+    this->writeBytes(compressionBuffer, (long)compressionBufferSize);
+    D(cout.flush() << "Packet::writeCompressedBytes():GZIP:numbytes:" << numBytes << ":compressedBytes:" << compressionBufferSize << "\n";)
     delete[] compressionBuffer;
     deflateEnd(&zInfo);
-    return -1;
-
-    /*
-    unsigned long compressionBufferSize = compressBound(numBytes);
-    unsigned char* compressionBuffer = new unsigned char[compressionBufferSize];
-    int status = compress(compressionBuffer, &compressionBufferSize, bytes, numBytes);
-    if (status == Z_OK)
-    {
-      this->writeBytes(compressionBuffer, (long)compressionBufferSize);
-      D(cout.flush() << "Packet::writeCompressedBytes():GZIP:numbytes:" << numBytes << ":compressedBytes:" << compressionBufferSize << "\n";)
-      delete[] compressionBuffer;
-      return compressionBufferSize;
-    }
-
-    E("Packet::writeCompressedBytes():error:compress() returned " << status << "\n");
-    delete[] compressionBuffer;
-    return -1;
-    */
+    return compressionBufferSize;
   }
 
   if (codec == COMPRESSION_SNAPPY)
