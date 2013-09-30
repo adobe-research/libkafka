@@ -1,4 +1,4 @@
-libkafka 0.3.0
+libkafka 0.3.0 (9.30.2013)
 ==============
 * Added GZIP and Snappy compression support for MessageSets.
 * Added error handling functions, simplified detection of error conditions in Response objects.
