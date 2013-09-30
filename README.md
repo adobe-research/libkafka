@@ -68,6 +68,7 @@ Known issues
 =============
 * Nested MessageSet blocks are not yet handled. This is a wonky part of the protocol.
 * The extern C wrrapper for C++ calls is not yet implemented.
+* The .deb packaging remains broken. RPM packaging is fully operational.
 
 Fixed Issues
 ============
