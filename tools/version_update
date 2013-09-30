@@ -6,7 +6,7 @@ if [ $# != 2 ]; then
   exit 1
 fi
 
-files="app/pom.xml configure.ac install/rpm/libkafka.spec lib/libkafka.doxygen lib/pom.xml pom.xml test/pom.xml"
+files="app/pom.xml configure.ac install/rpm/libkafka.spec lib/libkafka.doxygen lib/pom.xml pom.xml test/pom.xml README.md"
 for file in ${files}; do
   echo ${file}
   sed -e "s/${1}/${2}/g" ${file} > ${file}.bak && /bin/mv -f ${file}.bak ${file}
