@@ -27,4 +27,12 @@ AC_LANG([C++])
 AC_PROG_LIBTOOL
 GTEST_LIB_CHECK(,AC_MSG_WARN(foo),AC_MSG_WARN(bar))
 
+###########################
+# gcov coverage reporting
+###########################
+AC_TDD_GCOV
+AC_SUBST(COVERAGE_CFLAGS)
+AC_SUBST(COVERAGE_CXXFLAGS)
+AC_SUBST(COVERAGE_LDFLAGS)
+
 AC_OUTPUT
