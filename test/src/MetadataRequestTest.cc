@@ -59,6 +59,7 @@ namespace {
     for (int i=0; i<mr2->topicNameArraySize; i++) {
       EXPECT_EQ(mr2->topicNameArray[i], mr1->topicNameArray[i]);
     }
+    cout << *mr2;
 
     delete mr1;
     delete mr2;
