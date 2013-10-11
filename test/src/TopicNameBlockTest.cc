@@ -59,6 +59,7 @@ namespace {
     for (int i=0; i<tnmb2->subBlockArraySize; i++) {
       EXPECT_EQ(*(tnmb2->subBlockArray[i]), *(tnb1->subBlockArray[i]));
     }
+    cout << *tnb1;
 
     delete tnb1->packet;
     delete tnb1;

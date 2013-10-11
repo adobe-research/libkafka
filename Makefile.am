@@ -26,6 +26,7 @@ lib_libkafka_la_SOURCES = \
   lib/src/Response.cc \
   lib/src/Message.cc \
   lib/src/MessageSet.cc \
+  lib/src/TopicNameBlock.h \
   lib/src/metadata/Broker.cc \
   lib/src/metadata/MetadataRequest.cc \
   lib/src/metadata/MetadataResponse.cc \
@@ -136,6 +137,8 @@ test_libkafka_unit_tests_SOURCES = \
   test/src/OffsetPartitionTest.cc \
   test/src/OffsetResponseTest.cc \
   test/src/OffsetResponsePartitionTest.cc \
+  test/src/ApiConstantsTest.cc \
+  test/src/ClientTest.cc \
   test/src/TestConfig.cc \
   test/src/TestConfig.h \
   test/src/BaseTest.h
