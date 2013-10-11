@@ -56,6 +56,7 @@ namespace {
     EXPECT_EQ(fp2->partition, fp1->partition);
     EXPECT_EQ(fp2->fetchOffset, fp1->fetchOffset);
     EXPECT_EQ(fp2->maxBytes, fp1->maxBytes);
+    EXPECT_EQ(fp2->hasErrorCode(), false);
 
     delete fp1->packet;
     delete fp1;

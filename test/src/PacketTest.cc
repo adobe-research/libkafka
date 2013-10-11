@@ -54,22 +54,39 @@ namespace {
     EXPECT_EQ(p2->getSize(), p1->getSize());
     int crc = p2->readInt32();
     EXPECT_EQ(crc, -1889021706); // calculated *signed int* CRC32 of 3 byte sequence [1,2,3] from above
+    
+    delete p1;
+    delete p2;
+  } 
+
+  TEST_F(PacketTest, GzipCompression) {
 
     Packet *p3 = new Packet();
     EXPECT_NE(p3, (void*)0);
     int size = p3->writeCompressedBytes((unsigned char *)bytes, numBytes, Packet::COMPRESSION_GZIP);
     EXPECT_NE(size, -1);
+    
+    delete p3;
+  }
 
+  TEST_F(PacketTest, SnappyCompression) {
     Packet *p4 = new Packet();
     EXPECT_NE(p4, (void*)0);
-    size = p4->writeCompressedBytes((unsigned char*)bytes, numBytes, Packet::COMPRESSION_SNAPPY);
+    int size = p4->writeCompressedBytes((unsigned char*)bytes, numBytes, Packet::COMPRESSION_SNAPPY);
     EXPECT_NE(size, -1);
-
     //p2->writeToFile("/tmp/packet.out");
 
-    delete p1;
-    delete p2;
-    delete p3;
+    delete p4;
+  }
+
+  TEST_F(PacketTest, SeekTest) {
+    Packet *p4 = new Packet();
+    EXPECT_NE(p4, (void*)0);
+    int size = p4->writeCompressedBytes((unsigned char*)bytes, numBytes, Packet::COMPRESSION_SNAPPY);
+    EXPECT_NE(size, -1);
+    p4->resetForReading();
+    p4->seek(1);
+
     delete p4;
   }
 

@@ -53,6 +53,7 @@ namespace {
     unsigned char* buffer = new unsigned char[1024];
     int numBytesReceived = c->read(1024, buffer);
     EXPECT_GT(numBytesReceived, 0);
+    cout << *c;
 
     c->close();
     delete buffer;
