@@ -138,6 +138,7 @@ string Packet::readString()
 unsigned char* Packet::readBytes(int numBytes)
 {
   // returns a pointer to the bytes within the Packet buffer, and increments head
+  if (numBytes < 0) return this->head; // fix for issue 1, reported by zicfyy@gmail.com
   unsigned char* bytes = this->head;
   this->head += numBytes;
   D(cout.flush() << "Packet::readBytes():" << numBytes << "\n";)
