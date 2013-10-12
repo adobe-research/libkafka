@@ -225,7 +225,9 @@ coverage-html:
 generate-coverage-html:
 	@echo Collecting coverage data
 	$(LCOV) --gcov-tool $(GCOV) -b . --directory $(top_builddir) --capture --output-file coverage.info --no-checksum --compat-libtool
-	LANG=C $(GENHTML) --prefix $(top_builddir) --output-directory coveragereport --title "Code Coverage" --legend --show-details coverage.info
+	$(LCOV) --remove coverage.info "/usr*" -o coverage.info
+	$(LCOV) --remove coverage.info "/opt*" -o coverage.info
+	LANG=C++ $(GENHTML) --prefix $(top_builddir) --output-directory coveragereport --title "Code Coverage" --legend --show-details coverage.info
 
 clean-coverage-html: clean-gcda
 	-$(LCOV) --directory $(top_builddir) -z
