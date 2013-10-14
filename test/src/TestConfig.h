@@ -34,7 +34,7 @@ class TestConfig
     const static int CONNECTION_HTTP_PORT = 80;
     
     const static std::string CLIENT_BROKER_HOST;
-    const static int CLIENT_BROKER_PORT = 9092;
+    const static int CLIENT_BROKER_PORT = 8080;
 
     const static std::string PRODUCE_REQUEST_TOPIC_NAME;
     const static std::string PRODUCE_RESPONSE_TOPIC_NAME;

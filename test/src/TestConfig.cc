@@ -30,7 +30,7 @@ using namespace std;
 
 const string TestConfig::CONNECTION_HTTP_HOST = "www.google.com";
 
-const string TestConfig::CLIENT_BROKER_HOST = "wrigley.corp.adobe.com";
+const string TestConfig::CLIENT_BROKER_HOST = "ec2-54-224-84-250.compute-1.amazonaws.com";
 
 const string TestConfig::PRODUCE_REQUEST_TOPIC_NAME = "test_topic";
 const string TestConfig::PRODUCE_RESPONSE_TOPIC_NAME = "test_topic";
