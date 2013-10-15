@@ -16,7 +16,7 @@ Not compatible with Kafka versions prior to 0.8 due to wire protocol changes.
 
 Version
 =======
-Current release version: 0.3.0 (see <a href="https://github.com/adobe-research/libkafka/releases">RELEASES</a>)
+Current release version: 0.4.0 (see <a href="https://github.com/adobe-research/libkafka/releases">RELEASES</a>)
 
 Dependencies
 ============
@@ -24,7 +24,8 @@ Dependencies
 * zlib for CRC calculation, GZIP compression
 * Snappy for Snappy compression
 * Google Test for unit tests
-* (optional) Doxygen for C/C++ API documentation
+* (optional) lcov/gcov for unit test coverage reporting
+* (optional) doxygen for C/C++ API documentation
 
 Installation
 ============

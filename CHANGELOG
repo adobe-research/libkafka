@@ -1,8 +1,10 @@
-libkafka 0.4.0 ()
+libkafka 0.4.0 (10.15.2013)
 ==============
 * Added gcov/lcov unit test coverage reporting.
-* Added coveralls.io support for unit test coverage reporting.
+* Added coveralls.io support for automated unit test coverage reporting in conjunction with travis CI.
 * Added public kafka test server in EC2 for client unit test support.
+* Fix for Issue #1: Kafka server returns -1 key length in FetchResponse, not handled by Packet::readBytes()
+* Added additional unit tests for areas identified by unit test coverage reporting
 
 libkafka 0.3.0 (9.30.2013)
 ==============
