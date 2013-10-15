@@ -4,7 +4,8 @@ compiler:
   - clang
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq cmake libgtest-dev zlibc zlib1g zlib1g-dev libtool libsnappy-dev
+  - sudo apt-get install -qq cmake libgtest-dev zlibc zlib1g zlib1g-dev libtool libsnappy-dev lcov
+  - sudo pip install cpp-coveralls --use-mirrors
   - sudo mv config/gtest-config /usr/bin
   - cd $(mktemp -d)
   - cmake /usr/src/gtest
@@ -12,4 +13,7 @@ before_install:
   - sudo mv libgtest.a /usr/lib/
   - sudo mv libgtest_main.a /usr/lib
   - cd $TRAVIS_BUILD_DIR
-script: ./autogen.sh && ./configure --enable-gtest && make && make check && DISTCHECK_CONFIGURE_FLAGS=--enable-gtest make distcheck
+script:
+  - ./autogen.sh && ./configure --enable-gcov && make && make check && make coverage-html && make distcheck
+after_success:
+  - coveralls --exclude lib --exclude tests
