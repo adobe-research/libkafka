@@ -18,7 +18,6 @@ Version
 =======
 Current release version: 0.3.0 (see <a href="https://github.com/adobe-research/libkafka/releases">RELEASES</a>)
 
-
 Dependencies
 ============
 
@@ -41,6 +40,10 @@ Autoconf (g++)
 * make distcheck (produces release packages, tar.gz and tar.bz2)
 * make maintainer-clean (clean all autoconf generated files)
 * make rpm-clean (clean all artifacts of rpm, dist, and autotools)
+
+Unit test coverage reports with gcov/lcov
+* ./autogen.sh && ./configure --enable-gcov && make && make check && make coverage-html
+* HTML reports produced in ./coveragereport
 
 Maven (clang)
 * mvn clean install (builds shared library, command line apps)

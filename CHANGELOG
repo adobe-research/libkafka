@@ -1,3 +1,9 @@
+libkafka 0.4.0 ()
+==============
+* Added gcov/lcov unit test coverage reporting.
+* Added coveralls.io support for unit test coverage reporting.
+* Added public kafka test server in EC2 for client unit test support.
+
 libkafka 0.3.0 (9.30.2013)
 ==============
 * Added GZIP and Snappy compression support for MessageSets.
