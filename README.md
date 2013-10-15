@@ -41,7 +41,7 @@ Autoconf (g++)
 * make maintainer-clean (clean all autoconf generated files)
 * make rpm-clean (clean all artifacts of rpm, dist, and autotools)
 
-Unit test coverage reports with gcov/lcov
+Unit test coverage reports (gcov/lcov)
 * ./autogen.sh && ./configure --enable-gcov && make && make check && make coverage-html
 * HTML reports produced in ./coveragereport
 
