@@ -5,6 +5,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq cmake libgtest-dev zlibc zlib1g zlib1g-dev libtool libsnappy-dev lcov
   - sudo pip install cpp-coveralls --use-mirrors
+  - sudo npm install coveralls.io
   - sudo mv config/gtest-config /usr/bin
   - cd $(mktemp -d)
   - cmake /usr/src/gtest
