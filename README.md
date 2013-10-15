@@ -1,4 +1,6 @@
-libkafka <span width="100%"/></span><a href="https://travis-ci.org/adobe-research/libkafka"><img style="float:right" src="https://travis-ci.org/adobe-research/libkafka.png"/></a>
+libkafka 
+[![Build Status](https://travis-ci.org/adobe-research/libkafka.png)](https://travis-ci.org/adobe-research/libkafka)
+[![Coverage Status](https://coveralls.io/repos/adobe-research/libkafka/badge.png)](https://coveralls.io/r/adobe-research/libkafka)
 ========
 
 A C++ client library for Apache Kafka v0.8+. Also includes C API. With a full unit test suite.
