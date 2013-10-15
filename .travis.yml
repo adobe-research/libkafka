@@ -15,4 +15,4 @@ before_install:
 script:
   - ./autogen.sh && ./configure --enable-gcov && make && make check && make coverage-html && make distcheck
 after_success:
-  - coveralls --exclude lib --exclude tests
+  - coveralls --exclude lib --exclude tests --verbose
