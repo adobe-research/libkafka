@@ -223,7 +223,7 @@ coverage-html:
 	$(MAKE) $(AM_MAKEFLAGS) generate-coverage-html
 
 generate-coverage-html:
-	@echo Collecting coverage data
+	@echo Collecting coverage data with lcov
 	$(LCOV) --gcov-tool $(GCOV) -b . --directory $(top_builddir) --capture --output-file coverage.info --no-checksum --compat-libtool
 	$(LCOV) --remove coverage.info "/usr*" -o coverage.info
 	$(LCOV) --remove coverage.info "/opt*" -o coverage.info
