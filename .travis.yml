@@ -16,5 +16,4 @@ before_install:
 script:
   - ./autogen.sh && ./configure --enable-gcov && make && make check && make coverage-html && make distcheck
 after_success:
-  #  - coveralls --no-gcov --exclude test --exclude config --verbose
   - ./node_modules/coveralls/bin/coveralls.js < coverage.info
