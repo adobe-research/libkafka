@@ -60,7 +60,11 @@ Valgrind
 Examples
 ========
 
-* Take a look at ClientTest.cc in test/src. There are current examples for Metadata, Produce, and Fetch.
+High-level examples:
+* Take a look at the <a href="https://github.com/adobe-research/libkafka/samples">samples</a> directory.
+
+Low-level examples:
+* Take a look at ClientTest.cc in test/src. There are examples for Metadata, Produce, Fetch, and Offsets, with all of the compression combinations.
 * Take a look at the unit tests in test/src to see examples for any individual class.
 
 TODO
