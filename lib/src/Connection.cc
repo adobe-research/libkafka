@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <errno.h>
+#include <fcntl.h>
 
 #include "Connection.h"
 #include "Util.h"
@@ -81,23 +82,35 @@ int Connection::open()
   }
 
   D(cout.flush() << "--------------Connection::open():socket\n";)
-    this->socketFd = socket(this->host_info_list->ai_family, this->host_info_list->ai_socktype, this->host_info_list->ai_protocol);
+  this->socketFd = socket(this->host_info_list->ai_family, this->host_info_list->ai_socktype, this->host_info_list->ai_protocol);
   if (socketFd == -1)
   {
+
     E("Connection::open():socket error:" << strerror(errno) << "\n");
     return OPEN_CONNECTION_ERROR;
   }
 
+  struct timeval  timeout;
+  timeout.tv_sec = 10;
+  timeout.tv_usec = 0;
+  fd_set set;
+  FD_ZERO(&set);
+  FD_SET(this->socketFd, &set);
+  fcntl(this->socketFd, F_SETFL, O_NONBLOCK);
+
   D(cout.flush() << "--------------Connection::open():connect\n";)
-    status = connect(socketFd, this->host_info_list->ai_addr, this->host_info_list->ai_addrlen);
-  if (status == -1)
+  status = connect(socketFd, this->host_info_list->ai_addr, this->host_info_list->ai_addrlen);
+  if ((status == -1) && (errno != EINPROGRESS))
   {
     E("Connection::open():open error:" << strerror(errno) << "\n");
     return OPEN_CONNECTION_ERROR;
   }
 
+  status = select(this->socketFd+1, NULL, &set, NULL, &timeout);
+  fcntl(this->socketFd, F_SETFL, fcntl(this->socketFd, F_GETFL, 0) & ~O_NONBLOCK);
+
   D(cout.flush() << "--------------Connection::open():connected\n";)
-    return this->socketFd;
+  return this->socketFd;
 }
 
 void Connection::close()
