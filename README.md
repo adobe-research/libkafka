@@ -61,7 +61,7 @@ Examples
 ========
 
 High-level examples:
-* Take a look at the <a href="https://github.com/adobe-research/libkafka/samples">samples</a> directory.
+* Take a look at the [![samples](samples)](samples) directory.
 
 Low-level examples:
 * Take a look at ClientTest.cc in test/src. There are examples for Metadata, Produce, Fetch, and Offsets, with all of the compression combinations.
