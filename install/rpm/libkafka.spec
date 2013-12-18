@@ -3,7 +3,7 @@
 ###
 %define RPM_DIR rpm
 %define _noarch_libdir /usr/lib
-%define rel_ver 0.4.1
+%define rel_ver 0.5.0
 %define _topdir %(echo $PWD)/%{RPM_DIR}
 %define _tmppath %(echo $PWD)/%{RPM_DIR}
 

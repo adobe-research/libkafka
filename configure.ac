@@ -3,7 +3,7 @@
 # "[1.0.1]"). It also asumes that there won't be any closing parenthesis
 # between "AC_INIT(" and the closing ")" including comments and strings.
 AC_INIT([C++ Client for Apache Kafka v0.8+],
-        [0.4.1],
+        [0.5.0],
         [dt@dt.org],
         [libkafka])
 
