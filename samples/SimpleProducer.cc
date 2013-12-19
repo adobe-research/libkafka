@@ -27,6 +27,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <errno.h>
 #include <libkafka/ApiConstants.h>
 #include <libkafka/Client.h>
 #include <libkafka/Message.h>
@@ -62,13 +63,20 @@ main()
 
   ProduceResponse *response = c->sendProduceRequest(request);
 
-  if (response->hasErrorCode())
-    cerr << "publish error detected\n";
+  if (response == NULL)
+  {
+    cerr << "an error ocurred while sending the produce request, errno = " << strerror(errno) << "\n";
+  }
   else
-    cout << "message successfully published to kafka\n";
+  {
+    if (response->hasErrorCode())
+      cerr << "publish error detected\n";
+    else
+      cout << "message successfully published to kafka\n";
+  }
 
   delete request;
-  delete response;
+  if (response != NULL) delete response;
 }
 
 // culled from high-level client (coming soon...)
@@ -87,7 +95,7 @@ Message* createMessage(const char * value, const char *key)
 
   unsigned char *v = new unsigned char[strlen(value)];
   memcpy(v, value, strlen(value));
-  
+
   unsigned char *k = new unsigned char[strlen(key)];
   memcpy(k, key, strlen(key));
 
