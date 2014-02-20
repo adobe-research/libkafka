@@ -24,6 +24,8 @@ Dependencies
 * zlib for CRC calculation, GZIP compression
 * Snappy for Snappy compression
 * Google Test for unit tests
+* autoconf
+* libtool
 * (optional) lcov/gcov for unit test coverage reporting
 * (optional) doxygen for C/C++ API documentation
 
