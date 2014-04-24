@@ -66,6 +66,12 @@ High-level examples:
 Low-level examples:
 * Take a look at ClientTest.cc in test/src. There are examples for Metadata, Produce, Fetch, and Offsets, with all of the compression combinations.
 * Take a look at the unit tests in test/src to see examples for any individual class.
+* 
+Installation
+============
+php API
+
+https://github.com/peeped/libkafkaPHP
 
 TODO
 ====
