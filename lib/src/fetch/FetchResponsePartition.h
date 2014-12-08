@@ -44,12 +44,12 @@ class FetchResponsePartition : public WireFormatter, public PacketWriter, public
 
     int partition;
     short int errorCode;
-    long int highwaterMarkOffset;
+    int64_t highwaterMarkOffset;
     int messageSetSize;
     MessageSet *messageSet;
 
     FetchResponsePartition(Packet *packet);
-    FetchResponsePartition(int partition, short int errorCode, long int highwaterMarkOffset, int messageSetSize, MessageSet *messageSet, bool releaseArrays = false);
+    FetchResponsePartition(int partition, short int errorCode, int64_t highwaterMarkOffset, int messageSetSize, MessageSet *messageSet, bool releaseArrays = false);
     ~FetchResponsePartition();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

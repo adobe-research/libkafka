@@ -48,7 +48,7 @@ namespace LibKafka {
     this->maxBytes = this->packet->readInt32();
   }
 
-  FetchPartition::FetchPartition(int partition, long int fetchOffset, int maxBytes) : WireFormatter(), PacketWriter()
+  FetchPartition::FetchPartition(int partition, int64_t fetchOffset, int maxBytes) : WireFormatter(), PacketWriter()
   {
     D(cout.flush() << "--------------FetchPartition(params)\n";)
 
@@ -87,7 +87,7 @@ namespace LibKafka {
 
     int size = 0;
     if (includePacketSize) size += sizeof(int);
-    size += sizeof(int) + sizeof(long int) + sizeof(int);
+    size += sizeof(int) + sizeof(int64_t) + sizeof(int);
     return size;
   }
 

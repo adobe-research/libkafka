@@ -45,10 +45,10 @@ class OffsetResponsePartition : public WireFormatter, public PacketWriter, publi
     int partition;
     short int errorCode;
     int offsetArraySize;
-    long int *offsetArray;
+    int64_t *offsetArray;
 
     OffsetResponsePartition(Packet *packet);
-    OffsetResponsePartition(int partition, short int errorCode, int offsetArraySize, long int *offsetArray, bool releaseArrays = false);
+    OffsetResponsePartition(int partition, short int errorCode, int offsetArraySize, int64_t *offsetArray, bool releaseArrays = false);
     ~OffsetResponsePartition();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

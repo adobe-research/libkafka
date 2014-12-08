@@ -34,7 +34,7 @@ using namespace std;
 
 namespace LibKafka {
 
-Message::Message(Packet *packet, long int offset) : WireFormatter(), PacketWriter(packet)
+Message::Message(Packet *packet, int64_t offset) : WireFormatter(), PacketWriter(packet)
 {
   D(cout.flush() << "--------------Message(buffer)\n";)
 
@@ -62,7 +62,7 @@ Message::Message(Packet *packet, long int offset) : WireFormatter(), PacketWrite
   this->releaseArrays = false; // key and value point into the Packet buffer, not new memory
 }
 
-Message::Message(int crc, unsigned char magicByte, unsigned char attributes, int keyLength, unsigned char* key, int valueLength, unsigned char* value, long int offset, bool releaseArrays) : WireFormatter(), PacketWriter()
+Message::Message(int crc, unsigned char magicByte, unsigned char attributes, int keyLength, unsigned char* key, int valueLength, unsigned char* value, int64_t offset, bool releaseArrays) : WireFormatter(), PacketWriter()
 {
   D(cout.flush() << "--------------Message(params)\n";)
 
@@ -174,7 +174,7 @@ void Message::setCompression(int codec)
 
 bool Message::hasCompression()
 {
-  return (this->attributes & COMPRESSION_MASK);
+  return (this->attributes & COMPRESSION_MASK) != 0 ? true : false;
 }
 
 ostream& operator<< (ostream& os, const Message& m)

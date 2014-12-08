@@ -40,11 +40,11 @@ class FetchPartition : public WireFormatter, public PacketWriter, public ErrorHa
   public:
 
     int partition;
-    long int fetchOffset;
+    int64_t fetchOffset;
     int maxBytes;
 
     FetchPartition(Packet *packet);
-    FetchPartition(int partition, long int fetchOffset, int maxBytes);
+    FetchPartition(int partition, int64_t fetchOffset, int maxBytes);
     ~FetchPartition();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

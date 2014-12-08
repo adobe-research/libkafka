@@ -27,9 +27,19 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
-#include <arpa/inet.h>
+
+#if defined(WIN32)
+	#include <Winsock2.h>
+	#include <stdint.h>
+#else
+	#include <arpa/inet.h>
+#endif
+
 #include <zlib.h>
-#include <snappy.h>
+#if defined(WIN32)
+#else
+	#include <snappy.h>
+#endif
 
 #include "Packet.h"
 #include "Util.h"
@@ -117,11 +127,11 @@ int Packet::readInt32()
   return hostValue;
 }
 
-long int Packet::readInt64()
+int64_t Packet::readInt64()
 {
-  long int netValue = *(long int*)(this->head);
-  long int hostValue = ntohll(netValue);
-  this->head += sizeof(long int);
+  int64_t netValue = *(int64_t*)(this->head);
+  int64_t hostValue = ntohll(netValue);
+  this->head += sizeof(int64_t);
   D(cout.flush() << "Packet::readInt64():netValue(" << netValue << "):hostValue(" << hostValue << ")\n";)
   return hostValue;
 }
@@ -187,12 +197,12 @@ void Packet::updateInt32(int hostValue, unsigned char *bufferPointer)
   D(cout.flush() << "Packet::updateInt32():hostValue(" << hostValue << "):netValue(" << netValue << ")\n";)
 }
 
-void Packet::writeInt64(long int hostValue)
+void Packet::writeInt64(int64_t hostValue)
 {
-  long int netValue = htonll(hostValue);
-  memcpy(head, &netValue, sizeof(long int));
-  head += sizeof(long int);
-  this->size += sizeof(long int);
+  int64_t netValue = htonll(hostValue);
+  memcpy(head, &netValue, sizeof(int64_t));
+  head += sizeof(int64_t);
+  this->size += sizeof(int64_t);
   D(cout.flush() << "Packet::writeInt64():Value(" << hostValue << "):netValue(" << netValue << ")\n";)
 }
 
@@ -268,6 +278,8 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
     return compressionBufferSize;
   }
 
+#if defined(WIN32)
+#else
   if (codec == COMPRESSION_SNAPPY)
   {
     unsigned long compressionBufferSize = snappy::MaxCompressedLength(numBytes);
@@ -278,7 +290,7 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
     delete[] compressionBuffer;
     return compressionBufferSize;
   }
-
+#endif
   return -1; // invalid compression type
 }
 

@@ -43,10 +43,10 @@ class ProduceResponsePartition : public WireFormatter, public PacketWriter, publ
 
     int partition;
     short int errorCode;
-    long int offset;
+    int64_t offset;
 
     ProduceResponsePartition(Packet *packet);
-    ProduceResponsePartition(int partition, short int errorCode, long int offset);
+    ProduceResponsePartition(int partition, short int errorCode, int64_t offset);
     ~ProduceResponsePartition();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

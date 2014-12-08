@@ -18,6 +18,14 @@ SET(CMAKE_MFC_FLAG 0)
 add_definitions( -D_CRT_SECURE_NO_WARNINGS )
 
 
+# Try to find ZLIB
+find_package(ZLIB)
+if (ZLIB_FOUND)
+    include_directories(${ZLIB_INCLUDE_DIRS})
+else()
+	message( FATAL_ERROR "Unable to file ZLIB" )
+endif()
+
 # Distinguish between debug and release lib
 if (MSVC)
 	if(CMAKE_SIZEOF_VOID_P EQUAL 8)

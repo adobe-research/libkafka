@@ -44,9 +44,9 @@ OffsetResponsePartition::OffsetResponsePartition(Packet *packet) : WireFormatter
   // Kafka Protocol: short int errorCode
   this->errorCode = this->packet->readInt16();
 
-  // Kafka Protocol: long int offset[]
+  // Kafka Protocol: int64_t offset[]
   this->offsetArraySize = this->packet->readInt32();
-  this->offsetArray = new long int[this->offsetArraySize];
+  this->offsetArray = new int64_t[this->offsetArraySize];
   for (int i=0; i<this->offsetArraySize; i++) {
     this->offsetArray[i] = this->packet->readInt64();
   }
@@ -54,7 +54,7 @@ OffsetResponsePartition::OffsetResponsePartition(Packet *packet) : WireFormatter
   this->releaseArrays = true;
 }
 
-OffsetResponsePartition::OffsetResponsePartition(int partition, short int errorCode, int offsetArraySize, long int *offsetArray, bool releaseArrays) : WireFormatter(), PacketWriter(), ErrorHandler()
+OffsetResponsePartition::OffsetResponsePartition(int partition, short int errorCode, int offsetArraySize, int64_t *offsetArray, bool releaseArrays) : WireFormatter(), PacketWriter(), ErrorHandler()
 {
   D(cout.flush() << "--------------OffsetResponsePartition(params)\n";)
 
@@ -83,7 +83,7 @@ unsigned char* OffsetResponsePartition::toWireFormat(bool updatePacketSize)
   // Kafka Protocol: short int errorCode
   this->packet->writeInt16(this->errorCode);
 
-  // Kafka Protocol: long int offset[]
+  // Kafka Protocol: int64_t offset[]
   this->packet->writeInt32(this->offsetArraySize);
   for (int i=0; i<this->offsetArraySize; i++) {
     this->packet->writeInt64(this->offsetArray[i]);
@@ -102,7 +102,7 @@ int OffsetResponsePartition::getWireFormatSize(bool includePacketSize)
 
   int size = 0;
   if (includePacketSize) size += sizeof(int);
-  size += sizeof(int) + sizeof(short int) + sizeof(int) + (this->offsetArraySize * sizeof(long int));
+  size += sizeof(int) + sizeof(short int) + sizeof(int) + (this->offsetArraySize * sizeof(int64_t));
   return size;
 }
 

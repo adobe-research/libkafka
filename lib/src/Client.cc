@@ -27,10 +27,14 @@
 #include <string>
 #include <cstring>
 #include <typeinfo>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <errno.h>
+
+#if defined(WIN32)
+#else
+	#include <sys/socket.h>
+	#include <arpa/inet.h>
+	#include <netdb.h>
+	#include <errno.h>
+#endif
 
 #include "Client.h"
 #include "Util.h"
