@@ -44,7 +44,7 @@ using namespace LibKafka;
 Message* createMessage(const char * value, const char *key = "");
 ProduceRequest* createProduceRequest(string topic_name, Message **messageArray, int messageArraySize);
 
-main()
+int main()
 {
   const char *hostname = "<your kafka deployment hostname here>";
   const int port = 9092;
