@@ -51,9 +51,9 @@ namespace {
   
   TEST_F(ClientTest, MetadataRequest) {
     MetadataRequest *mr1 = createMetadataRequest(true);
-    EXPECT_NE(mr1, (void*)0);
+    ASSERT_NE(mr1, (void*)0);
     MetadataResponse *mr2 = c->sendMetadataRequest(mr1);
-    EXPECT_NE(mr2, (void*)0);
+    ASSERT_NE(mr2, (void*)0);
     EXPECT_EQ(mr2->hasErrorCode(), false);
     if (mr1 != NULL) { cout << "ClientTest:MetadataRequest:\n" << *mr1; delete mr1; }
     if (mr2 != NULL) { cout << "ClientTest:MetadataResponse:\n" << *mr2; delete mr2; }
@@ -61,9 +61,9 @@ namespace {
     
   TEST_F(ClientTest, ProduceRequest) {
     ProduceRequest *pr1 = createProduceRequest();
-    EXPECT_NE(pr1, (void*)0);
+    ASSERT_NE(pr1, (void*)0);
     ProduceResponse *pr2 = c->sendProduceRequest(pr1);
-    EXPECT_NE(pr2, (void*)0);
+    ASSERT_NE(pr2, (void*)0);
     EXPECT_EQ(pr2->hasErrorCode(), false);
     if (pr1 != NULL) { cout << "ClientTest:ProduceRequest:\n" << *pr1; delete pr1; }
     if (pr2 != NULL) { cout << "ClientTest:ProduceResponse:\n" << *pr2; delete pr2; }
@@ -73,9 +73,9 @@ namespace {
     ProduceRequest *pr1 = createProduceRequest();
     pr1->setCompression(ApiConstants::MESSAGE_COMPRESSION_GZIP);
     cout << *pr1;
-    EXPECT_NE(pr1, (void*)0);
+    ASSERT_NE(pr1, (void*)0);
     ProduceResponse *pr2 = c->sendProduceRequest(pr1);
-    EXPECT_NE(pr2, (void*)0);
+    ASSERT_NE(pr2, (void*)0);
     EXPECT_EQ(pr2->hasErrorCode(), false);
     if (pr1 != NULL) { cout << "ClientTest:ProduceRequest:Compression:GZIP\n" << *pr1; delete pr1; }
     if (pr2 != NULL) { cout << "ClientTest:ProduceResponse:Compression:GZIP\n" << *pr2; delete pr2; }
@@ -84,9 +84,9 @@ namespace {
   TEST_F(ClientTest, ProduceRequestWithSnappy) {
     ProduceRequest *pr1 = createProduceRequest();
     pr1->setCompression(ApiConstants::MESSAGE_COMPRESSION_SNAPPY);
-    EXPECT_NE(pr1, (void*)0);
+    ASSERT_NE(pr1, (void*)0);
     ProduceResponse *pr2 = c->sendProduceRequest(pr1);
-    EXPECT_NE(pr2, (void*)0);
+    ASSERT_NE(pr2, (void*)0);
     EXPECT_EQ(pr2->hasErrorCode(), false);
     if (pr1 != NULL) { cout << "ClientTest:ProduceRequest:Compression:Snappy\n" << *pr1; delete pr1; }
     if (pr2 != NULL) { cout << "ClientTest:ProduceResponse:Compression:Snappy\n" << *pr2; delete pr2; }
@@ -94,9 +94,9 @@ namespace {
 
   TEST_F(ClientTest, OffsetRequest) {
     OffsetRequest *or1 = createOffsetRequest();
-    EXPECT_NE(or1, (void*)0);
+    ASSERT_NE(or1, (void*)0);
     OffsetResponse *or2 = c->sendOffsetRequest(or1);
-    EXPECT_NE(or2, (void*)0);
+    ASSERT_NE(or2, (void*)0);
     EXPECT_EQ(or2->hasErrorCode(), false);
     if (or1 != NULL) { cout << "ClientTest:OffsetRequest:\n" << *or1; delete or1; }
     if (or2 != NULL) { cout << "ClientTest:OffsetResponse:\n" << *or2; delete or2; }
@@ -105,16 +105,16 @@ namespace {
   TEST_F(ClientTest, FetchRequest) {
     // get offset for fetch request
     OffsetRequest *or1 = createOffsetRequest();
-    EXPECT_NE(or1, (void*)0);
+    ASSERT_NE(or1, (void*)0);
     OffsetResponse *or2 = c->sendOffsetRequest(or1);
-    EXPECT_NE(or2, (void*)0);
+    ASSERT_NE(or2, (void*)0);
     EXPECT_EQ(or2->hasErrorCode(), false);
 
     long startOffset = or2->offsetResponseTopicArray[0]->subBlockArray[0]->offsetArray[1]; // should be first available msg
     FetchRequest *fr1 = createFetchRequest(startOffset);
-    EXPECT_NE(fr1, (void*)0);
+    ASSERT_NE(fr1, (void*)0);
     FetchResponse *fr2 = c->sendFetchRequest(fr1);
-    EXPECT_NE(fr2, (void*)0);
+    ASSERT_NE(fr2, (void*)0);
     EXPECT_EQ(fr2->hasErrorCode(), false);
     //fr2->packet->writeToFile("/tmp/fetchresponse.out");
 
