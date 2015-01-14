@@ -63,7 +63,7 @@ namespace {
     ProduceRequest *pr1 = createProduceRequest();
     ASSERT_NE(pr1, (void*)0);
     ProduceResponse *pr2 = c->sendProduceRequest(pr1);
-    EXPECT_NE(pr2, (void*)0);
+    ASSERT_NE(pr2, (void*)0);
     EXPECT_EQ(pr2->hasErrorCode(), false);
     if (pr1 != NULL) { cout << "ClientTest:ProduceRequest:\n" << *pr1; delete pr1; }
     if (pr2 != NULL) { cout << "ClientTest:ProduceResponse:\n" << *pr2; delete pr2; }
