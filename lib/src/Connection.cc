@@ -95,16 +95,16 @@ int Connection::open()
     return OPEN_CONNECTION_ERROR;
   }
 
-#if defined(WIN32)
-  u_long iMode=1;
-  ioctlsocket(this->socketFd,FIONBIO,&iMode);
-#else
   struct timeval  timeout;
   timeout.tv_sec = 10;
   timeout.tv_usec = 0;
   fd_set set;
   FD_ZERO(&set);
   FD_SET(this->socketFd, &set);
+#if defined(WIN32)
+  u_long iMode=1;
+  ioctlsocket(this->socketFd,FIONBIO,&iMode);
+#else
   fcntl(this->socketFd, F_SETFL, O_NONBLOCK);
 #endif
 
