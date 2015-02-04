@@ -28,6 +28,7 @@
 #ifndef OFFSETRESPONSEPARTITION_H
 #define OFFSETRESPONSEPARTITION_H
 
+#include <cstdint>
 #include <string>
 #include "../Debug.h"
 #include "../Packet.h"

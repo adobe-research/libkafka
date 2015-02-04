@@ -26,6 +26,7 @@
 #ifndef FETCHPARTITION_H
 #define FETCHPARTITION_H
 
+#include <cstdint>
 #include <string>
 #include "../Debug.h"
 #include "../Packet.h"

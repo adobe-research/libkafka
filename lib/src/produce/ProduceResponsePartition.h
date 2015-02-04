@@ -28,6 +28,7 @@
 #ifndef PRODUCERESPONSEPARTITION_H
 #define PRODUCERESPONSEPARTITION_H
 
+#include <cstdint>
 #include <string>
 #include "../Debug.h"
 #include "../Packet.h"

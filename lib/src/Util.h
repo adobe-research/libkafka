@@ -26,8 +26,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <cstdint>
 #include <string>
-#include <stdint.h>
 
 namespace LibKafka {
 

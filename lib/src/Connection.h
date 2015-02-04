@@ -28,12 +28,12 @@
 
 #include <iostream>
 #include <string>
-#if defined(WIN32)
-	#include <Winsock2.h>
+#ifdef _WIN32
+#include <Winsock2.h>
 #else
-	#include <sys/socket.h>
-	#include <netdb.h>
-#endif
+#include <sys/socket.h>
+#include <netdb.h>
+#endif  // _WIN32
 #include "Debug.h"
 
 namespace LibKafka {

@@ -26,6 +26,7 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include <cstdint>
 #include <string>
 
 #include "Debug.h"

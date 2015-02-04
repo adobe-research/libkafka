@@ -26,6 +26,7 @@
 #ifndef OFFSETPARTITION_H
 #define OFFSETPARTITION_H
 
+#include <cstdint>
 #include <string>
 #include "../Debug.h"
 #include "../Packet.h"

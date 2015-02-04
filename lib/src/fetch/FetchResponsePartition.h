@@ -28,6 +28,7 @@
 #ifndef FETCHRESPONSEPARTITION_H
 #define FETCHRESPONSEPARTITION_H
 
+#include <cstdint>
 #include <string>
 #include "../Debug.h"
 #include "../Packet.h"

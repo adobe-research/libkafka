@@ -23,23 +23,23 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <cstdint>
 #include <string>
 #include <cstring>
 #include <iostream>
 #include <fstream>
 
-#if defined(WIN32)
-	#include <Winsock2.h>
-	#include <stdint.h>
+#ifdef _WIN32
+#include <Winsock2.h>
+#include <stdint.h>
 #else
-	#include <arpa/inet.h>
-#endif
+#include <arpa/inet.h>
+#endif  // _WIN32
 
 #include <zlib.h>
-#if defined(WIN32)
-#else
-	#include <snappy.h>
-#endif
+#ifdef HAS_SNAPPY
+#include <snappy.h>
+#endif  // HAS_SNAPPY
 
 #include "Packet.h"
 #include "Util.h"
@@ -278,8 +278,7 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
     return compressionBufferSize;
   }
 
-#if defined(WIN32)
-#else
+#ifdef HAS_SNAPPY
   if (codec == COMPRESSION_SNAPPY)
   {
     unsigned long compressionBufferSize = snappy::MaxCompressedLength(numBytes);
@@ -290,7 +289,7 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
     delete[] compressionBuffer;
     return compressionBufferSize;
   }
-#endif
+#endif  // HAS_SNAPPY
   return -1; // invalid compression type
 }
 
