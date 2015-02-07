@@ -37,9 +37,7 @@
 #endif  // _WIN32
 
 #include <zlib.h>
-#ifdef HAS_SNAPPY
 #include <snappy.h>
-#endif  // HAS_SNAPPY
 
 #include "Packet.h"
 #include "Util.h"
@@ -278,7 +276,6 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
     return compressionBufferSize;
   }
 
-#ifdef HAS_SNAPPY
   if (codec == COMPRESSION_SNAPPY)
   {
     unsigned long compressionBufferSize = snappy::MaxCompressedLength(numBytes);
@@ -289,7 +286,7 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
     delete[] compressionBuffer;
     return compressionBufferSize;
   }
-#endif  // HAS_SNAPPY
+
   return -1; // invalid compression type
 }
 

@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 PROJECT(kafka)
 
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR} )
+
 find_package(ZLIB REQUIRED)
+find_package(Snappy REQUIRED)
 
 file(GLOB libkafka_HEADERS
     ${PROJECT_SOURCE_DIR}/*.h
@@ -19,7 +22,7 @@ file(GLOB libkafka_SOURCES
     ${PROJECT_SOURCE_DIR}/produce/*.cc
 )
 
-include_directories( ${PROJECT_SOURCE_DIR} ${ZLIB_INCLUDE_DIRS} )
+include_directories( ${PROJECT_SOURCE_DIR} ${ZLIB_INCLUDE_DIRS} ${SNAPPY_INCLUDE_DIRS} )
 add_library(kafka STATIC ${libkafka_HEADERS} ${libkafka_SOURCES})
 set_property(TARGET kafka PROPERTY CXX_STANDARD 11)
 
