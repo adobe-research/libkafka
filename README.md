@@ -51,15 +51,19 @@ Maven (clang)
 * mvn test (runs protocol unit tests)
 
 CMake 
-* mkdir build && cd build
-* cmake ..
-* cmake --build .
-* ctest
+```
+mkdir build && cd build
+cmake ..
+cmake --build .
+ctest
+```
 
 CMake (Without Unit Tests)
-* mkdir build && cd build
-* cmake -DKAFKA_TESTS=OFF ..
-* cmake --build .
+```
+mkdir build && cd build
+cmake -DKAFKA_TESTS=OFF ..
+cmake --build .
+```
 
 Debugging
 * Make with -DDEBUG or uncomment -DDEBUG in the top level pom.xml, and rebuild for full protocol debugging output.
@@ -69,10 +73,12 @@ Valgrind
 * ./valgrind.sh runs the valgrind tests with suppressions for Mac OS X.
 
 Valgrind (using CMake build)
-* mkdir build && cd build
-* cmake ..
-* ctest -D ExperimentalBuild
-* ctest -D ExperimentalMemCheck
+```
+mkdir build && cd build
+cmake ..
+ctest -D ExperimentalBuild
+ctest -D ExperimentalMemCheck
+```
 
 Examples
 ========
