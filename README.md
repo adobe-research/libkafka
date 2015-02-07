@@ -30,7 +30,7 @@ Dependencies
 Installation
 ============
 
-Supports both autoconf and maven builds:
+Supports autoconf, maven and CMake builds:
 
 Autoconf (g++)
 * ./autogen.sh
@@ -50,12 +50,29 @@ Maven (clang)
 * mvn clean install (builds shared library, command line apps)
 * mvn test (runs protocol unit tests)
 
+CMake 
+* mkdir build && cd build
+* cmake ..
+* cmake --build .
+* ctest
+
+CMake (Without Unit Tests)
+* mkdir build && cd build
+* cmake -DKAFKA_TESTS=OFF ..
+* cmake --build .
+
 Debugging
 * Make with -DDEBUG or uncomment -DDEBUG in the top level pom.xml, and rebuild for full protocol debugging output.
 
 Valgrind
 * Valgrind currently provides a clean memory leak report for the unit test suite. Future commits will maintain this.
 * ./valgrind.sh runs the valgrind tests with suppressions for Mac OS X.
+
+Valgrind (using CMake build)
+* mkdir build && cd build
+* cmake ..
+* ctest -D ExperimentalBuild
+* ctest -D ExperimentalMemCheck
 
 Examples
 ========
