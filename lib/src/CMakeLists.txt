@@ -21,3 +21,5 @@ file(GLOB libkafka_SOURCES
 
 include_directories( ${PROJECT_SOURCE_DIR} ${ZLIB_INCLUDE_DIRS} )
 add_library(kafka STATIC ${libkafka_HEADERS} ${libkafka_SOURCES})
+set_property(TARGET kafka PROPERTY CXX_STANDARD 11)
+
