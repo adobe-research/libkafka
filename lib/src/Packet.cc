@@ -278,10 +278,10 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
 
   if (codec == COMPRESSION_SNAPPY)
   {
-    unsigned long compressionBufferSize = snappy::MaxCompressedLength(numBytes);
+    size_t compressionBufferSize = snappy::MaxCompressedLength(numBytes);
     unsigned char* compressionBuffer = new unsigned char[compressionBufferSize];
     snappy::RawCompress((const char *)bytes, numBytes, (char *)compressionBuffer, &compressionBufferSize);
-    this->writeBytes(compressionBuffer, (long)compressionBufferSize);
+    this->writeBytes(compressionBuffer, (int)compressionBufferSize);
     D(cout.flush() << "Packet::writeCompressedBytes():SNAPPY:numbytes:" << numBytes << ":compressedBytes:" << compressionBufferSize << "\n";)
     delete[] compressionBuffer;
     return compressionBufferSize;
