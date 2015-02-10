@@ -26,11 +26,16 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#ifdef _WIN32
+#include <Winsock2.h>
+#include <ws2tcpip.h>
+#else
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netdb.h>
 #include <errno.h>
 #include <fcntl.h>
+#endif  // _WIN32
 
 #include "Connection.h"
 #include "Util.h"
@@ -96,7 +101,12 @@ int Connection::open()
   fd_set set;
   FD_ZERO(&set);
   FD_SET(this->socketFd, &set);
+#ifdef _WIN32
+  u_long iMode=1;
+  ioctlsocket(this->socketFd,FIONBIO,&iMode);
+#else
   fcntl(this->socketFd, F_SETFL, O_NONBLOCK);
+#endif  // _WIN32
 
   D(cout.flush() << "--------------Connection::open():connect\n";)
   status = connect(socketFd, this->host_info_list->ai_addr, this->host_info_list->ai_addrlen);
@@ -107,7 +117,12 @@ int Connection::open()
   }
 
   status = select(this->socketFd+1, NULL, &set, NULL, &timeout);
+#ifdef _WIN32
+  iMode = 0;
+  ioctlsocket(this->socketFd,FIONBIO,&iMode);
+#else
   fcntl(this->socketFd, F_SETFL, fcntl(this->socketFd, F_GETFL, 0) & ~O_NONBLOCK);
+#endif  // _WIN32
 
   D(cout.flush() << "--------------Connection::open():connected\n";)
   return this->socketFd;
@@ -125,8 +140,12 @@ void Connection::close()
 
   if (this->socketFd != SOCKET_UNINITIALIZED)
   {
+#ifdef _WIN32
+    closesocket(this->socketFd);
+#else
     ::close(this->socketFd);
     this->socketFd = SOCKET_UNINITIALIZED;
+#endif  // _WIN32
   }
 }
 
@@ -136,7 +155,11 @@ int Connection::read(int numBytes, unsigned char* buffer)
 
   int flags = 0;
   int numBytesReceived = 0;
+#ifdef _WIN32
+  char *p = (char *) buffer;
+#else
   unsigned char *p = buffer;
+#endif  // _WIN32
 
   while (numBytesReceived < numBytes)
   {
@@ -156,7 +179,11 @@ int Connection::write(int numBytes, unsigned char* buffer)
   D(cout.flush() << "--------------Connection::write(" << numBytes << ")\n";)
 
     int flags = 0;
+#ifdef _WIN32
+  int numBytesSent = (int)::send(this->socketFd, (const char*) buffer, (size_t)numBytes, flags);
+#else
   int numBytesSent = (int)::send(this->socketFd, (const void*)buffer, (ssize_t)numBytes, flags);
+#endif  // _WIN32
   if (numBytesSent == WRITE_ERROR) { E("Connection::write():error:" << strerror(errno) << "\n"); }
   D(cout.flush() << "--------------Connection::write(" << numBytes << "):wrote " << numBytesSent << "bytes\n";)
     return numBytesSent;

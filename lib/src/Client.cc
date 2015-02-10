@@ -27,10 +27,13 @@
 #include <string>
 #include <cstring>
 #include <typeinfo>
+
+#ifndef _WIN32
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
+#endif  // !_WIN32
 
 #include "Client.h"
 #include "Util.h"

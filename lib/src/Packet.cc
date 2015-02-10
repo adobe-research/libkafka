@@ -23,11 +23,19 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <cstdint>
 #include <string>
 #include <cstring>
 #include <iostream>
 #include <fstream>
+
+#ifdef _WIN32
+#include <Winsock2.h>
+#include <stdint.h>
+#else
 #include <arpa/inet.h>
+#endif  // _WIN32
+
 #include <zlib.h>
 #include <snappy.h>
 
@@ -117,11 +125,11 @@ int Packet::readInt32()
   return hostValue;
 }
 
-long int Packet::readInt64()
+int64_t Packet::readInt64()
 {
-  long int netValue = *(long int*)(this->head);
-  long int hostValue = ntohll(netValue);
-  this->head += sizeof(long int);
+  int64_t netValue = *(int64_t*)(this->head);
+  int64_t hostValue = ntohll(netValue);
+  this->head += sizeof(int64_t);
   D(cout.flush() << "Packet::readInt64():netValue(" << netValue << "):hostValue(" << hostValue << ")\n";)
   return hostValue;
 }
@@ -187,12 +195,12 @@ void Packet::updateInt32(int hostValue, unsigned char *bufferPointer)
   D(cout.flush() << "Packet::updateInt32():hostValue(" << hostValue << "):netValue(" << netValue << ")\n";)
 }
 
-void Packet::writeInt64(long int hostValue)
+void Packet::writeInt64(int64_t hostValue)
 {
-  long int netValue = htonll(hostValue);
-  memcpy(head, &netValue, sizeof(long int));
-  head += sizeof(long int);
-  this->size += sizeof(long int);
+  int64_t netValue = htonll(hostValue);
+  memcpy(head, &netValue, sizeof(int64_t));
+  head += sizeof(int64_t);
+  this->size += sizeof(int64_t);
   D(cout.flush() << "Packet::writeInt64():Value(" << hostValue << "):netValue(" << netValue << ")\n";)
 }
 
@@ -270,10 +278,10 @@ int Packet::writeCompressedBytes(unsigned char* bytes, int numBytes, Compression
 
   if (codec == COMPRESSION_SNAPPY)
   {
-    unsigned long compressionBufferSize = snappy::MaxCompressedLength(numBytes);
+    size_t compressionBufferSize = snappy::MaxCompressedLength(numBytes);
     unsigned char* compressionBuffer = new unsigned char[compressionBufferSize];
     snappy::RawCompress((const char *)bytes, numBytes, (char *)compressionBuffer, &compressionBufferSize);
-    this->writeBytes(compressionBuffer, (long)compressionBufferSize);
+    this->writeBytes(compressionBuffer, (int)compressionBufferSize);
     D(cout.flush() << "Packet::writeCompressedBytes():SNAPPY:numbytes:" << numBytes << ":compressedBytes:" << compressionBufferSize << "\n";)
     delete[] compressionBuffer;
     return compressionBufferSize;

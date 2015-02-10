@@ -23,6 +23,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <cstdint>
 #include <string>
 #include <iostream>
 
@@ -43,7 +44,7 @@ FetchResponsePartition::FetchResponsePartition(Packet *packet) : WireFormatter()
   // Kafka Protocol: short int errorCode
   this->errorCode = this->packet->readInt16();
 
-  // Kafka Protocol: long int highwaterMarkOffset
+  // Kafka Protocol: int64_t highwaterMarkOffset
   this->highwaterMarkOffset = this->packet->readInt64();
 
   // Kafka Protocol: int messageSetSize
@@ -55,7 +56,7 @@ FetchResponsePartition::FetchResponsePartition(Packet *packet) : WireFormatter()
   this->releaseArrays = true;
 }
 
-FetchResponsePartition::FetchResponsePartition(int partition, short int errorCode, long int highwaterMarkOffset, int messageSetSize, MessageSet *messageSet, bool releaseArrays) : WireFormatter(), PacketWriter(), ErrorHandler()
+FetchResponsePartition::FetchResponsePartition(int partition, short int errorCode, int64_t highwaterMarkOffset, int messageSetSize, MessageSet *messageSet, bool releaseArrays) : WireFormatter(), PacketWriter(), ErrorHandler()
 {
   D(cout.flush() << "--------------FetchResponsePartition(params)\n";)
 
@@ -85,7 +86,7 @@ unsigned char* FetchResponsePartition::toWireFormat(bool updatePacketSize)
   // Kafka Protocol: short int errorCode
   this->packet->writeInt16(this->errorCode);
 
-  // Kafka Protocol: long int highwaterMarkOffset
+  // Kafka Protocol: int64_t highwaterMarkOffset
   this->packet->writeInt64(this->highwaterMarkOffset);
   
   // Kafka Protocol: int messageSetSize
@@ -108,7 +109,7 @@ int FetchResponsePartition::getWireFormatSize(bool includePacketSize)
 
   int size = 0;
   if (includePacketSize) size += sizeof(int);
-  size += sizeof(int) + sizeof(short int) + sizeof(long int) + sizeof(int) + this->messageSetSize;
+  size += sizeof(int) + sizeof(short int) + sizeof(int64_t) + sizeof(int) + this->messageSetSize;
   return size;
 }
 

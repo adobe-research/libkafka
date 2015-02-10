@@ -23,6 +23,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <cstdint>
 #include <string>
 #include <iostream>
 
@@ -43,11 +44,11 @@ ProduceResponsePartition::ProduceResponsePartition(Packet *packet) : WireFormatt
   // Kafka Protocol: short int errorCode
   this->errorCode = this->packet->readInt16();
 
-  // Kafka Protocol: long int offset
+  // Kafka Protocol: int64_t offset
   this->offset = this->packet->readInt64();
 }
 
-ProduceResponsePartition::ProduceResponsePartition(int partition, short int errorCode, long int offset) : WireFormatter(), PacketWriter(), ErrorHandler()
+ProduceResponsePartition::ProduceResponsePartition(int partition, short int errorCode, int64_t offset) : WireFormatter(), PacketWriter(), ErrorHandler()
 {
   D(cout.flush() << "--------------ProduceResponsePartition(params)\n";)
 
@@ -70,7 +71,7 @@ unsigned char* ProduceResponsePartition::toWireFormat(bool updatePacketSize)
   // Kafka Protocol: short int errorCode
   this->packet->writeInt16(this->errorCode);
 
-  // Kafka Protocol: long int offset
+  // Kafka Protocol: int64_t offset
   this->packet->writeInt64(this->offset);
 
   if (updatePacketSize) this->packet->updatePacketSize();
@@ -86,7 +87,7 @@ int ProduceResponsePartition::getWireFormatSize(bool includePacketSize)
 
   int size = 0;
   if (includePacketSize) size += sizeof(int);
-  size += sizeof(int) + sizeof(short int) + sizeof(long int);
+  size += sizeof(int) + sizeof(short int) + sizeof(int64_t);
   return size;
 }
 

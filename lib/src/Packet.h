@@ -26,6 +26,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <cstdint>
 #include <string>
 #include "Debug.h"
 #include "WireFormatter.h"
@@ -50,7 +51,7 @@ class Packet : public WireFormatter
     signed char readInt8();
     short int readInt16();
     int readInt32();
-    long int readInt64();
+    int64_t readInt64();
     std::string readString();
     unsigned char* readBytes(int numBytes);
 
@@ -58,7 +59,7 @@ class Packet : public WireFormatter
     void writeInt16(short int value);
     void writeInt32(int value);
     void updateInt32(int value, unsigned char *bufferPointer);
-    void writeInt64(long int value);
+    void writeInt64(int64_t value);
     void writeString(std::string value);
 
     // see usage assumptions in Packet.cc

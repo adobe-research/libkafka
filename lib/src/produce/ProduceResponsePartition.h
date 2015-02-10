@@ -28,6 +28,7 @@
 #ifndef PRODUCERESPONSEPARTITION_H
 #define PRODUCERESPONSEPARTITION_H
 
+#include <cstdint>
 #include <string>
 #include "../Debug.h"
 #include "../Packet.h"
@@ -43,10 +44,10 @@ class ProduceResponsePartition : public WireFormatter, public PacketWriter, publ
 
     int partition;
     short int errorCode;
-    long int offset;
+    int64_t offset;
 
     ProduceResponsePartition(Packet *packet);
-    ProduceResponsePartition(int partition, short int errorCode, long int offset);
+    ProduceResponsePartition(int partition, short int errorCode, int64_t offset);
     ~ProduceResponsePartition();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

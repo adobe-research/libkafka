@@ -26,6 +26,7 @@
 #ifndef OFFSETPARTITION_H
 #define OFFSETPARTITION_H
 
+#include <cstdint>
 #include <string>
 #include "../Debug.h"
 #include "../Packet.h"
@@ -40,11 +41,11 @@ class OffsetPartition : public WireFormatter, public PacketWriter, public ErrorH
   public:
 
     int partition;
-    long int time;
+    int64_t time;
     int maxNumberOfOffsets;
 
     OffsetPartition(Packet *packet);
-    OffsetPartition(int partition, long int time, int maxNumberOfOffsets);
+    OffsetPartition(int partition, int64_t time, int maxNumberOfOffsets);
     ~OffsetPartition();
 
     unsigned char* toWireFormat(bool updatePacketSize = true);

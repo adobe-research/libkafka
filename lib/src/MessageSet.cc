@@ -23,6 +23,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <cstdint>
 #include <string>
 #include <iostream>
 
@@ -43,7 +44,7 @@ MessageSet::MessageSet(int messageSetSize, Packet *packet) : WireFormatter(), Pa
 
   while (bytesRead < this->messageSetSize)
   {
-    long int offset = this->packet->readInt64();
+    int64_t offset = this->packet->readInt64();
     int messageSize = this->packet->readInt32();
     Message *message = new Message(packet, offset);
     int messageWireSize = message->getWireFormatSize(false);
@@ -55,7 +56,7 @@ MessageSet::MessageSet(int messageSetSize, Packet *packet) : WireFormatter(), Pa
     }
     this->messages.push_back(message);
     // increment bytesRead for offset and messageSize fields, then messageSize
-    bytesRead += sizeof(long int) + sizeof(int) + messageSize;
+    bytesRead += sizeof(int64_t) + sizeof(int) + messageSize;
   }
 
   if (bytesRead != this->messageSetSize)
@@ -94,7 +95,7 @@ unsigned char* MessageSet::toWireFormat(bool updatePacketSize)
   
   for(vector<Message*>::const_iterator message=this->messages.begin(); message!=this->messages.end(); ++message)
   {
-    // Kafka Protocol: long int offset
+    // Kafka Protocol: int64_t offset
     this->packet->writeInt64((*message)->offset);
 
     // Kafka Protocol: int messageSize (allow for Message size changes due to compression)
@@ -126,7 +127,7 @@ int MessageSet::getWireFormatSize(bool includePacketSize)
 
   for(vector<Message*>::const_iterator message=this->messages.begin(); message!=this->messages.end(); ++message)
   {
-    size += sizeof(long int) + sizeof(int);
+    size += sizeof(int64_t) + sizeof(int);
     size += (*message)->getWireFormatSize(false);
   }
 
