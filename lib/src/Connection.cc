@@ -44,6 +44,7 @@ const int Connection::SOCKET_UNINITIALIZED;
 const int Connection::OPEN_CONNECTION_ERROR;
 const int Connection::READ_ERROR;
 const int Connection::WRITE_ERROR;
+const int Connection::CONNECTION_RESET;
 
 Connection::Connection(string host, int port)
 {
@@ -142,6 +143,7 @@ int Connection::read(int numBytes, unsigned char* buffer)
   {
     int rcvd = (int)::recv(this->socketFd, p, (size_t)(numBytes-numBytesReceived), flags);
     if (rcvd == READ_ERROR) { E("Connection::read():error:" << strerror(errno) << "\n"); break; }
+    if (rcvd == CONNECTION_RESET) { E("Connection::read():error:" << strerror(errno) << "\n"); numBytesReceived = READ_ERROR; break; }
     p += rcvd;
     numBytesReceived += rcvd;
     D(cout.flush() << "--------------Connection::read(" << numBytes << "):read " << rcvd << " bytes\n";)
