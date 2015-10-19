@@ -43,6 +43,7 @@ class Connection
     static const int OPEN_CONNECTION_ERROR = -1;
     static const int READ_ERROR = -1;
     static const int WRITE_ERROR = -1;
+    static const int CONNECTION_RESET = 0;
 
     Connection(std::string host, int port);
     ~Connection();
