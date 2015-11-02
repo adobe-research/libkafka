@@ -84,7 +84,11 @@ ResponseClass *Client::apiCall(RequestClass *request)
   if (!this->prepareConnection()) { E("Client::apiCall():unable to create connection"); return NULL; }
 
   int status = this->sendRequest(request);
-  if (status == Connection::WRITE_ERROR) { E("Client::apiCall():sendRequest() error:" << strerror(errno) << "\n"); return NULL; }
+  if (status == Connection::WRITE_ERROR)
+  {
+    E("Client::apiCall():sendRequest() error:" << strerror(errno) << "\n");
+    return NULL;
+  }
 
   D(cout.flush() << "Client::apiCall:" << typeid(RequestClass).name() << " sent:\n" << *request;)
 
@@ -126,7 +130,8 @@ ResponseClass *Client::receiveResponse()
 
   int netValueSize = -1;
   int numBytesReceived = this->connection->read(sizeof(int), (unsigned char *)(&netValueSize));
-  if (numBytesReceived == Connection::READ_ERROR || numBytesReceived == Connection::END_OF_CONNECTION_ERROR) {
+  if (numBytesReceived == Connection::READ_ERROR || numBytesReceived == Connection::END_OF_CONNECTION_ERROR)
+  {
     E("Client::receiveResponse():read error on size:" << strerror(errno) << "\n");
     delete this->connection; this->connection = NULL;
     return NULL;
@@ -136,7 +141,8 @@ ResponseClass *Client::receiveResponse()
   unsigned char *buffer = new unsigned char[hostValueSize+sizeof(int)]; // add space for int32 size
   memcpy(buffer, &netValueSize, sizeof(int));
   numBytesReceived = this->connection->read(hostValueSize, buffer + sizeof(int));
-  if (numBytesReceived == Connection::READ_ERROR || numBytesReceived == Connection::END_OF_CONNECTION_ERROR) {
+  if (numBytesReceived == Connection::READ_ERROR || numBytesReceived == Connection::END_OF_CONNECTION_ERROR)
+  {
     E("Client::receiveResponse():read error on body:" << strerror(errno) << "\n");
     delete this->connection; this->connection = NULL;
     return NULL;
