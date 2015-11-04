@@ -58,6 +58,17 @@ Request::Request(short int apiKey, short int apiVersion, int correlationId, stri
   this->clientId = clientId;
 }
 
+Request::Request(short int apiKey, short int apiVersion, int correlationId, string clientId, long bufferSize) : RequestOrResponse(bufferSize)
+{
+  D(cout.flush() << "--------------Request(params)\n";)
+
+  this->apiKey = apiKey;
+  this->apiVersion = apiVersion;
+  this->correlationId = correlationId;
+  this->clientId = clientId;
+}
+
+
 unsigned char* Request::toWireFormat(bool updatePacketSize)
 {
   unsigned char* buffer = this->RequestOrResponse::toWireFormat(false);

@@ -39,6 +39,7 @@ class RequestOrResponse : public WireFormatter, public PacketWriter
   public:
 
     RequestOrResponse();
+    RequestOrResponse(long bufferSize);
     RequestOrResponse(unsigned char *buffer, bool releaseBuffer = false);
     ~RequestOrResponse();
 

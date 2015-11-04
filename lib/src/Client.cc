@@ -112,7 +112,11 @@ int Client::sendRequest(Request *request)
 
   unsigned char *buffer = request->toWireFormat();
   int numBytesSent = this->connection->write(request->size(), buffer);
-  if (numBytesSent == Connection::WRITE_ERROR) { E("Client::sendRequest():write error:" << strerror(errno) << "\n"); return numBytesSent; }
+  if (numBytesSent == Connection::WRITE_ERROR) {
+    E("Client::sendRequest():write error:" << strerror(errno) << "\n");
+    delete this->connection; this->connection = NULL;
+    return numBytesSent;
+  }
   D(cout.flush() << "Client::sendRequest():request sent:numBytes:" << numBytesSent << "\n";)
   return numBytesSent;
 }
@@ -126,13 +130,23 @@ ResponseClass *Client::receiveResponse()
 
   int netValueSize = -1;
   int numBytesReceived = this->connection->read(sizeof(int), (unsigned char *)(&netValueSize));
-  if (numBytesReceived == Connection::READ_ERROR) { E("Client::receiveResponse():read error on size:" << strerror(errno) << "\n"); return NULL; }
+  if (numBytesReceived == Connection::READ_ERROR || numBytesReceived == Connection::END_OF_CONNECTION_ERROR)
+  {
+    E("Client::receiveResponse():read error on size:" << strerror(errno) << "\n");
+    delete this->connection; this->connection = NULL;
+    return NULL;
+  }
   int hostValueSize = ntohl(netValueSize);
   D(cout.flush() << "Client::receiveResponse():incoming response:size:" << hostValueSize << "\n";)
   unsigned char *buffer = new unsigned char[hostValueSize+sizeof(int)]; // add space for int32 size
   memcpy(buffer, &netValueSize, sizeof(int));
   numBytesReceived = this->connection->read(hostValueSize, buffer + sizeof(int));
-  if (numBytesReceived == Connection::READ_ERROR) { E("Client::receiveResponse():read error on body:" << strerror(errno) << "\n"); return NULL; }
+  if (numBytesReceived == Connection::READ_ERROR || numBytesReceived == Connection::END_OF_CONNECTION_ERROR)
+  {
+    E("Client::receiveResponse():read error on body:" << strerror(errno) << "\n");
+    delete this->connection; this->connection = NULL;
+    return NULL;
+  }
   return new ResponseClass(buffer, true); // true specfies delete buffer on ~Response()
 }
 

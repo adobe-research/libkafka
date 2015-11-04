@@ -48,6 +48,13 @@ RequestOrResponse::RequestOrResponse() : WireFormatter()
   D(cout.flush() << "--------------RequestOrResponse(params)\n";)
 }
 
+RequestOrResponse::RequestOrResponse(long bufferSize) : WireFormatter()
+{
+  this->packet = new Packet(bufferSize);
+
+  D(cout.flush() << "--------------RequestOrResponse(params)\n";)
+}
+
 RequestOrResponse::~RequestOrResponse()
 {
   delete this->packet;

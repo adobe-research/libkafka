@@ -43,6 +43,7 @@ const int Connection::DEFAULT_BUFFER_SIZE;
 const int Connection::SOCKET_UNINITIALIZED;
 const int Connection::OPEN_CONNECTION_ERROR;
 const int Connection::READ_ERROR;
+const int Connection::END_OF_CONNECTION_ERROR;
 const int Connection::WRITE_ERROR;
 
 Connection::Connection(string host, int port)
@@ -141,7 +142,7 @@ int Connection::read(int numBytes, unsigned char* buffer)
   while (numBytesReceived < numBytes)
   {
     int rcvd = (int)::recv(this->socketFd, p, (size_t)(numBytes-numBytesReceived), flags);
-    if (rcvd == READ_ERROR) { E("Connection::read():error:" << strerror(errno) << "\n"); break; }
+    if (rcvd == READ_ERROR || rcvd == END_OF_CONNECTION_ERROR) {E("Connection::read():error:" << strerror(errno) << "\n"); break; }
     p += rcvd;
     numBytesReceived += rcvd;
     D(cout.flush() << "--------------Connection::read(" << numBytes << "):read " << rcvd << " bytes\n";)
@@ -155,7 +156,10 @@ int Connection::write(int numBytes, unsigned char* buffer)
 {
   D(cout.flush() << "--------------Connection::write(" << numBytes << ")\n";)
 
-    int flags = 0;
+  // MSG_NOSIGNAL (since Linux 2.2)
+  // The local end has been "shut down" on a connection oriented socket. In this case the process will also receive a SIGPIPE unless MSG_NOSIGNAL is set.
+  
+  int flags = MSG_NOSIGNAL;
   int numBytesSent = (int)::send(this->socketFd, (const void*)buffer, (ssize_t)numBytes, flags);
   if (numBytesSent == WRITE_ERROR) { E("Connection::write():error:" << strerror(errno) << "\n"); }
   D(cout.flush() << "--------------Connection::write(" << numBytes << "):wrote " << numBytesSent << "bytes\n";)

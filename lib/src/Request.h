@@ -42,6 +42,7 @@ class Request : public RequestOrResponse
 
     Request(unsigned char *buffer, bool releaseBuffer = false);
     Request(short int apiKey, short int apiVersion, int correlationId, std::string clientId);
+    Request(short int apiKey, short int apiVersion, int correlationId, std::string clientId, long bufferSize);
 
     unsigned char* toWireFormat(bool updatePacketSize = true);
     int getWireFormatSize(bool includePacketSize = true);

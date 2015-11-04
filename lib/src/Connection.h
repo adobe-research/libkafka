@@ -42,6 +42,7 @@ class Connection
     static const int SOCKET_UNINITIALIZED = -1;
     static const int OPEN_CONNECTION_ERROR = -1;
     static const int READ_ERROR = -1;
+    static const int END_OF_CONNECTION_ERROR = 0;
     static const int WRITE_ERROR = -1;
 
     Connection(std::string host, int port);
